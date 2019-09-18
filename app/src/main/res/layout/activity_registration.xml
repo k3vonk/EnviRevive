@@ -8,8 +8,8 @@
 
     <TextView
         android:id="@+id/RegisterTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="288dp"
+        android:layout_height="105dp"
         android:layout_marginTop="128dp"
         android:fontFamily="@font/autour_one"
         android:text="Sign Up"
@@ -48,8 +48,8 @@
     <Button
         android:id="@+id/homeBtn_registerScreen"
         style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="158dp"
+        android:layout_height="84dp"
         android:layout_marginBottom="128dp"
         android:backgroundTint="#7CB342"
         android:fontFamily="@font/autour_one"
