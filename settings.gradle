@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='KGRJJ-Android-2019_2020'
