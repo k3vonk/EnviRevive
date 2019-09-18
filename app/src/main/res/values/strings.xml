@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KGRJJ-Android-2019_2020</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
 </resources>
