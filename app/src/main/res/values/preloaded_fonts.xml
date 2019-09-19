@@ -2,5 +2,6 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/autour_one</item>
+        <item>@font/galindo</item>
     </array>
 </resources>
