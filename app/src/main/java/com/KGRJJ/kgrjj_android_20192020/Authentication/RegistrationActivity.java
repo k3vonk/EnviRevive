@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
@@ -39,7 +37,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
         // Views
 
-        mEmailField = findViewById(R.id.email_input);
+        mEmailField = findViewById(R.id.email_inputLoginScreen);
         mPasswordField = findViewById(R.id.password_Input);
 
         // Buttons

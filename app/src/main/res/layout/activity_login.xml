@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Authentication.RegistrationActivity">
+    tools:context=".Authentication.LoginActivity">
 
     <TextView
-        android:id="@+id/RegisterTitle"
-        android:layout_width="288dp"
-        android:layout_height="105dp"
+        android:id="@+id/Log_in_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
         android:fontFamily="@font/autour_one"
-        android:text="Sign Up"
+        android:text="Sign In"
         android:textAlignment="center"
         android:textColor="#7CB342"
         android:textSize="56sp"
@@ -27,45 +27,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Email"
+        android:hint="Email Address"
         android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/Log_in_title" />
 
     <EditText
-        android:id="@+id/password_Input"
+        android:id="@+id/password_input_loginScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="Password "
+        android:hint="Password"
         android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
 
     <Button
-        android:id="@+id/homeBtn_registerScreen"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="158dp"
-        android:layout_height="84dp"
-        android:layout_marginBottom="128dp"
-        android:backgroundTint="#7CB342"
-        android:fontFamily="@font/autour_one"
-        android:text="Home"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/registerBtn_regScreen"
+        android:id="@+id/LoginButton_loginScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
-        android:text="Register"
+        android:layout_marginTop="32dp"
+        android:text="Login or Register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_Input" />
+        app:layout_constraintTop_toBottomOf="@+id/password_input_loginScreen" />
 </androidx.constraintlayout.widget.ConstraintLayout>
