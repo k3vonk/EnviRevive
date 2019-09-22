@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
-import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

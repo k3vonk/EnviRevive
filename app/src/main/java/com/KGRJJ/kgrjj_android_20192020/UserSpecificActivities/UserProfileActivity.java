@@ -1,28 +1,35 @@
 package com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.w3c.dom.Text;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     private FirebaseAuth mAuth;
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView profile_name;
+    private String username;
     FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,8 +37,33 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         profile_name = findViewById(R.id.profile_username);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
-        profile_name.setText(user.getUid());
+        getUserName();
+        Log.i("HELLO","USER NAME RETRIEVED: "+username);
+
         findViewById(R.id.SignOutBtn_profile).setOnClickListener(this);
+    }
+
+    private void getUserName(){
+        user = mAuth.getCurrentUser();
+        db.collection("users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.i("IDS",document.getId());
+                        Log.i("User ID: ",user.getUid());
+                        if(document.getId().equals(user.getUid())){
+                            username = document.getString("Username");
+                            Log.i("Result","Match Found: "+username);
+                            profile_name.setText(username);
+                        }
+                    }
+                } else {
+                    username = "failed";
+                }
+            }
+        });
     }
 
     @Override

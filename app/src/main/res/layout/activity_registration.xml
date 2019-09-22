@@ -11,12 +11,12 @@
         android:layout_width="288dp"
         android:layout_height="105dp"
         android:layout_marginTop="128dp"
-        android:fontFamily="@font/autour_one"
+        android:fontFamily="monospace"
         android:text="Sign Up"
         android:textAlignment="center"
         android:textColor="#7CB342"
         android:textSize="56sp"
-        android:textStyle="bold|italic"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/username_input" />
 
     <EditText
         android:id="@+id/password_Input"
@@ -46,25 +46,39 @@
         app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
 
     <Button
-        android:id="@+id/homeBtn_registerScreen"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="158dp"
-        android:layout_height="84dp"
-        android:layout_marginBottom="128dp"
-        android:backgroundTint="#7CB342"
-        android:fontFamily="@font/autour_one"
-        android:text="Home"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/registerBtn_regScreen"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:text="Register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_selection" />
+
+    <EditText
+        android:id="@+id/username_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
-        android:text="Register"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
+
+    <Button
+        android:id="@+id/image_selection"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="Upload Image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_Input" />
