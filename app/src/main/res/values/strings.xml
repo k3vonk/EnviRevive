@@ -2,5 +2,6 @@
     <string name="app_name">KGRJJ-Android-2019_2020</string>
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="AppTitle">KGRJJ</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="register">Register</string>
+    <string name="sign_in">Sign In</string>
 </resources>

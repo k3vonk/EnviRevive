@@ -27,7 +27,7 @@
         android:layout_marginBottom="128dp"
         android:backgroundTint="#7CB342"
         android:fontFamily="@font/autour_one"
-        android:text="@string/sign_up"
+        android:text="@string/common_signin_button_text"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold|italic"

@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button mRegisterButton;
     @Override
@@ -20,17 +21,21 @@ public class MainActivity extends AppCompatActivity {
 
         mRegisterButton = findViewById(R.id.signUpBtn_homeScreen);
 
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                LaunchRegisteration();
-            }
-        });
+        mRegisterButton.setOnClickListener(this);
     }
 
 
-    private void LaunchRegisteration(){
-        Intent myIntent = new Intent(this, RegistrationActivity.class);
+    private void LaunchRegistration(){
+        Intent myIntent = new Intent(this, LoginActivity.class);
         startActivity(myIntent);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int i = view.getId();
+
+        if(i == R.id.signUpBtn_homeScreen){
+            LaunchRegistration();
+        }
     }
 }

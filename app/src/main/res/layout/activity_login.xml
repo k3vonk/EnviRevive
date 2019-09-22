@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
         android:fontFamily="@font/autour_one"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textAlignment="center"
         android:textColor="#7CB342"
         android:textSize="56sp"
@@ -51,11 +51,34 @@
 
     <Button
         android:id="@+id/LoginButton_loginScreen"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:text="Login or Register"
+        android:layout_marginEnd="32dp"
+        android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_input_loginScreen" />
+
+    <TextView
+        android:id="@+id/createAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="Create a free account."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LoginButton_loginScreen" />
+
+    <TextView
+        android:id="@+id/loginIssue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="Can't login?"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LoginButton_loginScreen" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
