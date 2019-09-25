@@ -13,6 +13,11 @@
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
         <activity android:name=".Authentication.RegistrationActivity" />
         <activity android:name=".MainActivity">
+        </activity>
+
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
