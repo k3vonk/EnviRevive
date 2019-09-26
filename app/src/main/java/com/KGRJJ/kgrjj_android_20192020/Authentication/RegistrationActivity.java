@@ -4,16 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,20 +19,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
+
     private static final String TAG = "EmailPassword";
     private InputHandler inputHandler = new InputHandler();
     public static final int PICK_IMAGE = 1;
+
+
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextView mUsername;
-    private Image mProfileImage;
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -48,16 +45,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        // Views
+        // TextViews need to be stored as their content will be used later
 
         mEmailField = findViewById(R.id.email_inputLoginScreen);
         mPasswordField = findViewById(R.id.password_Input);
         mUsername = findViewById(R.id.username_input);
+
+        //Buttons don't need to be stored as they are jus just for listeners
         findViewById(R.id.image_selection).setOnClickListener(this);
-        // Buttons
         findViewById(R.id.registerBtn_regScreen).setOnClickListener(this);
+
+
         // [START initialize_auth]
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
     }
@@ -68,7 +67,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        //TODO
     }
     // [END on_start_check_user]
 
@@ -83,6 +82,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    /*
+        Create a user method. We take in two strings for email and password.
+        These are sent to a method defined in InputHandler which ensure the strings follow the
+        desired specs.
+
+        If it passes this check then we call on the FirebaseAuth method to create an account.
+
+        Inside this method we call on addUser() - this is a method written by Kiowa that adds the
+        newly created user to our firebase remote storage.
+     */
     private void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
         if(inputHandler.isValidEmailInput(email)) {
@@ -112,6 +121,14 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+
+    /* Method to add a user to our firebase storage.
+        This method is a standard method that simply connects to our firebase - finds the collection
+        named "users" and adds a username to the specified user. Our users are stored with specific
+        User IDS - this id from firebase auth is then used as a document ID in our fire Store
+        Each user has a username which is stored in the fire store along with profile image and
+        other relevant data.
+     */
     private void addUserData(FirebaseUser user){
 
         Map<String,String> username = new HashMap<>();

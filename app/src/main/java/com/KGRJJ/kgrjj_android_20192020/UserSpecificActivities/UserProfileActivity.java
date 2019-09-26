@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView profile_name;
     private String username;
+    private Image profileImage;
     FirebaseUser user;
 
     @Override
@@ -42,6 +44,11 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
 
         findViewById(R.id.SignOutBtn_profile).setOnClickListener(this);
     }
+
+
+    /* method that connects to firestore and finds the user with the same ID as the currently signed
+        in user. "Username" string is then assigned the value found form the database.
+     */
 
     private void getUserName(){
         user = mAuth.getCurrentUser();

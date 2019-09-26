@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 public class InputHandler {
 
     public boolean isValidEmailInput(String email){
+        //Checking the string has to correct pattern using built in libraries.
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
