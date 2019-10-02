@@ -147,12 +147,18 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     }
                 });
     }
+
     private void selectImage(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
+
+    private void uploadImage(){
+
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
