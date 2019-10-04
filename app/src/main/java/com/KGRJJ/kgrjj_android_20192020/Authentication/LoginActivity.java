@@ -61,26 +61,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void signIn(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "Authentication passed with." + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        Toast.makeText(LoginActivity.this, "Authentication passed with." + user.getEmail(),
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, UserProfileActivity.class);
+                        startActivity(intent);
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
 
-                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Authentication failed: " +
+                                        "username or password incorrect",
+                                Toast.LENGTH_LONG).show();
 
-                        // ...
                     }
+
+                    // ...
                 });
     }
 
@@ -94,8 +95,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         if(i == R.id.LoginButton_loginScreen){
             signIn(email.getText().toString(), password.getText().toString());
-            Intent intent = new Intent(this, UserProfileActivity.class);
-            startActivity(intent);
         }
     }
 
