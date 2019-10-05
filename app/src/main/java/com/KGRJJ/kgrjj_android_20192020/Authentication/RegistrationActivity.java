@@ -2,19 +2,32 @@ package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
+import com.KGRJJ.kgrjj_android_20192020.utilities.FirebaseStorageHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,7 +36,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,13 +47,16 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private static final String TAG = "EmailPassword";
     private InputHandler inputHandler = new InputHandler();
     public static final int PICK_IMAGE = 1;
+    private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
 
-
+    AnimationDrawable animationDrawable;
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextView mUsername;
     private Button mRegButton;
     private TextView mInfoReq;
+    private Uri filePath;
+
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
@@ -57,12 +75,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         mPasswordField = findViewById(R.id.password_Input);
         mUsername = findViewById(R.id.username_input);
         mRegButton = findViewById(R.id.registerBtn_regScreen);
+
         mInfoReq = findViewById(R.id.infoRequired);
 
         //Buttons don't need to be stored as they are jus just for listeners
 
         mRegButton.setOnClickListener(this);
-
+        findViewById(R.id.cancelSignUp).setOnClickListener(this);
         //KEEP THESE 3 MINIMISED TO AVOID CLUTTER
         mEmailField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,14 +155,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (requestCode == PICK_IMAGE) {
-            //TODO: action
 
-        }
-    }
 
     /*
         Create a user method. We take in two strings for email and password.
@@ -191,6 +203,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             return false;
         }
         addUserData();
+
         return true;
     }
 
@@ -204,11 +217,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
      */
     private void addUserData(){
         user = mAuth.getCurrentUser();
-        Map<String,String> username = new HashMap<>();
-        username.put("username",mUsername.getText().toString());
+        Map<String,String> UserData = new HashMap<>();
+        UserData.put("username",mUsername.getText().toString());
 
 
-        db.collection("user").document(user.getUid()).set(username)
+
+        db.collection("user").document(user.getUid()).set(UserData)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "DocumentSnapshot successfully written!");
                     Log.d("SUCCESSFULLY ADDED USER",user.getUid());
@@ -229,6 +243,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+
+
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -238,6 +255,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                 startActivity(myIntent);
             }
         }
-
+        if(i == R.id.cancelSignUp){
+            Intent myInten = new Intent(this, MainActivity.class);
+            startActivity(myInten);
+        }
     }
 }

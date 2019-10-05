@@ -7,24 +7,26 @@
     tools:context=".Authentication.RegistrationActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/bgImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
+        android:adjustViewBounds="false"
         android:alpha="1"
-        android:cropToPadding="true"
-        android:scaleType="centerInside"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@mipmap/backgroun_gradient" />
 
     <TextView
         android:id="@+id/RegisterTitle"
         android:layout_width="288dp"
         android:layout_height="105dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="28dp"
         android:fontFamily="monospace"
         android:text="Sign Up"
         android:textAlignment="center"
@@ -40,7 +42,7 @@
         android:id="@+id/email_inputLoginScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="44dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -53,7 +55,7 @@
         android:id="@+id/password_Input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:hint="Password "
         android:inputType="textPassword"
@@ -64,10 +66,11 @@
 
     <Button
         android:id="@+id/registerBtn_regScreen"
+        style="@android:style/Widget.DeviceDefault.Light.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="32dp"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,9 +80,10 @@
 
     <EditText
         android:id="@+id/username_input"
+        style="@android:style/Widget.Material.Light.AutoCompleteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="84dp"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
@@ -120,10 +124,24 @@
         android:id="@+id/infoRequired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
         android:text="* Please Provide required information "
         android:textColor="#35E5B3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
+
+    <TextView
+        android:id="@+id/cancelSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@android:string/cancel"
+        android:textColor="#3949AB"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
