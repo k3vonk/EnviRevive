@@ -46,17 +46,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
     private static final String TAG = "EmailPassword";
     private InputHandler inputHandler = new InputHandler();
-    public static final int PICK_IMAGE = 1;
     private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
-
-    AnimationDrawable animationDrawable;
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextView mUsername;
     private Button mRegButton;
     private TextView mInfoReq;
-    private Uri filePath;
-
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
