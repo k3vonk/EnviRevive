@@ -1,23 +1,22 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -31,7 +30,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //These variables will be assigned the text input areas of this screen.
     private TextView email;
     private TextView password;
-
+    private Button mLoginBTN;
+    private VideoView mVideoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +42,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          */
         findViewById(R.id.createAccount).setOnClickListener(this);
         // " create account is a clickable text to on the activity screen.
-
-        findViewById(R.id.LoginButton_loginScreen).setOnClickListener(this);
-
+        mLoginBTN = findViewById(R.id.LoginButton_loginScreen);
+        mLoginBTN.setOnClickListener(this);
+        mLoginBTN.setEnabled(false);
 
         //Essential for using firebase authentication
         mAuth = FirebaseAuth.getInstance();
@@ -52,6 +52,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
+//        mVideoView = findViewById(R.id.videoView);
+//        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.mountains_video2);
+//        mVideoView.setVideoURI(uri);
+//        mVideoView.start();
+        email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /* Function written using Firebase tips. Note we dont use our input handlers here.
@@ -65,11 +101,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(LoginActivity.this, "Authentication passed with." + user.getEmail(),
-                                Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(this, UserProfileActivity.class);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
 
 
                     } else {
@@ -84,6 +118,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     // ...
                 });
     }
+    private void checkRequiredFields(){
+        if(email.getText().toString().isEmpty() &&
+                password.getText().toString().isEmpty()  ){
+            mLoginBTN.setEnabled(true);
+        }
+        else{
+            mLoginBTN.setEnabled(false);
+        }
+    }
 
     @Override
     public void onClick(View view) {
@@ -92,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(i == R.id.createAccount){
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
         if(i == R.id.LoginButton_loginScreen){
             signIn(email.getText().toString(), password.getText().toString());
