@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Log.d(TAG, "signInWithEmail:success");
                         Intent intent = new Intent(this, UserProfileActivity.class);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
+                       // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
 
 
                     } else {
@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(i == R.id.createAccount){
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
+            //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
         if(i == R.id.LoginButton_loginScreen){
             signIn(email.getText().toString(), password.getText().toString());

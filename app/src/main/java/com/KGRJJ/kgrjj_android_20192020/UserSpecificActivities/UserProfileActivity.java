@@ -59,6 +59,9 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
         getUserName();
         findViewById(R.id.SignOutBtn_profile).setOnClickListener(this);
 
+
+
+
     }
 
 
@@ -87,5 +90,6 @@ public class UserProfileActivity extends AppCompatActivity implements View.OnCli
             startActivity(myIntent);
         }
     }
+
 
 }

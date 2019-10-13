@@ -1,45 +1,28 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.KGRJJ.kgrjj_android_20192020.utilities.FirebaseStorageHandler;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
+import com.mukesh.countrypicker.CountryPicker;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,30 +30,35 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private static final String TAG = "EmailPassword";
     private InputHandler inputHandler = new InputHandler();
     private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
+    private FirestoreDocumentModel FDM = new FirestoreDocumentModel();
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextView mUsername;
     private Button mRegButton;
     private TextView mInfoReq;
-
+    private TextView mCountry;
+    private EditText mName;
+    private EditText mCity;
     // [START declare_auth]
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser user;
+    private boolean countryPicked;
     // [END declare_auth]
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        countryPicked = false;
         // TextViews need to be stored as their content will be used later
-
+        mName = findViewById(R.id.Name);
+        mCity = findViewById(R.id.city);
         mEmailField = findViewById(R.id.email_inputLoginScreen);
         mPasswordField = findViewById(R.id.password_Input);
         mUsername = findViewById(R.id.username_input);
         mRegButton = findViewById(R.id.registerBtn_regScreen);
-
+        mCountry = findViewById(R.id.country_picker);
         mInfoReq = findViewById(R.id.infoRequired);
 
         //Buttons don't need to be stored as they are jus just for listeners
@@ -111,7 +99,38 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
             }
         });
+        mCity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        mName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkRequiredFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         mPasswordField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -130,7 +149,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         });
 
         mRegButton.setEnabled(false);
-
+        mCountry.setOnClickListener(this);
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -197,7 +216,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             Toast.makeText(getBaseContext(),"Email not valid",Toast.LENGTH_LONG).show();
             return false;
         }
-        addUserData();
+
+        if(user!=null){
+            addUserData();
+        }
 
         return true;
     }
@@ -212,10 +234,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
      */
     private void addUserData(){
         user = mAuth.getCurrentUser();
-        Map<String,String> UserData = new HashMap<>();
-        UserData.put("username",mUsername.getText().toString());
 
 
+//        UserData.put("username",mUsername.getText().toString());
+
+        Map<String,Object> UserData = FDM.addDataToHashMap(mName.getText().toString(),mUsername.getText().toString(),
+                mCity.getText().toString(),mCountry.getText().toString());
 
         db.collection("user").document(user.getUid()).set(UserData)
                 .addOnSuccessListener(aVoid -> {
@@ -229,7 +253,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private void checkRequiredFields(){
         if(!mEmailField.getText().toString().isEmpty() &&
                 !mPasswordField.getText().toString().isEmpty() &&
-                !mUsername.getText().toString().isEmpty()){
+                !mUsername.getText().toString().isEmpty()
+        && countryPicked &&
+        !mName.getText().toString().isEmpty() &&
+        !mCity.getText().toString().isEmpty()){
             mRegButton.setEnabled(true);
             mInfoReq.setEnabled(false);
         }
@@ -246,13 +273,26 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         int i = v.getId();
         if (i == R.id.registerBtn_regScreen) {
             if(createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString())) {
+
                 Intent myIntent = new Intent(this, UserProfileActivity.class);
                 startActivity(myIntent);
             }
         }
         if(i == R.id.cancelSignUp){
-            Intent myInten = new Intent(this, MainActivity.class);
-            startActivity(myInten);
+            Intent myIntent = new Intent(this, MainActivity.class);
+            startActivity(myIntent);
         }
+        if(i == R.id.country_picker){
+            CountryPicker.Builder builder = new CountryPicker.Builder().with(this)
+                    .listener(country -> {
+                        mCountry.setText(country.getName());
+                        countryPicked = true;
+                        checkRequiredFields();
+                    });
+            CountryPicker picker = builder.build();
+            picker.showDialog(this);
+            countryPicked = true;
+        }
+
     }
 }
