@@ -9,13 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".BaseActivity"></activity>
-        <activity android:name=".TestActivityWheel" />
-        <activity android:name=".Authentication.LoginActivity" />
+        <activity android:name=".Authentication.LoginActivity"></activity>
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
         <activity android:name=".Authentication.RegistrationActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name="Adapter.WheelSelectionAdapter" />
+        <activity android:name=".MainActivity">
+        </activity>
+
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

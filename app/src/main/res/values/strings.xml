@@ -4,12 +4,4 @@
     <string name="AppTitle">KGRJJ</string>
     <string name="register">Register</string>
     <string name="sign_in">Sign In</string>
-    <string name="password_not_valid">\n
-        a digit must occur at least once\n
-        a lower case letter must occur at least once\n
-        an upper case letter must occur at least once\n
-        a special character must occur at least once\n
-        no whitespace allowed in the entire string\n
-        at least 8 characters
-    </string>
 </resources>

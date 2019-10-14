@@ -20,7 +20,9 @@ public class InputHandler {
         (?=.*[@#$%^&+=]) a special character must occur at least once
         (?=\\S+$) no whitespace allowed in the entire string
         .{8,} at least 8 characters
-         */// found on https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
+         */
+
+        // found on https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
 
         String expression = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
