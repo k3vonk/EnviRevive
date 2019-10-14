@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
@@ -25,7 +26,7 @@ import com.mukesh.countrypicker.CountryPicker;
 
 import java.util.Map;
 
-public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegistrationActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
     private InputHandler inputHandler = new InputHandler();
@@ -191,9 +192,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
+//                                FirebaseUser currentUser = mAuth.getCurrentUser();
+                                user = mAuth.getCurrentUser();
                                 mAuth.updateCurrentUser(user);
-
+                                //addUserData();
+                                Log.i("TESTING", "creating user");
 
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -217,10 +220,11 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             return false;
         }
 
-        if(user!=null){
-            addUserData();
-        }
 
+
+        Log.i("TEST",user.getUid());
+
+        addUserData();
         return true;
     }
 
@@ -233,7 +237,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         other relevant data.
      */
     private void addUserData(){
-        user = mAuth.getCurrentUser();
+
 
 
 //        UserData.put("username",mUsername.getText().toString());
@@ -244,9 +248,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         db.collection("user").document(user.getUid()).set(UserData)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Log.d("SUCCESSFULLY ADDED USER",user.getUid());
+                    Log.d("TESTING",user.getUid());
                 })
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "Error writing document", e);
+                    Log.d("TESTING",": USER NOT CREATED");
+                });
 
     }
 

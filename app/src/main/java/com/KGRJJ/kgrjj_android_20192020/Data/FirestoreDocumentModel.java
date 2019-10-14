@@ -1,15 +1,16 @@
 package com.KGRJJ.kgrjj_android_20192020.Data;
-
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
 
 public class FirestoreDocumentModel {
 
-    public Map<String,Object> addDataToHashMap(String Name, String Username, String City,
+    public HashMap<String,Object> addDataToHashMap(String Name, String Username, String City,
                                                String country){
-        Map<String,Object> UserData = new HashMap<>();
+        HashMap<String,Object> UserData = new HashMap<>();
 
-        String[] arr;
+        String [] arr;
         arr = Name.split(" ", 2);
         String FName = arr[0];
         String LName = arr[1];
@@ -17,9 +18,9 @@ public class FirestoreDocumentModel {
         String ProfileImageRef = "";
         String Rank = "Fresh";
         int Points = 0;
-        String[] EventsAttended = {};
-        String[] subscribedEvents = {};
-        String[] Accolades = {};
+        List<String> EventsAttended = new ArrayList<>();
+        List<String> subscribedEvents = new ArrayList<>();
+        List<String> Accolades = new ArrayList<>();
         UserData.put("FName",FName);
         UserData.put("LName",LName);
         UserData.put("username",Username);
