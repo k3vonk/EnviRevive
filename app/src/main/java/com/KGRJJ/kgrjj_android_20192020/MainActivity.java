@@ -10,24 +10,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 /*Class definition contains Implements "View.OnClickListener - this allows us to create one
     OnClick method and have an if statement or switch case rather than create a listener for each
     button.
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private Button mRegisterButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
         mRegisterButton = findViewById(R.id.signUpBtn_homeScreen);
 
         mRegisterButton.setOnClickListener(this);
