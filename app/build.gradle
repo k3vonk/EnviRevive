@@ -6,7 +6,7 @@ android {
     defaultConfig {
         applicationId "com.KGRJJ.kgrjj_android_20192020"
         minSdkVersion 27
-        targetSdkVersion 28
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

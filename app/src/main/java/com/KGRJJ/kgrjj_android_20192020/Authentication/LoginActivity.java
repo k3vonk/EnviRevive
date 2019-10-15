@@ -1,7 +1,6 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,10 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
@@ -122,10 +117,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private void checkRequiredFields(){
         if(email.getText().toString().isEmpty() &&
                 password.getText().toString().isEmpty()  ){
-            mLoginBTN.setEnabled(true);
+            mLoginBTN.setEnabled(false);
         }
         else{
-            mLoginBTN.setEnabled(false);
+            mLoginBTN.setEnabled(true);
         }
     }
 

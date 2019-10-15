@@ -1,8 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020.Adapter;
 
 import android.content.Context;
-import android.media.Image;
-import android.text.Layout;
+;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,6 +12,7 @@ import com.KGRJJ.kgrjj_android_20192020.R;
 import java.util.List;
 
 import github.hellocsl.cursorwheel.CursorWheelLayout;
+
 
 public class WheelSelectionAdapter extends CursorWheelLayout.CycleWheelAdapter {
 

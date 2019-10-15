@@ -9,25 +9,111 @@
 
     <TextView
         android:id="@+id/profile_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="144dp"
+        android:layout_width="252dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="212dp"
+        android:layout_marginEnd="32dp"
         android:fontFamily="@font/galindo"
-        android:text="Username"
-        android:textSize="36sp"
+        android:text="Full Name Here"
+        android:textAlignment="textStart"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/SignOutBtn_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+    <TextView
+        android:id="@+id/profile_points_text"
+        android:layout_width="101dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
-        android:text="Sign Out"
+        android:fontFamily="@font/galindo"
+        android:text="Points"
+        android:textAlignment="textStart"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username"
+        app:layout_constraintVertical_bias="0.043" />
+
+    <TextView
+        android:id="@+id/profile_points"
+        android:layout_width="101dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="32dp"
+        android:fontFamily="@font/galindo"
+        android:text="54928"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_points_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username" />
+
+    <TextView
+        android:id="@+id/profile_city_country"
+        android:layout_width="126dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="32dp"
+        android:fontFamily="@font/galindo"
+        android:text="City, Country"
+        android:textAlignment="textStart"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_rank"
+        android:layout_width="139dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginBottom="436dp"
+        android:fontFamily="@font/galindo"
+        android:text="Rank Here"
+        android:textAlignment="textStart"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username" />
+
+    <Button
+        android:id="@+id/profile_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/profile_portrait_image"
+        android:layout_width="85dp"
+        android:layout_height="91dp"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profile_username"
+        app:layout_constraintHorizontal_bias="0.355"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.301"
+        tools:srcCompat="@tools:sample/avatars[2]" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="361dp"
+        android:layout_height="321dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.882">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

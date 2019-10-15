@@ -30,21 +30,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener{
 
-    //START FIREBASE SPECIFIC VARIABLES//
+    //START FIREBASE SPECIFIC VARIABLES/
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private StorageReference mStorageRef;
     //END FIREBASE SPECIFIC VARIABLES
 
-
-
-    private TextView profile_name;
+    //USER PROFILE PAGE VARIABLES
+    private TextView profile_name, profile_rank, profile_city_country, profile_points;
     private Image profileImage;
     private ImageView image;
     private FirebaseUser user;
+    //END USER PROFILE VARIABLES
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +55,17 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         profile_name = findViewById(R.id.profile_username);
+        profile_rank = findViewById(R.id.profile_rank);
+        profile_city_country = findViewById(R.id.profile_city_country);
+        profile_points = findViewById(R.id.profile_points);
+
         user = mAuth.getCurrentUser();
-        getUserName(user);
-        findViewById(R.id.SignOutBtn_profile).setOnClickListener(this);
+        getFullName(user);
+        getRank(user);
+        getCityCountry(user);
+        getPoints(user);
+
+        findViewById(R.id.profile_sign_out).setOnClickListener(this);
 
 
 
@@ -70,13 +77,43 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         in user. "Username" string is then assigned the value found form the database.
      */
 
-    private void getUserName(FirebaseUser user) {
+    private void getFullName(FirebaseUser user) {
 
 
         db.collection("user").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if(documentSnapshot.exists()){
-                       profile_name.setText(documentSnapshot.getString("username"));
+                       profile_name.setText(documentSnapshot.getString("FName" + " " + "LName"));
+                    }
+                });
+    }
+    private void getRank(FirebaseUser user) {
+
+
+        db.collection("user").document(user.getUid()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()){
+                        profile_rank.setText(documentSnapshot.getString("Rank"));
+                    }
+                });
+    }
+    private void getCityCountry(FirebaseUser user) {
+
+
+        db.collection("user").document(user.getUid()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()){
+                        profile_city_country.setText(documentSnapshot.getString("City" + "," + "Country"));
+                    }
+                });
+    }
+    protected void getPoints(FirebaseUser user) {
+
+
+        db.collection("user").document(user.getUid()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()){
+                        profile_points.setText(documentSnapshot.getString("Points"));
                     }
                 });
     }
@@ -84,7 +121,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.SignOutBtn_profile) {
+        if (i == R.id.profile_sign_out) {
             mAuth.signOut();
             Intent myIntent = new Intent(this, MainActivity.class);
             Toast.makeText(this,"Starting main activity",Toast.LENGTH_SHORT);

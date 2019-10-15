@@ -281,13 +281,13 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         if (i == R.id.registerBtn_regScreen) {
             if(createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString())) {
 
-                Intent myIntent = new Intent(this, UserProfileActivity.class);
-                startActivity(myIntent);
+                Intent myIntentProfile = new Intent(this, UserProfileActivity.class);
+                startActivity(myIntentProfile);
             }
         }
         if(i == R.id.cancelSignUp){
-            Intent myIntent = new Intent(this, MainActivity.class);
-            startActivity(myIntent);
+            Intent myIntentMain = new Intent(this, MainActivity.class);
+            startActivity(myIntentMain);
         }
         if(i == R.id.country_picker){
             CountryPicker.Builder builder = new CountryPicker.Builder().with(this)
