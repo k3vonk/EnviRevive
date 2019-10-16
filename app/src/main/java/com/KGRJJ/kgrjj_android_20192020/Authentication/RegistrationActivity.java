@@ -189,13 +189,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         Inside this method we call on addUser() - this is a method written by Kiowa that adds the
         newly created user to our firebase remote storage.
      */
-    private boolean test = false;
-    private void setTest(boolean val){
-        test = val;
-    }
-    private boolean getTest(){
-        return test;
-    }
+
     private boolean createAccount(String email, String password){
 
 
@@ -211,9 +205,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                                 user = task.getResult().getUser();
                                 mAuth.updateCurrentUser(user);
                                 addUserData(user);
-                                setTest(true);
-                                //addUserData();
-                                Log.i("TESTING", "creating user");
+
 
                             } else {
                                 // If sign in fails, display a message to the user.
