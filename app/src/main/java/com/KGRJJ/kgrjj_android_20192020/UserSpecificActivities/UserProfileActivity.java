@@ -127,20 +127,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     private void takePhoto(){
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        mProfileImageURI = FileProvider.getUriForFile(this,
-                getApplicationContext().getPackageName(),
-                new File(Environment.getExternalStorageDirectory(),
-                "fname_"+ System.currentTimeMillis() +".jpg"));
-
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,mProfileImageURI);
         startActivityForResult(intent,CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
     }
     protected void onActivityResult(int requestCode,int resultCode, Intent data){
         if(resultCode==RESULT_OK){
             if(requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE){
                 Bundle extras = data.getExtras();
-                Log.e("URI",mProfileImageURI.toString());
                 Bitmap bmp = (Bitmap) extras.get("data");
                 mProfileImage.setImageBitmap(bmp);
             }
