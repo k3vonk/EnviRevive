@@ -13,6 +13,7 @@ import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
@@ -27,6 +28,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private TextView email;
     private TextView password;
     private Button mLoginBTN;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
         //Essential for using firebase authentication
         mAuth = FirebaseAuth.getInstance();
-
+        user = mAuth.getCurrentUser();
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
@@ -97,6 +99,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithEmail:success");
+                        user = task.getResult().getUser();
+                        mAuth.updateCurrentUser(user);
                         Intent intent = new Intent(this, UserProfileActivity.class);
                         startActivity(intent);
                        // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);

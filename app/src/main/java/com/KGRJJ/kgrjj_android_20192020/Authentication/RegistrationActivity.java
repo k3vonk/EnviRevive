@@ -2,12 +2,15 @@ package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +43,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private TextView mCountry;
     private EditText mName;
     private EditText mCity;
+    private ProgressBar mProgress;
     // [START declare_auth]
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -61,6 +65,9 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mRegButton = findViewById(R.id.registerBtn_regScreen);
         mCountry = findViewById(R.id.country_picker);
         mInfoReq = findViewById(R.id.infoRequired);
+        mProgress = findViewById(R.id.myProgress);
+        mProgress.setVisibility(View.INVISIBLE);
+
 
         //Buttons don't need to be stored as they are jus just for listeners
 
@@ -182,7 +189,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         Inside this method we call on addUser() - this is a method written by Kiowa that adds the
         newly created user to our firebase remote storage.
      */
-    private boolean createAccount(String email, String password) {
+    private boolean test = false;
+    private void setTest(boolean val){
+        test = val;
+    }
+    private boolean getTest(){
+        return test;
+    }
+    private boolean createAccount(String email, String password){
+
 
         if(inputHandler.isValidEmailInput(email)) {
             if (inputHandler.isValidPasswordCombination(password)) {
@@ -193,8 +208,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success");
 //                                FirebaseUser currentUser = mAuth.getCurrentUser();
-                                user = mAuth.getCurrentUser();
+                                user = task.getResult().getUser();
                                 mAuth.updateCurrentUser(user);
+                                addUserData(user);
+                                setTest(true);
                                 //addUserData();
                                 Log.i("TESTING", "creating user");
 
@@ -219,12 +236,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             Toast.makeText(getBaseContext(),"Email not valid",Toast.LENGTH_LONG).show();
             return false;
         }
-
-
-
-        Log.i("TEST",user.getUid());
-
-        addUserData();
         return true;
     }
 
@@ -236,7 +247,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         Each user has a username which is stored in the fire store along with profile image and
         other relevant data.
      */
-    private void addUserData(){
+    private void addUserData(FirebaseUser user){
 
 
 
@@ -272,18 +283,27 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-
-
-
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.registerBtn_regScreen) {
+            mRegButton.setEnabled(false);
+            mRegButton.setVisibility(View.INVISIBLE);
             if(createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString())) {
 
+                mProgress.setVisibility(View.VISIBLE);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Intent myIntentProfile = new Intent(this, UserProfileActivity.class);
                 startActivity(myIntentProfile);
+            }else{
+                mRegButton.setEnabled(true);
+                mRegButton.setVisibility(View.VISIBLE);
             }
+
         }
         if(i == R.id.cancelSignUp){
             Intent myIntentMain = new Intent(this, MainActivity.class);
