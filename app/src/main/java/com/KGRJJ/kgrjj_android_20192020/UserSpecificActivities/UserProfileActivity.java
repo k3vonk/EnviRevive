@@ -29,6 +29,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.GrayscaleTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
+
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
 
@@ -49,7 +53,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     /* method that connects to firestore and finds the user with the same ID as the currently signed
         in user. "Username" string is then assigned the value found form the database.
      */
-    private ImageView mProfileImage;
+    private ImageView mProfileImage,mCoverPhoto;
     private FirebaseUser user;
 
     @Override
@@ -67,6 +71,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         profile_city_country = findViewById(R.id.profile_city_country);
         profile_points = findViewById(R.id.profile_points);
         mProfileImage = findViewById(R.id.profile_portrait_image);
+        mCoverPhoto = findViewById(R.id.coverPhoto);
         user = mAuth.getCurrentUser();
         if (user != null) {
             getFullName(user);
@@ -79,6 +84,11 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.changeImage).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
 
+        Glide
+                .with(this)
+                .load(R.mipmap.glenda)
+                .centerCrop()
+                .into(mCoverPhoto);
 
     }
 
