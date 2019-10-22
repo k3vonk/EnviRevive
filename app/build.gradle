@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.KGRJJ.kgrjj_android_20192020"
-        minSdkVersion 27
+        minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -31,15 +31,24 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.firebase:firebase-auth:19.1.0'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
+
+
+    //Add Google Maps & Location API
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.2.0'
     implementation 'github.hellocsl:CursorWheelLayout:1.1.0'
     implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
+
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
 }

@@ -42,12 +42,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         startActivity(myIntent);
     }
 
+    private void launchMap(){
+        Intent myMapIntent = new Intent(this, MapsActivity.class);
+        startActivity(myMapIntent);
+    }
+
     @Override
     public void onClick(View view) {
         int i = view.getId();
 
         if(i == R.id.signUpBtn_homeScreen){
-            LaunchRegistration();
+            //LaunchRegistration();
+            launchMap();
         }
     }
 }

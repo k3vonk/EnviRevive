@@ -12,6 +12,7 @@
         no whitespace allowed in the entire string\n
         at least 8 characters
     </string>
+
     <string name="upcoming_events">
         \n\n\n
         \t Title of Event 1\n\n
@@ -33,4 +34,7 @@
         \t Title of Event 3\n\n
 
     </string>
+
+    <string name="title_activity_maps">Map</string>
+
 </resources>
