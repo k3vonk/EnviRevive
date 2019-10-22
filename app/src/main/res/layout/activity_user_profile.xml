@@ -9,8 +9,9 @@
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.8"
         android:fadingEdge="horizontal|vertical"
         android:foregroundTint="#00BCD4"
         android:foregroundTintMode="add"
@@ -19,7 +20,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/backgroun_gradient" />
+        app:srcCompat="@mipmap/greenblue" />
+
+    <ImageView
+        android:id="@+id/cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.2"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/glenda" />
 
     <Button
         android:id="@+id/profile_sign_out"
@@ -34,8 +47,8 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/events_scroll"
-        android:layout_width="336dp"
-        android:layout_height="199dp"
+        android:layout_width="345dp"
+        android:layout_height="263dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:fillViewport="true"
@@ -113,9 +126,11 @@
             android:id="@+id/profile_rank"
             android:layout_width="139dp"
             android:layout_height="30dp"
+            android:background="#00FFFFFF"
             android:fontFamily="sans-serif"
             android:text="Rank Here"
             android:textAlignment="center"
+            android:textColor="#000000"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@+id/profile_city_country"
             app:layout_constraintStart_toStartOf="@+id/profile_city_country"
@@ -125,58 +140,54 @@
             android:id="@+id/profile_city_country"
             android:layout_width="126dp"
             android:layout_height="27dp"
+            android:background="#00FFFFFF"
             android:fontFamily="sans-serif"
             android:text="City, Country"
             android:textAlignment="center"
+            android:textColor="#000000"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="@+id/profile_username"
             app:layout_constraintStart_toStartOf="@+id/profile_username"
             app:layout_constraintTop_toBottomOf="@+id/profile_username" />
 
         <TextView
-            android:id="@+id/profile_points_text"
-            android:layout_width="101dp"
-            android:layout_height="33dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginBottom="32dp"
-            android:fontFamily="sans-serif"
-            android:text="Points"
-            android:textAlignment="gravity"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
             android:id="@+id/profile_username"
             android:layout_width="252dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="80dp"
+            android:background="#00FFFFFF"
             android:fontFamily="sans-serif"
             android:text="Full Name Here"
             android:textAlignment="center"
+            android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.051" />
+            app:layout_constraintVertical_bias="0.65" />
 
         <TextView
             android:id="@+id/profile_points"
-            android:layout_width="142dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="32dp"
+            android:layout_width="141dp"
+            android:layout_height="45dp"
+            android:background="#00FFFFFF"
             android:fontFamily="sans-serif"
             android:text="00"
-            android:textAlignment="gravity"
+            android:textAlignment="center"
+            android:textColor="#000000"
             android:textSize="36sp"
-            app:layout_constraintBottom_toTopOf="@+id/profile_points_text"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_rank" />
 
         <ImageView
             android:id="@+id/profile_portrait_image"
-            android:layout_width="162dp"
-            android:layout_height="161dp"
+            android:layout_width="150dp"
+            android:layout_height="137dp"
+            android:layout_marginTop="32dp"
             android:alpha="1"
             android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@mipmap/profile"

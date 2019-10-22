@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/green_blue" />
+        app:srcCompat="@mipmap/greenblue" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -38,10 +38,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:fontFamily="@font/chonburi"
+        android:fontFamily="sans-serif"
         android:text="@string/sign_in"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:textSize="56sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +98,8 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:text="Create a free account."
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LoginButton_loginScreen" />
 
@@ -109,7 +110,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="Can't login?"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LoginButton_loginScreen" />
 

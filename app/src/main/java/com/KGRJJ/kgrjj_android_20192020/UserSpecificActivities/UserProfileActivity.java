@@ -18,6 +18,7 @@ import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -81,36 +83,9 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.profile_sign_out).setOnClickListener(this);
         findViewById(R.id.change_image).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
-
-        //max_points = profile_points.getText().toString();
-
-
-
     }
-    @Override
-    protected  void onResume(){
-        super.onResume();
-        TextViewAnimation(0, max_points, profile_points);
-    }
-    private void TextViewAnimation(int curr,int max, TextView points) {
 
 
-        i = curr;
-        j = max;
-        new Thread(() -> {
-            while(i < j){
-                try{
-                    Thread.sleep(10);
-                } catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-                //j = max_points;
-                points.post(() -> points.setText("" + i));
-                i++;
-            }
-        }).start();
-
-    }
 
     private void getFullName(FirebaseUser user) {
 
@@ -155,16 +130,33 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         db.collection("user").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        updateMax(
-                                documentSnapshot.getDouble("Points").intValue());
                         //profile_points.setText("0");
+                        TextViewAnimation(0, documentSnapshot.getDouble("Points").intValue(), profile_points);
                     }
 
                 });
     }
-    private void updateMax(int max){
-        max_points = max;
+    private void TextViewAnimation(int curr,int max, TextView points) {
+
+
+        i = curr;
+        j = max;
+        new Thread(() -> {
+            while(i < j){
+                try{
+                    Thread.sleep(10);
+                } catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+                //j = max_points;
+                points.post(() -> points.setText("" + i));
+                i++;
+            }
+        }).start();
+
+
     }
+
     protected void getProfileImage(FirebaseUser user) {
 //        StorageReference profileRef = mStorageRef.child(user.getUid()+"/profileImage.jpg");
 //        final long ONE_MEGABYTE = 1024 *1024;
@@ -174,17 +166,13 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 //        });
         StorageReference profileRef = mStorageRef
                 .child(user.getUid() + "/profileImage.png");
-        profileRef.getDownloadUrl().addOnSuccessListener(uri -> Glide
-                .with(getApplicationContext())
-                .load(uri)
-                .apply(RequestOptions.centerCropTransform())
-                .apply(RequestOptions.circleCropTransform())
-                .into(mProfileImage));
-        //mProfileImage.setRotation((float)90.0);
-
-//        String imageUrl = "gs://kgrjj-android-2019.appspot.com/images/"+
-//                user.getUid()+"profileImage.png";
-
+        profileRef.getDownloadUrl().addOnSuccessListener(uri ->
+                Glide
+                        .with(getApplicationContext())
+                        .load(uri)
+                        .apply(RequestOptions.centerCropTransform())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(mProfileImage));
     }
 
     private void uploadToFirebase(Bitmap bmp) {
