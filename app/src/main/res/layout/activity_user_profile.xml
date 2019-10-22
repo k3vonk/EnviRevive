@@ -8,56 +8,97 @@
     tools:context=".UserSpecificActivities.UserProfileActivity">
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.8"
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fadingEdge="horizontal|vertical"
+        android:foregroundTint="#00BCD4"
+        android:foregroundTintMode="add"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/green_blue" />
-
-    <ImageView
-        android:id="@+id/coverPhoto"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.3"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/glenda" />
+        app:srcCompat="@mipmap/backgroun_gradient" />
 
     <Button
         android:id="@+id/profile_sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
         android:text="Sign Out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.922"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="361dp"
-        android:layout_height="321dp"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/events_scroll"
+        android:layout_width="336dp"
+        android:layout_height="199dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/background"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="@+id/background"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.882">
+        app:layout_constraintVertical_bias="0.834">
 
         <LinearLayout
+            android:id="@+id/horizontal_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Upcoming Events"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/upcoming_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/upcoming_events" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Events Attended"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/events_attended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/attended_events" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Events You May Be Interested In"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/maybeinterested_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/maybeinterested_events" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -72,7 +113,7 @@
             android:id="@+id/profile_rank"
             android:layout_width="139dp"
             android:layout_height="30dp"
-            android:fontFamily="@font/galindo"
+            android:fontFamily="sans-serif"
             android:text="Rank Here"
             android:textAlignment="center"
             android:textSize="20sp"
@@ -84,7 +125,7 @@
             android:id="@+id/profile_city_country"
             android:layout_width="126dp"
             android:layout_height="27dp"
-            android:fontFamily="@font/galindo"
+            android:fontFamily="sans-serif"
             android:text="City, Country"
             android:textAlignment="center"
             android:textSize="15sp"
@@ -96,18 +137,20 @@
             android:id="@+id/profile_points_text"
             android:layout_width="101dp"
             android:layout_height="33dp"
-            android:fontFamily="@font/galindo"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="sans-serif"
             android:text="Points"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/profile_username"
-            app:layout_constraintTop_toBottomOf="@+id/profile_rank" />
+            android:textAlignment="gravity"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/profile_username"
             android:layout_width="252dp"
             android:layout_height="50dp"
-            android:fontFamily="@font/galindo"
+            android:fontFamily="sans-serif"
             android:text="Full Name Here"
             android:textAlignment="center"
             android:textSize="30sp"
@@ -118,16 +161,15 @@
 
         <TextView
             android:id="@+id/profile_points"
-            android:layout_width="101dp"
-            android:layout_height="32dp"
-            android:fontFamily="@font/galindo"
-            android:text="54928"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_points_text"
-            app:layout_constraintEnd_toEndOf="@+id/profile_username"
-            app:layout_constraintStart_toEndOf="@+id/profile_points_text"
-            app:layout_constraintTop_toTopOf="@+id/profile_points_text" />
+            android:layout_width="142dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="32dp"
+            android:fontFamily="sans-serif"
+            android:text="00"
+            android:textAlignment="gravity"
+            android:textSize="36sp"
+            app:layout_constraintBottom_toTopOf="@+id/profile_points_text"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/profile_portrait_image"
@@ -141,12 +183,21 @@
             tools:srcCompat="@mipmap/profile" />
 
         <ImageButton
-            android:id="@+id/changeImage"
+            android:id="@+id/change_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_portrait_image"
             app:srcCompat="@drawable/ic_profile" />
+
+        <ImageView
+            android:id="@+id/rank_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="27dp"
+            app:layout_constraintEnd_toStartOf="@+id/profile_rank"
+            app:layout_constraintTop_toBottomOf="@+id/profile_username"
+            tools:srcCompat="@tools:sample/avatars[2]" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

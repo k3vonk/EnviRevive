@@ -12,4 +12,25 @@
         no whitespace allowed in the entire string\n
         at least 8 characters
     </string>
+    <string name="upcoming_events">
+        \n\n\n
+        \t Title of Event 1\n\n
+        \t Title of Event 2\n\n
+        \t Title of Event 3\n\n
+
+    </string>
+    <string name="attended_events">
+        \n\n\n
+        \t Title of Event 1\n\n
+        \t Title of Event 2\n\n
+        \t Title of Event 3\n\n
+
+    </string>
+    <string name="maybeinterested_events">
+        \n\n\n
+        \t Title of Event 1\n\n
+        \t Title of Event 2\n\n
+        \t Title of Event 3\n\n
+
+    </string>
 </resources>

@@ -41,4 +41,5 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }

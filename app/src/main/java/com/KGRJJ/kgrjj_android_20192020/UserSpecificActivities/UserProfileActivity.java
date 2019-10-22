@@ -29,14 +29,12 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
-import jp.wasabeef.glide.transformations.GrayscaleTransformation;
-import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
-
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
 
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
+    private int i, j;
+    private int max_points;
     //private ImageView image;
     private static Uri imageUri;
     //END FIREBASE SPECIFIC VARIABLES
@@ -71,7 +69,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         profile_city_country = findViewById(R.id.profile_city_country);
         profile_points = findViewById(R.id.profile_points);
         mProfileImage = findViewById(R.id.profile_portrait_image);
-        mCoverPhoto = findViewById(R.id.coverPhoto);
+        mCoverPhoto = findViewById(R.id.cover);
         user = mAuth.getCurrentUser();
         if (user != null) {
             getFullName(user);
@@ -81,14 +79,36 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             getProfileImage(user);
         }
         findViewById(R.id.profile_sign_out).setOnClickListener(this);
-        findViewById(R.id.changeImage).setOnClickListener(this);
+        findViewById(R.id.change_image).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
 
-        Glide
-                .with(this)
-                .load(R.mipmap.glenda)
-                .centerCrop()
-                .into(mCoverPhoto);
+        //max_points = profile_points.getText().toString();
+
+
+
+    }
+    @Override
+    protected  void onResume(){
+        super.onResume();
+        TextViewAnimation(0, max_points, profile_points);
+    }
+    private void TextViewAnimation(int curr,int max, TextView points) {
+
+
+        i = curr;
+        j = max;
+        new Thread(() -> {
+            while(i < j){
+                try{
+                    Thread.sleep(10);
+                } catch(InterruptedException e){
+                    e.printStackTrace();
+                }
+                //j = max_points;
+                points.post(() -> points.setText("" + i));
+                i++;
+            }
+        }).start();
 
     }
 
@@ -135,12 +155,16 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         db.collection("user").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        profile_points.setText(
-                                documentSnapshot.getDouble("Points").toString());
+                        updateMax(
+                                documentSnapshot.getDouble("Points").intValue());
+                        //profile_points.setText("0");
                     }
+
                 });
     }
-
+    private void updateMax(int max){
+        max_points = max;
+    }
     protected void getProfileImage(FirebaseUser user) {
 //        StorageReference profileRef = mStorageRef.child(user.getUid()+"/profileImage.jpg");
 //        final long ONE_MEGABYTE = 1024 *1024;
@@ -228,7 +252,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             Toast.makeText(this, "Starting main activity", Toast.LENGTH_SHORT).show();
             startActivity(myIntent);
         }
-        if (i == R.id.changeImage) {
+        if (i == R.id.change_image) {
             int REQUEST_CODE = 1;
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
