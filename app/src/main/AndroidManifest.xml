@@ -73,6 +73,10 @@
             </intent-filter>
         </activity>
 
+        <!-- continue a user-initiated action
+        <service
+            android:name="MapsActivity"
+            android:foregroundServiceType="location" ></service> -->
 
         <provider
             android:name="androidx.core.content.FileProvider"
