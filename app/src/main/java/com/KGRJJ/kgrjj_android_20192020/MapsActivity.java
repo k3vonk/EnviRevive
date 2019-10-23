@@ -42,6 +42,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     Location mLastLocation;
 
+    //Keys
+    private boolean requestingLocationUpdates = false;
+    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        updateValuesFromBundle(savedInstanceState);
     }
 
     @Override
@@ -64,6 +70,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mFusedLocationProviderClient != null) {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
+
+    }
+
+    /**
+     * Restore stored values from previous instance of the activity
+     * @param savedInstanceState
+     */
+    private void updateValuesFromBundle(Bundle savedInstanceState){
+        if(savedInstanceState == null){
+            return;
+        }
+
+        //Update the value of requestingLocationUpdates from the Bundle
+        if(savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)){
+            requestingLocationUpdates = savedInstanceState.getBoolean(REQUESTING_LOCATION_UPDATES_KEY);
+        }
+
+
     }
 
     /**
@@ -86,9 +110,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Requesting location
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(120000); //Every 2 minutes
-        mLocationRequest.setFastestInterval(120000);
+
+        //Frequency settings
+        mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
+        mLocationRequest.setFastestInterval(2 * 60 * 1000);
+
         mLocationRequest.setSmallestDisplacement(3);
+
+        //Accuracy settings
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -143,13 +172,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Checks if the application has permission to access location.
      */
     private void checkLocationPermission() {
+
+        //Foreground & background access to service
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
-            } else {
+            } else {//Only in the foreground
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
             }
 
+        }else{//Ask for permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
         }
     }
 
@@ -173,5 +206,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         }
+    }
+
+    /**
+     * Save the state of the activity
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, requestingLocationUpdates);
+        super.onSaveInstanceState(outState);
     }
 }
