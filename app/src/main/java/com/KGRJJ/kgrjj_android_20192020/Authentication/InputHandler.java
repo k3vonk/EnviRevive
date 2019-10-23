@@ -22,7 +22,9 @@ public class InputHandler {
         .{8,} at least 8 characters
          */// found on https://stackoverflow.com/questions/3802192/regexp-java-for-password-validation
 
-        String expression = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        //String expression = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
+        //TODO REVERT THIS
+        String expression = "^\\w{1,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
