@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
+import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.KGRJJ.kgrjj_android_20192020.utilities.FirebaseStorageHandler;
@@ -289,7 +290,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Intent myIntentProfile = new Intent(this, UserProfileActivity.class);
+                Intent myIntentProfile = new Intent(this, MapsActivity.class);
                 startActivity(myIntentProfile);
             }else{
                 mRegButton.setEnabled(true);
@@ -298,7 +299,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
         }
         if(i == R.id.cancelSignUp){
-            Intent myIntentMain = new Intent(this, MainActivity.class);
+            Intent myIntentMain = new Intent(this, LoginActivity.class);
             startActivity(myIntentMain);
         }
         if(i == R.id.country_picker){

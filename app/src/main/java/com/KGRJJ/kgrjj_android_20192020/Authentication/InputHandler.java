@@ -24,7 +24,7 @@ public class InputHandler {
 
         //String expression = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
         //TODO REVERT THIS
-        String expression = "^\\w{1,4}$";
+        String expression = "^\\w{5,}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
