@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     private ImageView mSplashLogo;
@@ -19,15 +21,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        mSplashLogo=(ImageView)findViewById(R.id.logo);
+        mSplashLogo= findViewById(R.id.logo);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(i);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
         },msplashTimeOut);
 
         Animation mAnim = AnimationUtils.loadAnimation(this, R.anim.splashscreenanimation);
