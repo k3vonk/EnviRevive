@@ -51,11 +51,7 @@
         <activity
             android:name=".TestActivityWheel2"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter> <!-- Intent received -->
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".Authentication.LoginActivity" />
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
@@ -65,7 +61,11 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter> <!-- Intent received -->
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 
