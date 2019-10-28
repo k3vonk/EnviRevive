@@ -6,20 +6,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -27,13 +24,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".ImageCaptureAndUpload"></activity>
-
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".TestActivityWheel"></activity>
+        <activity android:name=".ImageCaptureAndUpload" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
+        <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.
             (See the file "res/values/google_maps_api.xml").
@@ -42,22 +37,26 @@
             sign the APK for publishing.
             You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-
         <!-- META-DATA -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
-        <!-- ACTIVITY -->
+            android:resource="@array/preloaded_fonts" /> <!-- ACTIVITY -->
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity android:name=".BaseActivity" />
-        <activity android:name=".TestActivityWheel" />
+        <activity
+            android:name=".TestActivityWheel2"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter> <!-- Intent received -->
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Authentication.LoginActivity" />
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
         <activity android:name=".Authentication.RegistrationActivity" />
@@ -66,18 +65,20 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter> <!-- Intent received -->
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-
-        <!-- continue a user-initiated action
+        <!--
+ continue a user-initiated action
         <service
             android:name="MapsActivity"
-            android:foregroundServiceType="location" ></service> -->
-
+            android:foregroundServiceType="location" ></service>
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.KGRJJ.kgrjj_android_20192020.provider"
@@ -91,7 +92,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

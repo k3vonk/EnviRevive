@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home_wheel"
+        android:title="Home" />
+    <item
+        android:id="@+id/profile_wheel"
+        android:title="Profile" />
+    <item
+        android:id="@+id/news_wheel"
+        android:title="News" />
+    <item
+        android:id="@+id/map_wheel"
+        android:title="Map" />
+</menu>
