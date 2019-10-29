@@ -2,19 +2,26 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 
+import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Pair;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationCallback;
@@ -29,12 +36,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private ImageButton mProfileBTN;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -51,8 +60,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+
         //TODO: comment
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mProfileBTN = findViewById(R.id.profileBTN);
+        mProfileBTN.setOnClickListener(v -> {
+            Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
+
+//            Pair pair = new Pair<View,String>(findViewById(R.id.map),"map_fade");
+//            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+//                    MapsActivity.this,pair
+//            );
+            startActivity(myIntent);
+
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -207,6 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
 
     /**
      * Save the state of the activity
