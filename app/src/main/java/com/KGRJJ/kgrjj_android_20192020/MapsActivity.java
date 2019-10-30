@@ -53,24 +53,17 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //Circle Menu variables
-        ImageButton mProfileBTN = findViewById(R.id.profileBTN);
-        mProfileBTN.setOnClickListener(v -> {
-            Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
-
-//            Pair pair = new Pair<View,String>(findViewById(R.id.map),"map_fade");
-//            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-//                    MapsActivity.this,pair
-//            );
-            startActivity(myIntent);
-
-        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+    }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_maps;
     }
 
 

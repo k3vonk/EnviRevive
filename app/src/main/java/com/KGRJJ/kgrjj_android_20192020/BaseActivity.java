@@ -115,12 +115,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     protected abstract int getLayoutResourceID();
 
-    }
-    private void setupWindowAnimations(){
-        Transition slide = TransitionInflater
-                .from(getApplicationContext())
-                .inflateTransition(R.transition.activity_fade);
-        getWindow().setEnterTransition(slide);
-        getWindow().setExitTransition(slide);
-    }
+
+
 }
