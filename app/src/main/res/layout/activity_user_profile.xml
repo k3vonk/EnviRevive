@@ -125,7 +125,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
         <TextView
             android:id="@+id/profile_rank"
             android:layout_width="139dp"
@@ -214,13 +213,7 @@
             app:layout_constraintTop_toBottomOf="@+id/profile_username"
             tools:srcCompat="@tools:sample/avatars[2]" />
 
-        <Button
-            android:id="@+id/mapBTN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="go to map"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <include layout="@layout/activity_base" />
 
         <Button
             android:id="@+id/CreateEventBTN"

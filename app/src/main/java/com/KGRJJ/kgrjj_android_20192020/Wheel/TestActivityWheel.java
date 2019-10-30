@@ -1,13 +1,15 @@
-package com.KGRJJ.kgrjj_android_20192020;
+package com.KGRJJ.kgrjj_android_20192020.Wheel;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Adapter.WheelSelectionAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Data.ImageData;
+import com.KGRJJ.kgrjj_android_20192020.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class TestActivityWheel extends AppCompatActivity implements CursorWheelL
 
     CursorWheelLayout wheel_image;
     List<ImageData> lstImages;
+    Button button;
 
 
     @Override
@@ -26,11 +29,14 @@ public class TestActivityWheel extends AppCompatActivity implements CursorWheelL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_wheel);
 
+        button = findViewById(R.id.nav_button);
+        button.setOnClickListener(v -> openNavDialog());
         initViews();
-
         loadData();
-
         wheel_image.setOnMenuSelectedListener(this);
+    }
+
+    private void openNavDialog() {
     }
 
     private void loadData(){

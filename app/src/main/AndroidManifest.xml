@@ -26,6 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <activity android:name=".EventCreationDialog"></activity>
         <activity android:name=".Event_related_content.EventDisplay" />
         <activity android:name=".TestActivityWheel" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
@@ -49,12 +51,17 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".BaseActivity" />
-        <activity
-            android:name=".TestActivityWheel2"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <activity android:name=".Authentication.LoginActivity" />
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
-        <activity android:name=".Authentication.RegistrationActivity" />
+        <activity
+            android:name=".Authentication.RegistrationActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+
+
+        </activity>
+
         <activity android:name=".MainActivity" />
         <activity android:name="Adapter.WheelSelectionAdapter" />
         <activity

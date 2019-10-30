@@ -22,12 +22,6 @@
         tools:context=".MapsActivity"
         android:transitionName="map_fade"/>
 
-    <ImageButton
-        android:id="@+id/profileBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/star_big_off" />
+    <include layout="@layout/activity_base" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

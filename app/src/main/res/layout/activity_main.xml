@@ -62,4 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+    <include layout="@layout/activity_base" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
