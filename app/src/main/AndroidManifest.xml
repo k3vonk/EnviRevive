@@ -30,7 +30,7 @@
         <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <activity android:name=".EventCreationDialog"></activity>
         <activity android:name=".Event_related_content.EventDisplay" />
-        <activity android:name=".TestActivityWheel" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
+<!--        <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt;-->
         <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.
@@ -67,11 +67,12 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter> <!-- Intent received -->
-                <action android:name="android.intent.action.MAIN" />
+        <intent-filter> <!-- Intent received -->
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
             <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 

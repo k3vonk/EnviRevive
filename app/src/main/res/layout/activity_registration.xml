@@ -8,8 +8,6 @@
     tools:context=".Authentication.RegistrationActivity">
 
 
-
-
     <ImageView
         android:id="@+id/bgImage"
         android:layout_width="0dp"
@@ -24,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/greenblue" />
+        app:srcCompat="@drawable/gradient_background3" />
 
     <ImageView
         android:id="@+id/imageView7"
