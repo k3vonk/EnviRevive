@@ -319,6 +319,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             picker.showDialog(this);
             countryPicked = true;
         }
-
+    //fix test
     }
 }
