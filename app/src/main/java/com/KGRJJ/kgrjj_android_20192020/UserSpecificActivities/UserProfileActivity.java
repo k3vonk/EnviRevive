@@ -14,11 +14,11 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
-import com.KGRJJ.kgrjj_android_20192020.MainActivity;
+import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,6 +82,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         }
         findViewById(R.id.profile_sign_out).setOnClickListener(this);
         findViewById(R.id.change_image).setOnClickListener(this);
+        findViewById(R.id.mapBTN).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
     }
 
@@ -173,9 +174,22 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 Glide
                         .with(getApplicationContext())
                         .load(uri)
+                        .apply(RequestOptions.overrideOf(400,400))
                         .apply(RequestOptions.centerCropTransform())
                         .apply(RequestOptions.circleCropTransform())
                         .into(mProfileImage));
+//        String path = Environment.getExternalStorageDirectory().toString()+"/"+user.getUid()+"_images";
+//
+//        File imgFile = new  File(path+user.getUid()+".jpg");
+//
+//        if(imgFile.exists()) {
+//            Glide
+//                    .with(getApplicationContext())
+//                    .load(imgFile)
+//                    .apply(RequestOptions.centerCropTransform())
+//                    .apply(RequestOptions.circleCropTransform())
+//                    .into(mProfileImage);
+//        }
     }
 
     private void uploadToFirebase(Bitmap bmp) {
@@ -239,7 +253,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         int i = v.getId();
         if (i == R.id.profile_sign_out) {
             mAuth.signOut();
-            Intent myIntent = new Intent(this, MainActivity.class);
+            Intent myIntent = new Intent(this, LoginActivity.class);
             Toast.makeText(this, "Starting main activity", Toast.LENGTH_SHORT).show();
             startActivity(myIntent);
         }
@@ -248,6 +262,10 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
             takePhoto();
+        }
+        if(i == R.id.mapBTN){
+            Intent myIntent = new Intent(this, MapsActivity.class);
+            startActivity(myIntent);
         }
     }
 

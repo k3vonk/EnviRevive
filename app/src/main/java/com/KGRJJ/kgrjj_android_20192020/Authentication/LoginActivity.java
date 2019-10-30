@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
+import com.KGRJJ.kgrjj_android_20192020.Services.UserProfileDataService;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -103,7 +104,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Log.d(TAG, "signInWithEmail:success");
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
-
+                        Intent service = new Intent(this, UserProfileDataService.class);
+                        service.putExtra("ID",user.getUid());
+                        startService(service);
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
                        // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);

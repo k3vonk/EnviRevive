@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/AppTheme"
+
 
     tools:context=".UserSpecificActivities.UserProfileActivity">
 
@@ -114,9 +116,10 @@
     </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/profileInfo"
         android:layout_width="416dp"
         android:layout_height="359dp"
+        android:transitionName="profile_constraint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -183,7 +186,7 @@
         <ImageView
             android:id="@+id/profile_portrait_image"
             android:layout_width="150dp"
-            android:layout_height="137dp"
+            android:layout_height="150dp"
             android:layout_marginTop="32dp"
             android:alpha="1"
             android:scaleType="centerInside"

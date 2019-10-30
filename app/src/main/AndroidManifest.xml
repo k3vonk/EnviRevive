@@ -24,27 +24,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Wheel.TestActivityWheel3"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-
-
-<!--             <intent-filter> &lt;!&ndash; Intent received &ndash;&gt;-->
-<!--             <action android:name="android.intent.action.MAIN" />-->
-
-
-<!--             <category android:name="android.intent.category.LAUNCHER" />-->
-<!--             </intent-filter>-->
-<!--             <intent-filter> &lt;!&ndash; Intent received &ndash;&gt;-->
-<!--             <action android:name="android.intent.action.MAIN" />-->
-
-<!--             </intent-filter>-->
-        </activity>
-
-
         <activity android:name=".Wheel.TestActivityWheel" />
-        <activity android:name=".ImageCaptureAndUpload" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
+        <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.
@@ -65,7 +48,6 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".BaseActivity" />
-
         <activity
             android:name=".Wheel.TestActivityWheel2"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -91,19 +73,17 @@
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter> <!-- Intent received -->
+                <action android:name="android.intent.action.MAIN" />
 
-             <intent-filter> <!-- Intent received -->
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-             <intent-filter> <!-- Intent received -->
-             <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
 
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <!--
  continue a user-initiated action

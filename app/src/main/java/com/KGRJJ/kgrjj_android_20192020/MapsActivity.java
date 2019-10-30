@@ -3,20 +3,19 @@ package com.KGRJJ.kgrjj_android_20192020;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-
-
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -34,72 +33,52 @@ import java.util.List;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
+    //Map variables
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
-    private FusedLocationProviderClient mFusedLocationProviderClient;
-    private static final int PERMISSION_LOCATION_CODE = 99;
 
     Location mLastLocation;
 
-    //Keys
-    private boolean requestingLocationUpdates = false;
-    protected final static String REQUESTING_LOCATION_UPDATES_KEY = "requesting-location-updates-key";
+    //Static variables
+    private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+    public static final String MAP_TAG = "ENVIVE_MAP_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
 
-
-        //TODO: comment
+        //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        //Circle Menu variables
+        ImageButton mProfileBTN = findViewById(R.id.profileBTN);
+        mProfileBTN.setOnClickListener(v -> {
+            Intent myIntent = new Intent(getApplicationContext(), UserProfileActivity.class);
+
+//            Pair pair = new Pair<View,String>(findViewById(R.id.map),"map_fade");
+//            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+//                    MapsActivity.this,pair
+//            );
+            startActivity(myIntent);
+
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
-        updateValuesFromBundle(savedInstanceState);
     }
 
-    @Override
-    protected int getLayoutResourceID() {
-        return R.layout.activity_maps;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (mFusedLocationProviderClient != null) {
-            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
-        }
-
-    }
-
-    /**
-     * Restore stored values from previous instance of the activity
-     * @param savedInstanceState
-     */
-    private void updateValuesFromBundle(Bundle savedInstanceState){
-        if(savedInstanceState == null){
-            return;
-        }
-
-        //Update the value of requestingLocationUpdates from the Bundle
-        if(savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)){
-            requestingLocationUpdates = savedInstanceState.getBoolean(REQUESTING_LOCATION_UPDATES_KEY);
-        }
-
-
-    }
 
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -121,20 +100,54 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
         mLocationRequest.setFastestInterval(2 * 60 * 1000);
 
-        mLocationRequest.setSmallestDisplacement(3);
-
         //Accuracy settings
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
+        //If permission is granted...
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            //Location Permission already granted
             mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             mMap.setMyLocationEnabled(true);
-        } else {
-            //Request Location Permission
-            checkLocationPermission();
+        } else { //Request permission...
+            checkLocationPermissions();
         }
 
+        //TODO: heatmap update
+
+    }
+
+    /**
+     * Check for application permission to access location
+     */
+    private void checkLocationPermissions() {
+
+        //If there is no permission...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
+        } else { //else granted...
+            Log.d(MAP_TAG, "getLocation: permissions granted");
+        }
+    }
+
+    /**
+     * Handle requests based on requestCode
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case REQUEST_PERMISSION_LOCATION_KEY:
+
+                //If the request is granted...
+                if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
+                    //If permission location is granted...
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                        mMap.setMyLocationEnabled(true);
+                    } else { //Permission denied...
+                        Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+        }
     }
 
     /**
@@ -167,6 +180,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 mCurrLocationMarker = mMap.addMarker(markerOptions);
 
                 //move map camera & animation
+                //TODO: add a boundary here so it doesnt change positions
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
 
@@ -174,52 +188,15 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         }
     };
 
-    /**
-     * Checks if the application has permission to access location.
-     */
-    private void checkLocationPermission() {
+    //TODO: different states
+    @Override
+    public void onPause(){
+        super.onPause();
 
-        //Foreground & background access to service
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
-            } else {//Only in the foreground
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
-            }
-
-        }else{//Ask for permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_LOCATION_CODE);
+        if(mFusedLocationProviderClient != null) {
+            mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
 
 
-    /**
-     * Permission request response
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        //Use switch if there are other request code required
-        if(requestCode == PERMISSION_LOCATION_CODE) {
-            if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    mMap.setMyLocationEnabled(true);
-                }
-            } else {
-                //permission is denied
-                Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
-
-            }
-        }
-    }
-
-    /**
-     * Save the state of the activity
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState){
-        outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, requestingLocationUpdates);
-        super.onSaveInstanceState(outState);
-    }
 }

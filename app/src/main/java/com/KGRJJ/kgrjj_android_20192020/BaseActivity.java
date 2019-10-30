@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.transition.*;
+import android.transition.TransitionInflater;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
@@ -22,7 +24,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceID());
 
@@ -114,4 +115,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     protected abstract int getLayoutResourceID();
 
+    }
+    private void setupWindowAnimations(){
+        Transition slide = TransitionInflater
+                .from(getApplicationContext())
+                .inflateTransition(R.transition.activity_fade);
+        getWindow().setEnterTransition(slide);
+        getWindow().setExitTransition(slide);
+    }
 }
