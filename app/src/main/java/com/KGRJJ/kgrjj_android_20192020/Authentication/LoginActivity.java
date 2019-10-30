@@ -34,7 +34,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+
 
         /* Adding listeners to both button - no need to store them in a variable since they
             are only ever used for listening. "This links to the OnClick method defined below
@@ -88,6 +88,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             }
         });
     }
+
 
     /* Function written using Firebase tips. Note we dont use our input handlers here.
         This is because if the input isnt correct the FirebaseAuthentication method
@@ -143,5 +144,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             signIn(email.getText().toString(), password.getText().toString());
         }
     }
-
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_login;
+    }
 }

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BaseActivity">
+    tools:context=".Wheel.TestActivityWheel3">
 
     <com.cleveroad.sy.cyclemenuwidget.CycleMenuWidget
         android:id="@+id/itemCycleMenuWidget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
 
@@ -18,13 +21,12 @@
         app:cm_autoMinRadius="10dp"
         app:cm_corner="right_bottom"
         app:cm_fixedRadius="200dp"
-        app:cm_item_background_tint="#00C3FF"
         app:cm_radius_scale_type="auto"
-        app:cm_ripple_color="#009933"
         app:cm_scroll_type="endless"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cm_item_background_tint="#00C3FF"
         app:cm_corner_image_src="@drawable/ic_burger_menu"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:cm_ripple_color="#009933"
+        />
 
 
-</merge>
+</RelativeLayout>

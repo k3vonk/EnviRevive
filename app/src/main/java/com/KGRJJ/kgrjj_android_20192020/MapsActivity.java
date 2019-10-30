@@ -32,7 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationRequest mLocationRequest;
@@ -48,8 +48,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+
 
         //TODO: comment
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -61,6 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         updateValuesFromBundle(savedInstanceState);
+    }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_maps;
     }
 
     @Override

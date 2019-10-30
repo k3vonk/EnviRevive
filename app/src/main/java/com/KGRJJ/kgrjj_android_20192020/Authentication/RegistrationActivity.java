@@ -55,7 +55,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        
         countryPicked = false;
         // TextViews need to be stored as their content will be used later
         mName = findViewById(R.id.Name);
@@ -165,6 +165,12 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         user = mAuth.getCurrentUser();
         // [END initialize_auth]
     }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_registration;
+    }
+
 
     // [START on_start_check_user]
     @Override

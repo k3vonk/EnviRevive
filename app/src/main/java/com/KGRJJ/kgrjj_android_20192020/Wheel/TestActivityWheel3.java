@@ -1,37 +1,33 @@
-package com.KGRJJ.kgrjj_android_20192020;
-
+package com.KGRJJ.kgrjj_android_20192020.Wheel;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
-import com.KGRJJ.kgrjj_android_20192020.Wheel.TestActivityWheel3;
+import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
+import com.KGRJJ.kgrjj_android_20192020.R;
 import com.cleveroad.sy.cyclemenuwidget.CycleMenuWidget;
 import com.cleveroad.sy.cyclemenuwidget.OnMenuItemClickListener;
 import com.cleveroad.sy.cyclemenuwidget.OnStateChangedListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.cleveroad.sy.cyclemenuwidget.StateSaveListener;
+import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public class TestActivityWheel3 extends AppCompatActivity {
 
-    protected CycleMenuWidget cycleMenuWidget;
+    CycleMenuWidget cycleMenuWidget;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResourceID());
-
-        FirebaseAuth.AuthStateListener mAuthListener = firebaseAuth -> {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            assert user != null;
-            Toast.makeText(getApplicationContext(), "Signed in user => " + user.getUid(), Toast.LENGTH_SHORT)
-                    .show();
-        };
+        setContentView(R.layout.activity_test_wheel_3);
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
 
@@ -65,16 +61,16 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentProfile);
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "Profile button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Profile button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Search button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Plus button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
@@ -83,19 +79,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                     public void onMenuItemLongClick(View view, int itemPosition) {
                         switch (itemPosition) {
                             case 0:
-                                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Home Button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "Profile button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Profile button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Search button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Plus button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestActivityWheel3.this, "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 
@@ -111,7 +107,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
         );
 
-    }
-    protected abstract int getLayoutResourceID();
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.wheel_menu, menu);
+        return true;
+    }
 }

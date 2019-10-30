@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestActivityWheel">
+    tools:context=".Wheel.TestActivityWheel">
     <!---->
 
     <github.hellocsl.cursorwheel.CursorWheelLayout
@@ -30,5 +30,11 @@
             android:textSize="12sp" />
 
     </github.hellocsl.cursorwheel.CursorWheelLayout>
+
+    <Button
+        android:id="@+id/nav_button"
+        android:text="Open Nav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

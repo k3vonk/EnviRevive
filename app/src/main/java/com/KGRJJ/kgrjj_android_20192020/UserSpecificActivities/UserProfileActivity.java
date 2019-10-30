@@ -59,7 +59,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -85,7 +85,10 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         mProfileImage.setOnClickListener(this);
     }
 
-
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_user_profile;
+    }
 
     private void getFullName(FirebaseUser user) {
 

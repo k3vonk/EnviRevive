@@ -6,4 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ImageCaptureAndUpload">
 
+    <include layout="@layout/activity_base" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

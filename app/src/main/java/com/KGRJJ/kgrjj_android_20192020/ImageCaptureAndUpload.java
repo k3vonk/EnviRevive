@@ -8,6 +8,11 @@ public class ImageCaptureAndUpload extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_capture_and_upload);
+
+    }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_image_capture_and_upload;
     }
 }

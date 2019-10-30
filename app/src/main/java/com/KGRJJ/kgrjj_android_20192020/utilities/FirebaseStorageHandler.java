@@ -25,7 +25,7 @@ public class FirebaseStorageHandler {
             StorageReference ref = mStorageReference.child(reference);
             ref.putFile(file)
                     .addOnSuccessListener(taskSnapshot -> Toast.makeText(context,
-                            "Uploaded Image Succesfuly",
+                            "Uploaded Image Succesfully",
                             Toast.LENGTH_LONG).show())
                     .addOnFailureListener(e -> Toast.makeText(context,"Failed" +
                             ""+e.getLocalizedMessage(),Toast.LENGTH_LONG).show());

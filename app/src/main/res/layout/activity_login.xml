@@ -115,4 +115,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LoginButton_loginScreen" />
 
+    <include layout="@layout/activity_base" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

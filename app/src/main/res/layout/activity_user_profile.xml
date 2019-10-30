@@ -210,6 +210,8 @@
             app:layout_constraintTop_toBottomOf="@+id/profile_username"
             tools:srcCompat="@tools:sample/avatars[2]" />
 
+        <include layout="@layout/activity_base" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
