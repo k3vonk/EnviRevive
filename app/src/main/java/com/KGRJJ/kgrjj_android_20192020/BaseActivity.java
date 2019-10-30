@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.transition.*;
 import android.transition.TransitionInflater;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

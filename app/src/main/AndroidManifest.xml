@@ -26,8 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".TestActivityWheel" />
-        <!-- android:theme="@style/AppTheme.NoActionBar" -->
+        <activity android:name=".EventCreationDialog"></activity>
+        <activity android:name=".Event_related_content.EventDisplay" />
+        <activity android:name=".TestActivityWheel" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.

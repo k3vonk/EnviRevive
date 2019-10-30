@@ -1,6 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,6 +19,9 @@ import androidx.core.app.ActivityCompat;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
+import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
+import com.KGRJJ.kgrjj_android_20192020.EventCreationDialog;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventCreation;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
@@ -29,7 +35,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -48,6 +53,8 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     //END USER PROFILE VARIABLES
     //USER PROFILE PAGE VARIABLES
     private TextView profile_name, profile_rank, profile_city_country, profile_points;
+    private EventCreation eventCreation;
+    private Image_Upload image_upload;
 
 
     /* method that connects to firestore and finds the user with the same ID as the currently signed
@@ -83,7 +90,10 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         findViewById(R.id.profile_sign_out).setOnClickListener(this);
         findViewById(R.id.change_image).setOnClickListener(this);
         findViewById(R.id.mapBTN).setOnClickListener(this);
+        findViewById(R.id.CreateEventBTN).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
+        image_upload = new Image_Upload(db,mStorageRef,user,UserProfileActivity.this);
+
     }
 
 
@@ -189,22 +199,6 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 //        }
     }
 
-    private void uploadToFirebase(Bitmap bmp) {
-        StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
-
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] data = baos.toByteArray();
-        UploadTask uploadTask = profileRef.putBytes(data);
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
-        });
-
-
-    }
 
     private void takePhoto() {
         ContentValues values = new ContentValues();
@@ -234,7 +228,8 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                             .apply(RequestOptions.circleCropTransform())
                             .into(mProfileImage);
                     //mProfileImage.setRotation((float) 270);
-                    uploadToFirebase(thumbnail);
+                    image_upload.UplaodProfileImage(thumbnail);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -244,6 +239,8 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             }
         }
     }
+
+
 
     @Override
     public void onClick(View v) {
@@ -264,6 +261,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
             Intent myIntent = new Intent(this, MapsActivity.class);
             startActivity(myIntent);
         }
+        if(i == R.id.CreateEventBTN){
+            EventCreationDialog dialog = new EventCreationDialog(UserProfileActivity.this,db,user);
+            dialog.show();
+        }
+
+
     }
 
 

@@ -54,5 +54,5 @@ dependencies {
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 }

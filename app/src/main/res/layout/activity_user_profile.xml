@@ -222,6 +222,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/CreateEventBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create event"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mapBTN" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include layout="@layout/activity_base"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

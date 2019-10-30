@@ -4,4 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BaseActivity"/>
+    tools:context=".Event_related_content.EventDisplay">
+
+</androidx.constraintlayout.widget.ConstraintLayout>
