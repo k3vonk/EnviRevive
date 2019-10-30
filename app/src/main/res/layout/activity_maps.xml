@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:theme="@style/AppTheme"
     android:transitionName="activity_transition_fade"
+    android:configChanges="keyboardHidden|orientation|screenSize"
     tools:context=".MainActivity">
 
 
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/star_big_off" />
+        app:srcCompat="@android:drawable/star_big_off"
+        android:contentDescription="@string/menu_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
