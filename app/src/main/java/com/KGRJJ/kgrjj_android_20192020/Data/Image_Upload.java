@@ -14,6 +14,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Random;
 
 public class Image_Upload {
     private FirebaseFirestore mDatabase;
@@ -41,10 +43,14 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp){
+    public void UploadImage(Bitmap bmp,FirebaseFirestore db,Location location){
 
-        StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
 
+
+        String imagename = new Random().nextInt(10000) + 0 + "_"+location;
+        StorageReference profileRef = mStorageRef.child("images/"+imagename);
+
+        String url = "gs://kgrjj-android-2019.appspot.com/images/";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -55,5 +61,9 @@ public class Image_Upload {
         }).addOnFailureListener(e -> {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("Location",location);
+        map.put("PNG",baos);
+        db.collection("Images").add(map);
     }
 }

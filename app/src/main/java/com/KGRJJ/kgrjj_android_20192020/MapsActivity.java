@@ -5,16 +5,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
+import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -28,7 +32,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
@@ -38,27 +48,44 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
+    private Bitmap thumbnail;
+    private Uri imageUri;
+    private Image_Upload image_upload;
+    private FirebaseFirestore db;
+    private StorageReference mStorageReference;
+    private FirebaseUser user;
+    private ImageButton mTakePicBTN;
+
+
 
     Location mLastLocation;
 
     //Static variables
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+    protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     public static final String MAP_TAG = "ENVIVE_MAP_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        //setContentView(R.layout.activity_maps);
 
         //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_frag);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
+                "gs://kgrjj-android-2019.appspot.com/images");
+        image_upload = new Image_Upload(db,mStorageReference,user,MapsActivity.this);
+        mTakePicBTN = findViewById(R.id.take_pic);
+        mTakePicBTN.setOnClickListener(v -> takePhoto());
     }
 
     @Override
@@ -188,6 +215,38 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
         if(mFusedLocationProviderClient != null) {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+    private void takePhoto() {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
+                try {
+                    thumbnail = MediaStore.Images.Media.getBitmap(
+                            getContentResolver(), imageUri
+                    );
+
+                    image_upload.UploadImage(thumbnail,db,mLastLocation);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                Bundle extras = data.getExtras();
+//                Bitmap bmp = (Bitmap) extras.get("data");
+//
+            }
         }
     }
 
