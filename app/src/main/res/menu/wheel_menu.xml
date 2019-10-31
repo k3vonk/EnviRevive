@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/new_game"
-        android:icon="@drawable/ic_home"
+        android:id="@+id/map"
+        android:icon="@drawable/ic_public_black_24dp"
         tools:ignore="MenuTitle"/>
     <item
-        android:id="@+id/test2"
+        android:id="@+id/profile"
         android:icon="@drawable/ic_profile"
         tools:ignore="MenuTitle"/>
 
     <item
-        android:id="@+id/test3"
+        android:id="@+id/find_event"
         android:icon="@drawable/ic_search"
         tools:ignore="MenuTitle"/>
     <item
-        android:id="@+id/test4"
-        android:icon="@drawable/cm_ic_plus"
+        android:id="@+id/take_photo"
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
         tools:ignore="MenuTitle"/>
 
     <item
-        android:id="@+id/test5"
-        android:icon="@drawable/ic_profile"
+        android:id="@+id/create_event"
+        android:icon="@drawable/ic_event_black_24dp"
         tools:ignore="MenuTitle"/>
 
 

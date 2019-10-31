@@ -43,7 +43,8 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp,FirebaseFirestore db,Location location){
+    public void UploadImage(Bitmap bmp,Location location){
+
 
 
 
@@ -63,7 +64,7 @@ public class Image_Upload {
         });
         HashMap<String,Object> map = new HashMap<>();
         map.put("Location",location);
-        map.put("PNG",baos);
-        db.collection("Images").add(map);
+        map.put("URL",url+imagename);
+        mDatabase.collection("Images").add(map);
     }
 }

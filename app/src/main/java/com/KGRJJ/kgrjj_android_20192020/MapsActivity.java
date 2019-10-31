@@ -48,21 +48,12 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
-    private Bitmap thumbnail;
-    private Uri imageUri;
-    private Image_Upload image_upload;
-    private FirebaseFirestore db;
-    private StorageReference mStorageReference;
-    private FirebaseUser user;
-    private ImageButton mTakePicBTN;
 
-
+    //image capture
 
     Location mLastLocation;
-
     //Static variables
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
-    protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     public static final String MAP_TAG = "ENVIVE_MAP_TAG";
 
     @Override
@@ -70,22 +61,18 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_maps);
 
-        //Instantiation
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+//Instantiation
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_frag);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
-                "gs://kgrjj-android-2019.appspot.com/images");
-        image_upload = new Image_Upload(db,mStorageReference,user,MapsActivity.this);
-        mTakePicBTN = findViewById(R.id.take_pic);
-        mTakePicBTN.setOnClickListener(v -> takePhoto());
+
+
+
     }
 
     @Override
@@ -113,6 +100,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
 
+
         //Requesting location
         mLocationRequest = new LocationRequest();
 
@@ -131,26 +119,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             checkLocationPermissions();
         }
 
-        //TODO: heatmap update
-
     }
 
-    /**
-     * Check for application permission to access location
-     */
-    private void checkLocationPermissions() {
 
-        //If there is no permission...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
-        } else { //else granted...
-            Log.d(MAP_TAG, "getLocation: permissions granted");
-        }
-    }
-
-    /**
-     * Handle requests based on requestCode
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -162,7 +133,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                     //If permission location is granted...
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        mMap.setMyLocationEnabled(true);
+                       // mMap.setMyLocationEnabled(true);
                     } else { //Permission denied...
                         Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                     }
@@ -174,6 +145,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
      */
+
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -217,38 +189,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
-    private void takePhoto() {
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New picture");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-        imageUri = getContentResolver().insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
-                try {
-                    thumbnail = MediaStore.Images.Media.getBitmap(
-                            getContentResolver(), imageUri
-                    );
-
-                    image_upload.UploadImage(thumbnail,db,mLastLocation);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-//                Bundle extras = data.getExtras();
-//                Bitmap bmp = (Bitmap) extras.get("data");
-//
-            }
-        }
-    }
 
 
 }

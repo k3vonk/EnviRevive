@@ -10,6 +10,18 @@
     tools:context=".UserSpecificActivities.UserProfileActivity">
 
     <ImageView
+        android:id="@+id/cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.2"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/glenda" />
+
+    <ImageView
         android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -24,17 +36,100 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/gradient_background3" />
 
+    <TextView
+        android:id="@+id/profile_points"
+        android:layout_width="141dp"
+        android:layout_height="45dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif"
+        android:text="00"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_rank" />
+
+<!--    <Button-->
+<!--        android:id="@+id/CreateEventBTN"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="4dp"-->
+<!--        android:text="Create event"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <TextView
+        android:id="@+id/profile_username"
+        android:layout_width="252dp"
+        android:layout_height="50dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif"
+        android:text="Full Name Here"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_portrait_image" />
+
+    <TextView
+        android:id="@+id/profile_city_country"
+        android:layout_width="126dp"
+        android:layout_height="27dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif"
+        android:text="City, Country"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_username"
+        app:layout_constraintStart_toStartOf="@+id/profile_username"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username" />
+
+    <ImageButton
+        android:id="@+id/change_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_profile" />
+
     <ImageView
-        android:id="@+id/cover"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.2"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/background"
+        android:id="@+id/profile_portrait_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        android:alpha="1"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/glenda" />
+        app:srcCompat="@mipmap/profile"
+        tools:srcCompat="@mipmap/profile" />
+
+    <TextView
+        android:id="@+id/profile_rank"
+        android:layout_width="139dp"
+        android:layout_height="30dp"
+        android:background="#00FFFFFF"
+        android:fontFamily="sans-serif"
+        android:text="Rank Here"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/profile_city_country"
+        app:layout_constraintStart_toStartOf="@+id/profile_city_country"
+        app:layout_constraintTop_toBottomOf="@+id/profile_city_country" />
+
+    <ImageView
+        android:id="@+id/rank_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="27dp"
+        app:layout_constraintEnd_toStartOf="@+id/profile_rank"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username"
+        tools:srcCompat="@tools:sample/avatars[2]" />
 
     <Button
         android:id="@+id/profile_sign_out"
@@ -115,114 +210,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/profileInfo"
-        android:layout_width="416dp"
-        android:layout_height="359dp"
-        android:transitionName="profile_constraint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/profile_rank"
-            android:layout_width="139dp"
-            android:layout_height="30dp"
-            android:background="#00FFFFFF"
-            android:fontFamily="sans-serif"
-            android:text="Rank Here"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="@+id/profile_city_country"
-            app:layout_constraintStart_toStartOf="@+id/profile_city_country"
-            app:layout_constraintTop_toBottomOf="@+id/profile_city_country" />
-
-        <TextView
-            android:id="@+id/profile_city_country"
-            android:layout_width="126dp"
-            android:layout_height="27dp"
-            android:background="#00FFFFFF"
-            android:fontFamily="sans-serif"
-            android:text="City, Country"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="@+id/profile_username"
-            app:layout_constraintStart_toStartOf="@+id/profile_username"
-            app:layout_constraintTop_toBottomOf="@+id/profile_username" />
-
-        <TextView
-            android:id="@+id/profile_username"
-            android:layout_width="252dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="80dp"
-            android:background="#00FFFFFF"
-            android:fontFamily="sans-serif"
-            android:text="Full Name Here"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.65" />
-
-        <TextView
-            android:id="@+id/profile_points"
-            android:layout_width="141dp"
-            android:layout_height="45dp"
-            android:background="#00FFFFFF"
-            android:fontFamily="sans-serif"
-            android:text="00"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="36sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_rank" />
-
-        <ImageView
-            android:id="@+id/profile_portrait_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="32dp"
-            android:alpha="1"
-            android:scaleType="centerInside"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@mipmap/profile"
-            tools:srcCompat="@mipmap/profile" />
-
-        <ImageButton
-            android:id="@+id/change_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_portrait_image"
-            app:srcCompat="@drawable/ic_profile" />
-
-        <ImageView
-            android:id="@+id/rank_image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="27dp"
-            app:layout_constraintEnd_toStartOf="@+id/profile_rank"
-            app:layout_constraintTop_toBottomOf="@+id/profile_username"
-            tools:srcCompat="@tools:sample/avatars[2]" />
-
-        <include layout="@layout/activity_base" />
-
-        <Button
-            android:id="@+id/CreateEventBTN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create event"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapBTN" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <include layout="@layout/activity_base"/>
+    <include
+        layout="@layout/activity_base" />
 </androidx.constraintlayout.widget.ConstraintLayout>

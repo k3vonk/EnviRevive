@@ -1,5 +1,6 @@
 package com.KGRJJ.kgrjj_android_20192020.Event_related_content;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -16,17 +17,18 @@ public class EventCreation {
         this.db = db;
         this.user = user;
     }
-    public void CreateEvent(String Title,String description,String date,String Time){
+    public void CreateEvent(String Title, String description, String date, String Time, Location location){
         HashMap<String,Object> map = new HashMap<>();
         map.put("Title",Title);
         map.put("Description",description);
         map.put("Date",date);
         map.put("Time",Time);
+        map.put("Location",location);
         ArrayList<String> myArray = new ArrayList<>();
         myArray.add(user.getUid());
         map.put("Attendees",myArray);
 
-        db.collection("Events").add(map).addOnSuccessListener(aVoid->
+        db.collection("Events").document(Title).set(map).addOnSuccessListener(aVoid->
                 Log.i("Test","Correctly added event")
         );
     }
