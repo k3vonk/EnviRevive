@@ -41,18 +41,20 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.2.0'
+    implementation 'com.google.firebase:firebase-firestore:21.2.1'
 
     //Wheel Dependencies
     implementation 'github.hellocsl:CursorWheelLayout:1.1.0'
-    implementation 'com.linroid.filtermenu:library:0.2.+@aar'
-    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
+    implementation 'com.github.Hitomis:CircleMenu:v1.0.0'
+    implementation 'com.cleveroad:cycle-menu:1.0.2'
     //Wheel Dependencies
 
+
+    implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.4'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 }

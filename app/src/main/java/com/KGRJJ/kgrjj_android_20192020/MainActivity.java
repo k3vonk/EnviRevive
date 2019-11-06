@@ -28,11 +28,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
         mRegisterButton = findViewById(R.id.signUpBtn_homeScreen);
 
         mRegisterButton.setOnClickListener(this);
         //"This" refers to the OnClick Listener defined below
+    }
+
+    @Override
+    protected int getLayoutResourceID() {
+        return R.layout.activity_main;
     }
 
     //A method used to create a new activity. Will be fleshed out with configuration etc later on

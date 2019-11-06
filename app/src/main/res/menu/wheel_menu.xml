@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
-        android:id="@+id/home_wheel"
-        android:title="Home" />
+        android:id="@+id/map"
+        android:icon="@drawable/ic_public_black_24dp"
+        tools:ignore="MenuTitle"/>
     <item
-        android:id="@+id/profile_wheel"
-        android:title="Profile" />
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_profile"
+        tools:ignore="MenuTitle"/>
+
     <item
-        android:id="@+id/news_wheel"
-        android:title="News" />
+        android:id="@+id/find_event"
+        android:icon="@drawable/ic_search"
+        tools:ignore="MenuTitle"/>
     <item
-        android:id="@+id/map_wheel"
-        android:title="Map" />
+        android:id="@+id/take_photo"
+        android:icon="@drawable/ic_add_a_photo_black_24dp"
+        tools:ignore="MenuTitle"/>
+
+    <item
+        android:id="@+id/create_event"
+        android:icon="@drawable/ic_event_black_24dp"
+        tools:ignore="MenuTitle"/>
+
+
+
 </menu>
