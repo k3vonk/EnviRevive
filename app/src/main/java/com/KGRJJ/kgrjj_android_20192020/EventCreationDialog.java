@@ -10,25 +10,37 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventCreation;
+
+import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
+import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.Timestamp;
+
+import java.time.LocalDateTime;
+import java.util.Calendar;
 
 public class EventCreationDialog extends BaseActivity implements View.OnClickListener, OnMapReadyCallback {
 
 
     private TextView mTitle;
     private TextView mDescription;
-    private TextView mDate;
-    private TextView mTime;
     private Button mButton;
+    private Button mDate;
+    private Button mTime;
+    private TextView mDateText;
+    private TextView mTimeText;
     private EventCreation eventCreation;
     private GoogleMap mMap;
     private Location mLocation;
-
+    private boolean datePicked;
+    private boolean timePicked;
 
 
 
@@ -36,25 +48,53 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.dialog_event_creation);
-
+        datePicked = false;
+        timePicked = false;
+        com.KGRJJ.kgrjj_android_20192020.utilities.Date date;
+        final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
         mTitle = findViewById(R.id.EVENT_TITLE);
         mDescription = findViewById(R.id.EVENT_DESCRIPTION);
-        mDate = findViewById(R.id.EVENT_DATE);
+        mDate = findViewById(R.id.EVETNT_DATE);
         mTime = findViewById(R.id.EVENT_TIME);
+        mDateText = findViewById(R.id.EVENT_DATE_TEXT);
+        mTimeText = findViewById(R.id.EVENT_TIME_TEXT);
         mButton = findViewById(R.id.CREATE_EVENT_BTN);
         eventCreation = new EventCreation(db,user);
+        mDate.setOnClickListener(view ->{
+            CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                    .setOnDateSetListener((dialog, year, monthOfYear, dayOfMonth) -> mDateText.setText(dayOfMonth+"/"+monthOfYear+"/"+year))
+                    .setFirstDayOfWeek(Calendar.SUNDAY)
+                    .setPreselectedDate(LocalDateTime.now().getYear(),
+                            LocalDateTime.now().getMonthValue(),LocalDateTime.now().getDayOfMonth())
+                    .setDoneText("Date selected")
+                    .setThemeLight();
+            cdp.show(getSupportFragmentManager(),FRAG_TAG_DATE_PICKER);
+            datePicked = true;
+        });
+        mTime.setOnClickListener(view ->{
+            RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
+                    .setOnTimeSetListener((dialog, hourOfDay, minute) -> mTimeText.setText(hourOfDay+":"+minute))
+                    .setStartTime(10, 10)
+                    .setDoneText("Yay")
+                    .setCancelText("Nop")
+                    .setThemeDark();
+            rtpd.show(getSupportFragmentManager(), "fragment_time_picker_name");
+            timePicked = true;
+        });
         mButton.setEnabled(false);
+
         mButton.setOnClickListener(v1 -> {
+            String[] mydate = mDateText.getText().toString().split("/");
+            Date date1 = new Date(Integer.valueOf(mydate[0]),Integer.valueOf(mydate[1]),Integer.valueOf(mydate[2]));
+            String[] myTime = mTimeText.getText().toString().split(":");
+            Time time = new Time(Integer.valueOf(myTime[0]),Integer.valueOf(myTime[1]));
             Toast.makeText(getApplicationContext(),"Event Created",Toast.LENGTH_SHORT).show();
             eventCreation.CreateEvent(mTitle.getText().toString(),
-                    mDescription.getText().toString(),
-                    mDate.getText().toString(),
-                    mTime.getText().toString(),mLocation
+                    mDescription.getText().toString(),date1,time,mLocation
             );
             mTitle.clearComposingText();
             mDescription.clearComposingText();
-            mDate.clearComposingText();
-            mTime.clearComposingText();
+
             mButton.setEnabled(false);
         });
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_frag);
@@ -101,39 +141,8 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
 
             }
         });
-        mDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                CheckFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         mDescription.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                CheckFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        mTime.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -155,8 +164,7 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
     private void CheckFields(){
         if(!mTitle.getText().toString().isEmpty()&&
             !mDescription.getText().toString().isEmpty() &&
-            !mDate.getText().toString().isEmpty()&&
-            !mTime.getText().toString().isEmpty()&&
+            datePicked && timePicked &&
             mLocation!=null){
             mButton.setEnabled(true);
         }
