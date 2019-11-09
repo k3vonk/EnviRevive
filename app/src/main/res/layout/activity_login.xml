@@ -7,31 +7,28 @@
     tools:context=".Authentication.LoginActivity">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView6"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.8"
-        android:contentDescription="image of a bridge with green gradient"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gradient_background3" />
+        app:srcCompat="@mipmap/blackboard" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.2"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:alpha="0.7"
+        android:contentDescription="image of a bridge with green gradient"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/reggg" />
+        app:srcCompat="@drawable/gradient_background3" />
 
     <TextView
         android:id="@+id/Log_in_title"
@@ -51,7 +48,7 @@
         android:id="@+id/email_inputLoginScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="316dp"
+        android:layout_marginTop="152dp"
         android:background="#80FAF7F7"
         android:ems="10"
         android:hint="Email Address"
@@ -60,7 +57,7 @@
         android:textColor="#090808"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Log_in_title" />
 

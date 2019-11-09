@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
@@ -15,6 +16,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Image_Upload {
@@ -29,22 +31,22 @@ public class Image_Upload {
         this.user = user;
         this.context = context;
     }
-    public void UplaodProfileImage(Bitmap bmp){
+    public void UplaodProfileImage(Bitmap bmp, FirebaseUser user){
+        this.user=user;
         StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
-
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
+
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(context, "Uploaded image", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp,Location location){
-
+    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
+            this.user = user;
 
 
 

@@ -62,7 +62,8 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
         eventCreation = new EventCreation(db,user);
         mDate.setOnClickListener(view ->{
             CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
-                    .setOnDateSetListener((dialog, year, monthOfYear, dayOfMonth) -> mDateText.setText(dayOfMonth+"/"+monthOfYear+"/"+year))
+                    .setOnDateSetListener((dialog, year, monthOfYear, dayOfMonth) ->{ monthOfYear = monthOfYear+1;
+                            mDateText.setText(dayOfMonth+"/"+monthOfYear+"/"+year);})
                     .setFirstDayOfWeek(Calendar.SUNDAY)
                     .setPreselectedDate(LocalDateTime.now().getYear(),
                             LocalDateTime.now().getMonthValue(),LocalDateTime.now().getDayOfMonth())
@@ -113,8 +114,8 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
         mMap.getUiSettings().setCompassEnabled(true);
 
         mMap.setOnMapLongClickListener(latLng -> {
-
-            // TODO: Change this marker to user profile
+            mMap.clear();
+            // TODO: Change this marker to user profileImage
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
             markerOptions.title("Current Position");

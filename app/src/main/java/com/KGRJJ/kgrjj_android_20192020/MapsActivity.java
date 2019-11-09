@@ -1,24 +1,16 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,13 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
@@ -164,8 +150,10 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 //Place current location marker
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                // TODO: Change this marker to user profile
+                // TODO: Change this marker to user profileImage
                 MarkerOptions markerOptions = new MarkerOptions();
+                
+                //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(profileImage));
                 markerOptions.position(latLng);
                 markerOptions.title("Current Position");
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));

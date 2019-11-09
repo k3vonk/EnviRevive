@@ -57,7 +57,11 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+    implementation 'com.firebaseui:firebase-ui-storage:3.2.1'
 
     //time and date
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
+
+    //animations
+    implementation 'com.airbnb.android:lottie:3.1.0'
 }

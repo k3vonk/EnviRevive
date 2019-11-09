@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
+import com.KGRJJ.kgrjj_android_20192020.LoadingScreen;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.Services.UserProfileDataService;
@@ -104,6 +105,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Log.d(TAG, "signInWithEmail:success");
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
+                        getUserData(user);
                         Intent service = new Intent(this, UserProfileDataService.class);
                         service.putExtra("ID",user.getUid());
                         startService(service);
@@ -123,6 +125,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
                     // ...
                 });
+
+
     }
     private void checkRequiredFields(){
         if(email.getText().toString().isEmpty() &&

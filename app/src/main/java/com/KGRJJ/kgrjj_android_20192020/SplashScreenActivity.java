@@ -21,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        mSplashLogo= findViewById(R.id.logo);
+        //mSplashLogo= findViewById(R.id.logo);
 
         new Handler().postDelayed(() -> {
             Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             finish();
         },msplashTimeOut);
 
-        Animation mAnim = AnimationUtils.loadAnimation(this, R.anim.splashscreenanimation);
-        mSplashLogo.startAnimation(mAnim);
+        //Animation mAnim = AnimationUtils.loadAnimation(this, R.anim.splashscreenanimation);
+        //mSplashLogo.startAnimation(mAnim);
     }
 }
