@@ -1,24 +1,16 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,14 +24,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -62,7 +58,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         //setContentView(R.layout.activity_maps);
 
 
-//Instantiation
+        //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -119,6 +115,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             checkLocationPermissions();
         }
 
+        //TODO: heatmap update
+        addHeatMap();
     }
 
 
@@ -180,6 +178,43 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         }
     };
 
+    HeatmapTileProvider mHeatMapTileProvider;
+    TileOverlay mTileOverlay;
+    //TODO: adding heatmap
+    private void addHeatMap() {
+        List<LatLng> list = null;
+
+        // Get the data: latitude/longitude positions of police stations.
+        try {
+            list = readItems(R.raw.police_stations);
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+        }
+
+        // Create a heat map tile provider, passing it the latlngs of the police stations
+        mHeatMapTileProvider = new HeatmapTileProvider.Builder()
+                .data(list)
+                .build();
+        // Add a tile overlay to the map, using the heat map tile provider.
+        mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+    }
+
+    private ArrayList<LatLng> readItems(int resource) throws JSONException {
+        ArrayList<LatLng> list = new ArrayList<LatLng>();
+        InputStream inputStream = getResources().openRawResource(resource);
+        String json = new Scanner(inputStream).useDelimiter("\\A").next();
+        JSONArray array = new JSONArray(json);
+
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            double lat = object.getDouble("lat");
+            double lng = object.getDouble("lng");
+            list.add(new LatLng(lat, lng));
+        }
+
+        return list;
+    }
+
     //TODO: different states
     @Override
     public void onPause(){
@@ -189,6 +224,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
+
+
+
 
 
 
