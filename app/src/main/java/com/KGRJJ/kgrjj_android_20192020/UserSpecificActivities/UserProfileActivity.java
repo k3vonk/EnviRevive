@@ -20,6 +20,7 @@ import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventCreation;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.dx.dxloadingbutton.lib.LoadingButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +44,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     //END USER PROFILE VARIABLES
     //USER PROFILE PAGE VARIABLES
     private TextView profile_name, profile_rank, profile_city_country, profile_points;
+    private LoadingButton lb;
 
 
 
@@ -68,6 +70,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         profile_points = findViewById(R.id.profile_points);
         mProfileImage = findViewById(R.id.profile_portrait_image);
         mCoverPhoto = findViewById(R.id.cover);
+        lb = findViewById(R.id.loading_btn);
         user = mAuth.getCurrentUser();
         if (user != null) {
             getFullName(user);
@@ -81,7 +84,12 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
         //findViewById(R.id.CreateEventBTN).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
-
+        lb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lb.startLoading();
+            }
+        });
 
     }
 
@@ -147,7 +155,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         new Thread(() -> {
             while(i < j){
                 try{
-                    Thread.sleep(10);
+                    Thread.sleep(2);
                 } catch(InterruptedException e){
                     e.printStackTrace();
                 }

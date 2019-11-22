@@ -31,6 +31,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private TextView password;
     private Button mLoginBTN;
     FirebaseUser user;
+    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         mLoginBTN = findViewById(R.id.LoginButton_loginScreen);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
-
+        v = findViewById(R.id.itemCycleMenuWidget);
+        v.setVisibility(View.INVISIBLE);
         //Essential for using firebase authentication
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();

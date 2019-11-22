@@ -51,6 +51,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private FirebaseUser user;
     private boolean countryPicked;
     // [END declare_auth]
+    private View v;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +67,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         mRegButton = findViewById(R.id.registerBtn_regScreen);
         mCountry = findViewById(R.id.country_picker);
         mInfoReq = findViewById(R.id.infoRequired);
-        mProgress = findViewById(R.id.myProgress);
-        mProgress.setVisibility(View.INVISIBLE);
+        v = findViewById(R.id.itemCycleMenuWidget);
+        v.setVisibility(View.INVISIBLE);
+//        mProgress = findViewById(R.id.myProgress);
+//        mProgress.setVisibility(View.INVISIBLE);
 
 
         //Buttons don't need to be stored as they are jus just for listeners

@@ -197,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Bundle bundle = new Bundle();
         bundle.putBoolean("Profile",PI);
-        //bundle.putString(MediaStore.EXTRA_OUTPUT, imageUri.toString());
+        bundle.putString(MediaStore.EXTRA_OUTPUT, imageUri.toString());
         intent.putExtras(bundle);
 
         startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
