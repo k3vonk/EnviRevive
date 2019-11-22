@@ -49,13 +49,12 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            />
         <activity android:name=".BaseActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            />
         <activity android:name=".Authentication.LoginActivity"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".UserSpecificActivities.UserProfileActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".UserSpecificActivities.UserProfileActivity" />
         <activity
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
@@ -68,8 +67,7 @@
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
 
