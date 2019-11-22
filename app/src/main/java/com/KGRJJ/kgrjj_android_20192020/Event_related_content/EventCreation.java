@@ -16,7 +16,6 @@ import java.util.HashMap;
 public class EventCreation {
     private FirebaseFirestore db;
     private FirebaseUser user;
-    private Date date;
 
     public EventCreation(FirebaseFirestore db, FirebaseUser user){
         this.db = db;
@@ -30,14 +29,14 @@ public class EventCreation {
         map.put("Time",time);
         map.put("Location",location);
         ArrayList<String> myArray = new ArrayList<>();
+        ArrayList<String> imageArray = new ArrayList<>();
         myArray.add(user.getUid());
         map.put("Attendees",myArray);
+        map.put("Images",imageArray);
 
         db.collection("Events").document(Title).set(map).addOnSuccessListener(aVoid->
                 Log.i("Test","Correctly added event")
         );
     }
-    public void addDate(Date date){
-        this.date = date;
-    }
+
 }

@@ -48,18 +48,28 @@
             android:resource="@array/preloaded_fonts" /> <!-- ACTIVITY -->
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".BaseActivity" />
-        <activity android:name=".Authentication.LoginActivity" />
-        <activity android:name=".UserSpecificActivities.UserProfileActivity" />
+            android:label="@string/title_activity_maps"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".BaseActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".Authentication.LoginActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".UserSpecificActivities.UserProfileActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name=".Authentication.RegistrationActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name="Adapter.WheelSelectionAdapter" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            ></activity>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            />
+        <activity android:name="Adapter.WheelSelectionAdapter"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustPan">
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
 
