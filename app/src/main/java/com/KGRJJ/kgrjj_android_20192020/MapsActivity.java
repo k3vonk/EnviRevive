@@ -1,6 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -26,6 +27,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
@@ -33,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -75,6 +85,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     protected int getLayoutResourceID() {
         return R.layout.activity_maps;
     }
+
 
 
     /**
@@ -182,37 +193,28 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     TileOverlay mTileOverlay;
     //TODO: adding heatmap
     private void addHeatMap() {
-        List<LatLng> list = null;
+     readItems();
 
-        // Get the data: latitude/longitude positions of police stations.
-        try {
-            list = readItems(R.raw.police_stations);
-        } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
-        }
 
-        // Create a heat map tile provider, passing it the latlngs of the police stations
-        mHeatMapTileProvider = new HeatmapTileProvider.Builder()
-                .data(list)
-                .build();
-        // Add a tile overlay to the map, using the heat map tile provider.
-        mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
     }
 
-    private ArrayList<LatLng> readItems(int resource) throws JSONException {
-        ArrayList<LatLng> list = new ArrayList<LatLng>();
-        InputStream inputStream = getResources().openRawResource(resource);
-        String json = new Scanner(inputStream).useDelimiter("\\A").next();
-        JSONArray array = new JSONArray(json);
+    private void readItems(){
+        ArrayList<LatLng> list = new ArrayList<>();
 
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject object = array.getJSONObject(i);
-            double lat = object.getDouble("lat");
-            double lng = object.getDouble("lng");
-            list.add(new LatLng(lat, lng));
-        }
+        db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for(DocumentSnapshot doc : queryDocumentSnapshots){
+                GeoPoint location = (GeoPoint) doc.get("Location");
+                list.add(new LatLng(location.getLatitude(),location.getLongitude()));
+            }
+            // Create a heat map tile provider, passing it the latlngs of the police stations
+            mHeatMapTileProvider = new HeatmapTileProvider.Builder()
+                    .data(list)
+                    .build();
 
-        return list;
+            // Add a tile overlay to the map, using the heat map tile provider.
+            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+        });
+
     }
 
     //TODO: different states

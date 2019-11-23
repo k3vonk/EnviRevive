@@ -40,11 +40,23 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -53,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Location mLastLocation;
     protected FusedLocationProviderClient mFusedLocationProviderClient;
     protected LocationRequest mLocationRequest;
-
+    protected ArrayList<LatLng> list;
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
 
     private Bitmap thumbnail;
@@ -186,6 +198,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 "gs://kgrjj-android-2019.appspot.com/images");
         image_upload = new Image_Upload(db,mStorageReference,user,getApplicationContext());
     }
+
+
 
     protected void takePhoto(boolean PI) {
 

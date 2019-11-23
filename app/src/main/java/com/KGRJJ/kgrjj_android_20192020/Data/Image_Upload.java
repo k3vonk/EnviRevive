@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -63,7 +65,7 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
         HashMap<String,Object> map = new HashMap<>();
-        map.put("Location",location);
+        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         map.put("URL",url+imagename);
         mDatabase.collection("Images").add(map);
     }
