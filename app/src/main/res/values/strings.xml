@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">KGRJJ-Android-2019_2020</string>
+    <string name="app_name">EnviRevive</string>
     <string name="title_activity_registration">RegistrationActivity</string>
-    <string name="AppTitle">KGRJJ</string>
+    <string name="AppTitle">EnviRevive</string>
     <string name="register">Register</string>
     <string name="sign_in">Sign In</string>
     <string name="password_not_valid">\n

@@ -22,13 +22,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gradient_background3" />
+        app:srcCompat="@mipmap/backgroun_gradient" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.2"
+        android:alpha="0.1"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/bgImage"
@@ -59,11 +59,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
+        android:textColorHint="@color/bpTransparent_black"
         android:textColor="#3949AB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,13 +75,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Password "
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textColorHint="@color/bpTransparent_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
 
@@ -92,6 +94,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/gradient_background2"
         android:text="Register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -104,10 +107,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
+        android:textColorHint="@color/bpTransparent_black"
         android:textAlignment="center"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
@@ -160,6 +164,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
+        android:textColorHint="@color/bpTransparent_black"
         app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
 
     <TextView
@@ -173,7 +178,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen" />
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen"
+        android:textColorHint="@color/bpTransparent_black"/>
 
     <EditText
         android:id="@+id/Name"
@@ -181,12 +187,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Full Name"
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="@color/bpTransparent_black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoRequired" />
@@ -196,11 +204,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:gravity="center_vertical"
         android:hint="City / Country"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColorHint="@color/bpTransparent_black"
         android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="@+id/city"
         app:layout_constraintStart_toStartOf="@+id/city"
@@ -211,9 +220,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="City"
+        android:textColorHint="@color/bpTransparent_black"
         android:inputType="textPersonName"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"

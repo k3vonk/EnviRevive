@@ -34,7 +34,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     //These variables will be assigned the text input areas of this screen.
     private TextView email;
     private TextView password;
-    private CardView mLoginBTN;
+    private Button mLoginBTN;
     private LottieAnimationView animationView;
     FirebaseUser user;
 
@@ -157,7 +157,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
         if(i == R.id.loginBTN){
-            mLoginBTN.setCardBackgroundColor(getColor(R.color.backgroundColor));
+
             mLoginBTN.setVisibility(View.INVISIBLE);
             signIn(email.getText().toString(), password.getText().toString());
         }
