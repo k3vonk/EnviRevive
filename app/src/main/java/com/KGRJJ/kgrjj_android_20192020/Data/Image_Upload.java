@@ -11,8 +11,10 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.protobuf.DescriptorProtos;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -65,7 +67,8 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
         HashMap<String,Object> map = new HashMap<>();
-        map.put("Location",location);
+        GeoPoint loc = new GeoPoint(location.getLatitude(),location.getLongitude());
+        map.put("Location",loc);
         map.put("URL",url+imagename);
         mDatabase.collection("Images").add(map);
     }
