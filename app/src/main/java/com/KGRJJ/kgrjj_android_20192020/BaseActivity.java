@@ -26,10 +26,6 @@ import androidx.core.content.ContextCompat;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.cleveroad.sy.cyclemenuwidget.CycleMenuWidget;
 import com.cleveroad.sy.cyclemenuwidget.OnMenuItemClickListener;
 import com.cleveroad.sy.cyclemenuwidget.OnStateChangedListener;
@@ -41,10 +37,16 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.type.LatLng;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -53,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected Location mLastLocation;
     protected FusedLocationProviderClient mFusedLocationProviderClient;
     protected LocationRequest mLocationRequest;
-
+    protected ArrayList<LatLng> list;
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     protected static final int RESULT_OK = -1;
 
@@ -66,13 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static StorageReference mStorageReference;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
-
-    public static String fullname;
-    public static String Rank;
-    public static String Country;
-    public static String Points;
-    public  static Bitmap profileImage;
-
     private static boolean isInProfile;
     private static boolean isInReg;
     protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
@@ -211,100 +206,41 @@ public abstract class BaseActivity extends AppCompatActivity {
         imageUri = getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("Profile",PI);
+        //bundle.putString(MediaStore.EXTRA_OUTPUT, imageUri.toString());
+        intent.putExtras(bundle);
+
         startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
+                try {
+                    thumbnail = MediaStore.Images.Media.getBitmap(
+                            getContentResolver(), imageUri
 
-                thumbnail  = (Bitmap) data.getExtras().get("data");
-
-
-                    if (isInProfile) {
-                        image_upload.UplaodProfileImage(thumbnail,user);
-                    } else if (isInReg) {
-                        Log.i("TESTING", "image taken from reg");
-                        ImageView m = findViewById(R.id.takePhoto);
-
-                        Glide
-                                .with(getApplicationContext())
-                                .load(thumbnail)
-                                        //.apply(RequestOptions.overrideOf(400,400))
-                                .apply(RequestOptions.centerCropTransform())
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(m);
-                    } else {
-                        image_upload.UploadImage(thumbnail, mLastLocation,user);
+                    );
+                    if(getIntent().getExtras().getBoolean("Profile")){
+                        image_upload.UplaodProfileImage(thumbnail);
+                    }else{
+                        image_upload.UploadImage(thumbnail,mLastLocation);
                     }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+//                Bundle extras = data.getExtras();
+//                Bitmap bmp = (Bitmap) extras.get("data");
+//
             }
         }
     }
-    public void getUserData(FirebaseUser user) {
-        Log.i("TESTING","cloud function called");
-
-        db.collection("user").document(user.getUid()).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        fullname = (String.format("%s %s",
-                                documentSnapshot.getString("FName"),
-                                documentSnapshot.getString("LName")));
-                        Log.i("TESTING",fullname);
-                        Rank = (documentSnapshot.getString("Rank"));
-                        Log.i("TESTING",Rank);
-                        Country = (String.format("%s,%s",
-                                documentSnapshot.getString("City"),
-                                documentSnapshot.getString("Country")));
-                        Log.i("TESTING",Country);
-                        Points =  String.valueOf(documentSnapshot.getDouble("Points").intValue());
-                        Log.i("TESTING",Points);
-
-                            StorageReference profileRef = mStorageReference
-                                    .child(user.getUid() + "/profileImage.png");
-
-                            profileRef.getDownloadUrl()
-                                    .addOnSuccessListener(uri-> {
-                                                Glide.with(getApplicationContext())
-                                                        .asBitmap()
-                                                        .load(uri)
-                                                        .into(new CustomTarget<Bitmap>(){
-
-                                                            @Override
-                                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                                                profileImage = resource;
-                                                            }
-
-                                                            @Override
-                                                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                                            }
-                                                        });
-                                            });
-                            //Glide
-
-
-
-
-
-
-                        //Log.i("TESTING",profileImage);
-
-                    }
-                });
-        Toast.makeText(getApplicationContext(),"Pulled values from cloud",Toast.LENGTH_LONG).show();
-    }
-
-    protected FirebaseAuth.AuthStateListener mAuthListener = firebaseAuth -> {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        assert user != null;
-        Toast.makeText(getApplicationContext(), "Signed in user => " + user.getUid(), Toast.LENGTH_SHORT)
-                .show();
-    };
-
-
-
-
     /**
      * Check for application permission to access location
      */

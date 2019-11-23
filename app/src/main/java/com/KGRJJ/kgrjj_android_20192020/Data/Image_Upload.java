@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,8 +34,7 @@ public class Image_Upload {
         this.user = user;
         this.context = context;
     }
-    public void UplaodProfileImage(Bitmap bmp, FirebaseUser user){
-        this.user=user;
+    public void UplaodProfileImage(Bitmap bmp){
         StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -47,8 +47,8 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
-            this.user = user;
+    public void UploadImage(Bitmap bmp,Location location){
+
 
 
 
@@ -67,9 +67,7 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
         HashMap<String,Object> map = new HashMap<>();
-        GeoPoint loc = new GeoPoint(location.getLatitude(),location.getLongitude());
-        map.put("Location",loc);
-
+        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         map.put("URL",url+imagename);
         mDatabase.collection("Images").add(map);
     }

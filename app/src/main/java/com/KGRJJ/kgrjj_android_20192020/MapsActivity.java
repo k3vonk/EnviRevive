@@ -145,7 +145,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                     //If permission location is granted...
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        // mMap.setMyLocationEnabled(true);
+                       // mMap.setMyLocationEnabled(true);
                     } else { //Permission denied...
                         Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                     }
@@ -198,17 +198,16 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private void addHeatMap() {
         readItems();
 
-
     }
 
-    private void readItems(){
+    private void readItems() {
         ArrayList<LatLng> list = new ArrayList<>();
 
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
-            for(DocumentSnapshot doc : queryDocumentSnapshots){
-                Log.i("TESTING",doc.get("Location").toString());
+            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                Log.i("TESTING", doc.get("Location").toString());
                 GeoPoint location = (GeoPoint) doc.get("Location");
-                list.add(new LatLng(location.getLatitude(),location.getLongitude()));
+                list.add(new LatLng(location.getLatitude(), location.getLongitude()));
             }
             // Create a heat map tile provider, passing it the latlngs of the police stations
             mHeatMapTileProvider = new HeatmapTileProvider.Builder()
