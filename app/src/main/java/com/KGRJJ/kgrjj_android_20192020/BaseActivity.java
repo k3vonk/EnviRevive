@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.annotation.GlideModule;
@@ -147,7 +148,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentProfile);
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Intent myIntentEventsList = new Intent(getApplicationContext(), EventDisplayActivity.class);
+                                startActivity(myIntentEventsList);
                                 break;
                             case 3:
                                 Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();

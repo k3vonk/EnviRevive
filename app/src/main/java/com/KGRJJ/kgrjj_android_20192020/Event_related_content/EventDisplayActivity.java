@@ -3,23 +3,36 @@ package com.KGRJJ.kgrjj_android_20192020.Event_related_content;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.ramotion.cardslider.CardSliderLayoutManager;
+import com.ramotion.cardslider.CardSnapHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class EventDisplay extends BaseActivity {
+public class EventDisplayActivity extends BaseActivity {
 
+    private HashSet<EventDataObject> events;
+    private RecyclerView recyclerView;
 
-    private HashSet<EventDataObject> events = new HashSet<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_display);
+
+        events = new HashSet<>();
+
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         getEvents();
     }
 

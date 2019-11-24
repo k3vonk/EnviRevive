@@ -14,6 +14,9 @@ public class EventDataObject {
     private Date date;
     private Time time;
     private Location location;
+
+
+
     private ArrayList<String> imageURLS;
 
 
@@ -27,9 +30,7 @@ public class EventDataObject {
 
     }
 
-    public ArrayList<String> getImageURLS(){
-        return imageURLS;
-    }
+
     public String getTitle() {
         return Title;
     }
@@ -48,6 +49,10 @@ public class EventDataObject {
 
     public Location getLocation() {
         return location;
+    }
+
+    public ArrayList<String> getImageURLS(){
+        return imageURLS;
     }
 
 
