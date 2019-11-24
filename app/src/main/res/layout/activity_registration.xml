@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/backgroun_gradient" />
+        app:srcCompat="@drawable/gradient_bg" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@mipmap/reggg" />
+        app:srcCompat="@mipmap/main_image" />
 
     <TextView
         android:id="@+id/RegisterTitle"
@@ -56,7 +56,7 @@
 
     <EditText
         android:id="@+id/email_inputLoginScreen"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_background"
@@ -64,15 +64,15 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
-        android:textColorHint="@color/bpTransparent_black"
         android:textColor="#3949AB"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_input" />
 
     <EditText
         android:id="@+id/password_Input"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_background"
@@ -81,21 +81,22 @@
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textColorHint="@color/bpTransparent_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
 
     <Button
         android:id="@+id/registerBtn_regScreen"
         style="@android:style/Widget.DeviceDefault.Light.Button"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/gradient_background2"
         android:text="Register"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,16 +105,16 @@
     <EditText
         android:id="@+id/username_input"
         style="@android:style/Widget.Material.Light.AutoCompleteTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:textColorHint="@color/bpTransparent_black"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name" />
@@ -164,7 +165,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        android:textColorHint="@color/bpTransparent_black"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
 
     <TextView
@@ -179,12 +180,12 @@
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen"
-        android:textColorHint="@color/bpTransparent_black"/>
+        android:textColorHint="#000000"/>
 
     <EditText
         android:id="@+id/Name"
         style="@android:style/Widget.EditText"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
         android:background="@drawable/gradient_background"
@@ -193,15 +194,16 @@
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textColor="#000000"
-        android:textColorHint="@color/bpTransparent_black"
+        android:textColorHint="#000000"
 
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoRequired" />
 
     <TextView
         android:id="@+id/country_picker"
-        android:layout_width="0dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_background"
@@ -209,23 +211,23 @@
         android:hint="City / Country"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
-        android:textColorHint="@color/bpTransparent_black"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="@+id/city"
         app:layout_constraintStart_toStartOf="@+id/city"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
     <EditText
         android:id="@+id/city"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="City"
-        android:textColorHint="@color/bpTransparent_black"
         android:inputType="textPersonName"
         android:textAlignment="center"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_Input" />
@@ -242,8 +244,8 @@
 
     <ImageView
         android:id="@+id/takePhoto"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -254,7 +256,7 @@
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_reg"
 
-        android:layout_width="262dp"
+        android:layout_width="350dp"
         android:layout_height="71dp"
         android:layout_marginBottom="124dp"
         app:layout_constraintBottom_toBottomOf="parent"

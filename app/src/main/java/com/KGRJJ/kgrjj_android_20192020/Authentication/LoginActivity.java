@@ -118,6 +118,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         startService(service);
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
+                        finish();
                        // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
 
 

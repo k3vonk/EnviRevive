@@ -1,6 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -24,8 +25,27 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -41,14 +61,17 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     //Static variables
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
     public static final String MAP_TAG = "ENVIVE_MAP_TAG";
-
+    @Override
+    public void onBackPressed() {
+        this.recreate();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_maps);
+        Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
 
-
-//Instantiation
+        //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -65,6 +88,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     protected int getLayoutResourceID() {
         return R.layout.activity_maps;
     }
+
 
 
     /**
@@ -105,6 +129,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             checkLocationPermissions();
         }
 
+        //TODO: heatmap update
+        addHeatMap();
     }
 
 
@@ -119,7 +145,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                     //If permission location is granted...
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                       // mMap.setMyLocationEnabled(true);
+                        // mMap.setMyLocationEnabled(true);
                     } else { //Permission denied...
                         Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                     }
@@ -150,10 +176,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 //Place current location marker
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                // TODO: Change this marker to user profileImage
+                // TODO: Change this marker to user profile
                 MarkerOptions markerOptions = new MarkerOptions();
-                
-                //markerOptions.icon(BitmapDescriptorFactory.fromBitmap(profileImage));
                 markerOptions.position(latLng);
                 markerOptions.title("Current Position");
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
@@ -168,6 +192,35 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         }
     };
 
+    HeatmapTileProvider mHeatMapTileProvider;
+    TileOverlay mTileOverlay;
+    //TODO: adding heatmap
+    private void addHeatMap() {
+        readItems();
+
+
+    }
+
+    private void readItems(){
+        ArrayList<LatLng> list = new ArrayList<>();
+
+        db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for(DocumentSnapshot doc : queryDocumentSnapshots){
+                Log.i("TESTING",doc.get("Location").toString());
+                GeoPoint location = (GeoPoint) doc.get("Location");
+                list.add(new LatLng(location.getLatitude(),location.getLongitude()));
+            }
+            // Create a heat map tile provider, passing it the latlngs of the police stations
+            mHeatMapTileProvider = new HeatmapTileProvider.Builder()
+                    .data(list)
+                    .build();
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+        });
+
+    }
+
     //TODO: different states
     @Override
     public void onPause(){
@@ -177,6 +230,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
+
+
+
 
 
 

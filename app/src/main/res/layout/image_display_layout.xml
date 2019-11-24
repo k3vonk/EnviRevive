@@ -13,7 +13,7 @@
         android:layout_marginTop="200dp"
         android:layout_marginBottom="200dp"
         app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/bpTransparent_black">
+        app:cardBackgroundColor="#000000">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -69,6 +69,7 @@ public class Image_Upload {
         HashMap<String,Object> map = new HashMap<>();
         GeoPoint loc = new GeoPoint(location.getLatitude(),location.getLongitude());
         map.put("Location",loc);
+
         map.put("URL",url+imagename);
         mDatabase.collection("Images").add(map);
     }

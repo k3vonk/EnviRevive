@@ -10,6 +10,7 @@
         android:id="@+id/imageView6"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:alpha="1"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,7 +22,7 @@
         android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.7"
+        android:alpha="0.6"
         android:contentDescription="image of a bridge with green gradient"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,7 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/backgroun_gradient" />
+        app:srcCompat="@drawable/gradient_bg" />
 
     <TextView
         android:id="@+id/Log_in_title"

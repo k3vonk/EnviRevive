@@ -6,8 +6,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -17,7 +15,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,7 +27,6 @@ import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -42,14 +38,12 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
 import java.util.List;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -67,8 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected static Uri imageUri;
 
-    protected static Image_Upload image_upload;
-    protected static FirebaseFirestore db;
+    protected  Image_Upload image_upload;
+    protected  FirebaseFirestore db;
     protected static StorageReference mStorageReference;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
@@ -206,18 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 "gs://kgrjj-android-2019.appspot.com/images");
         image_upload = new Image_Upload(db,mStorageReference,user,getApplicationContext());
     }
-//    protected void getProfileImage(FirebaseUser user) {
-//        StorageReference profileRef = mStorageReference
-//                .child(user.getUid() + "/profileImage.jpg");
-//        profileRef.getDownloadUrl().addOnSuccessListener(uri ->
-//        {
-//            try {
-//                profileImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
+
     protected void takePhoto(boolean PI,boolean Reg) {
 
         isInProfile = PI;
@@ -235,14 +218,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
+
                 thumbnail  = (Bitmap) data.getExtras().get("data");
 
-                Log.i("TESTING",""+thumbnail.getGenerationId());
+
                     if (isInProfile) {
                         image_upload.UplaodProfileImage(thumbnail,user);
                     } else if (isInReg) {
                         Log.i("TESTING", "image taken from reg");
                         ImageView m = findViewById(R.id.takePhoto);
+
                         Glide
                                 .with(getApplicationContext())
                                 .load(thumbnail)
