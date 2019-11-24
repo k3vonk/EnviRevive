@@ -61,11 +61,15 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     //Static variables
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
     public static final String MAP_TAG = "ENVIVE_MAP_TAG";
-
+    @Override
+    public void onBackPressed() {
+        this.recreate();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_maps);
+        Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
 
 
         //Instantiation
@@ -193,18 +197,20 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     TileOverlay mTileOverlay;
     //TODO: adding heatmap
     private void addHeatMap() {
-     readItems();
 
+        readItems();
 
     }
 
-    private void readItems(){
+    private void readItems() {
         ArrayList<LatLng> list = new ArrayList<>();
 
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
-            for(DocumentSnapshot doc : queryDocumentSnapshots){
+            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                Log.i("TESTING", doc.get("Location").toString());
                 GeoPoint location = (GeoPoint) doc.get("Location");
-                list.add(new LatLng(location.getLatitude(),location.getLongitude()));
+                list.add(new LatLng(location.getLatitude(), location.getLongitude()));
+
             }
             // Create a heat map tile provider, passing it the latlngs of the police stations
             mHeatMapTileProvider = new HeatmapTileProvider.Builder()

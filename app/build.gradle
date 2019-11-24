@@ -41,15 +41,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.2.1'
+    implementation 'com.google.firebase:firebase-firestore:21.3.0'
 
     //Wheel Dependencies
     implementation 'github.hellocsl:CursorWheelLayout:1.1.0'
     implementation 'com.github.Hitomis:CircleMenu:v1.0.0'
     implementation 'com.cleveroad:cycle-menu:1.0.2'
     //Wheel Dependencies
-
-
+    implementation 'com.code-troopers.betterpickers:library:3.1.0'
+    implementation 'com.airbnb.android:lottie:3.1.0'
     implementation 'com.github.mukeshsolanki:country-picker-android:2.0.1'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
@@ -57,4 +57,14 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+    implementation 'com.firebaseui:firebase-ui-storage:3.2.1'
+    implementation 'com.ramotion.cardslider:card-slider:0.3.1'
+
+    //time and date
+    implementation 'com.code-troopers.betterpickers:library:3.1.0'
+
+    //animations
+    implementation 'com.airbnb.android:lottie:3.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
