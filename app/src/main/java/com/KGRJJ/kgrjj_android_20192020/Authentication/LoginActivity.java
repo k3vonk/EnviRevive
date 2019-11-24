@@ -73,11 +73,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    checkRequiredFields();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                checkRequiredFields();
             }
 
             @Override
@@ -93,11 +89,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    checkRequiredFields();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                checkRequiredFields();
             }
 
             @Override
@@ -146,12 +138,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
     }
-    private void checkRequiredFields() throws InterruptedException {
+    private void checkRequiredFields() {
         if(email.getText().toString().isEmpty() ||
                 password.getText().toString().isEmpty()  ){
             mLoginBTN.setEnabled(false);
-            TimeUnit.SECONDS.sleep(5);
-            mLoginBTN.setEnabled(true);
+//            TimeUnit.SECONDS.sleep(5);
+//            mLoginBTN.setEnabled(true);
 
         }
         else{

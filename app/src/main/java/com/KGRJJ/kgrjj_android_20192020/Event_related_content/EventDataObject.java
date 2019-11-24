@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
 
@@ -13,14 +14,14 @@ public class EventDataObject {
     private String description;
     private Date date;
     private Time time;
-    private Location location;
+    private GeoPoint location;
 
 
 
     private ArrayList<String> imageURLS;
 
 
-    public EventDataObject(String title, String description, Date date, Time time, Location location, ArrayList<String> imageURLS) {
+    public EventDataObject(String title, String description, Date date, Time time, GeoPoint location, ArrayList<String> imageURLS) {
         Title = title;
         this.description = description;
         this.date = date;
@@ -47,7 +48,7 @@ public class EventDataObject {
         return time;
     }
 
-    public Location getLocation() {
+    public GeoPoint getLocation() {
         return location;
     }
 

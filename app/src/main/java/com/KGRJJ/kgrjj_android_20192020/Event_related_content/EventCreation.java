@@ -6,6 +6,7 @@ import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
 
 
@@ -27,7 +28,7 @@ public class EventCreation {
         map.put("Description",description);
         map.put("Date",date);
         map.put("Time",time);
-        map.put("Location",location);
+        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         ArrayList<String> myArray = new ArrayList<>();
         ArrayList<String> imageArray = new ArrayList<>();
         myArray.add(user.getUid());

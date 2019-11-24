@@ -12,6 +12,7 @@ public class Date {
         this.day = day;
     }
 
+    private String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
 
 
     public int getMonth() {
@@ -36,5 +37,8 @@ public class Date {
     public void setYear(int year) {
         this.year = year;
     }
-
+    @Override
+    public String toString(){
+        return day +"-"+months[month-1]+"-"+year;
+    }
 }
