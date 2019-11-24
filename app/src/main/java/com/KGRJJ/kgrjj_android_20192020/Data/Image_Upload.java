@@ -25,16 +25,14 @@ import java.util.Random;
 public class Image_Upload {
     private FirebaseFirestore mDatabase;
     private StorageReference mStorageRef;
-    private FirebaseUser user;
     private Context context;
 
-    public Image_Upload(FirebaseFirestore db, StorageReference StorageRef, FirebaseUser user, Context context){
+    public Image_Upload(FirebaseFirestore db, StorageReference StorageRef,Context context){
         this.mDatabase=db;
         this.mStorageRef=StorageRef;
-        this.user = user;
         this.context = context;
     }
-    public void UplaodProfileImage(Bitmap bmp){
+    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user){
         StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -47,7 +45,7 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp,Location location){
+    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
 
 
