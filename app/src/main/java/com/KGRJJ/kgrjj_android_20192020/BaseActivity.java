@@ -152,13 +152,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentEventsList);
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
                                 takePhoto(false,false);
                                 break;
                             case 4:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
                                 startActivity(myIntentEventCreate);
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 5:
                                 mAuth.signOut();
@@ -173,20 +171,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                     public void onMenuItemLongClick(View view, int itemPosition) {
                         switch (itemPosition) {
                             case 0:
-                                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Go to the Map", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "Profile button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "View your profile", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "See a List of Events", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Take a photo", Toast.LENGTH_SHORT).show();
 
                                 break;
                             case 4:
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Create an Event", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 
