@@ -71,6 +71,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         //setContentView(R.layout.activity_maps);
         Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
 
+
         //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
@@ -196,6 +197,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     TileOverlay mTileOverlay;
     //TODO: adding heatmap
     private void addHeatMap() {
+
         readItems();
 
     }
@@ -208,6 +210,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 Log.i("TESTING", doc.get("Location").toString());
                 GeoPoint location = (GeoPoint) doc.get("Location");
                 list.add(new LatLng(location.getLatitude(), location.getLongitude()));
+
             }
             // Create a heat map tile provider, passing it the latlngs of the police stations
             mHeatMapTileProvider = new HeatmapTileProvider.Builder()

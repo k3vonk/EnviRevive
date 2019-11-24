@@ -48,7 +48,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.type.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -204,7 +210,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         image_upload = new Image_Upload(db,mStorageReference,getApplicationContext());
     }
 
+
     protected void takePhoto(boolean PI,boolean Reg) {
+
 
         isInProfile = PI;
         isInReg = Reg;
