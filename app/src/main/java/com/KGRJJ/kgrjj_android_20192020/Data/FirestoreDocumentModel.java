@@ -4,6 +4,10 @@ package com.KGRJJ.kgrjj_android_20192020.Data;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.StorageReference;
+import com.google.firestore.v1.Document;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,9 +28,9 @@ public class FirestoreDocumentModel {
 
         String Rank = "Fresh";
         int Points = 0;
-        List<String> EventsAttended = new ArrayList<>();
-        List<String> subscribedEvents = new ArrayList<>();
-        List<String> Accolades = new ArrayList<>();
+        List<DocumentReference> EventsAttended = new ArrayList<>();
+        List<DocumentReference> subscribedEvents = new ArrayList<>();
+        List<DocumentReference> Accolades = new ArrayList<>();
         UserData.put("FName",FName);
         UserData.put("LName",LName);
         UserData.put("username",Username);

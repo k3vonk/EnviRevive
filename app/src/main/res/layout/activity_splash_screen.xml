@@ -31,7 +31,7 @@
         app:srcCompat="@drawable/gradient_background3" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/anim_splash"
+        android:id="@+id/aim"
 
         android:layout_width="0dp"
         android:layout_height="0dp"

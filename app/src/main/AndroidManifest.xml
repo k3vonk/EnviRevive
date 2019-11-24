@@ -22,13 +22,14 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_envi_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LoadingScreen" /> <!-- android:theme="@style/AppTheme.NoActionBar" -->
+        <activity android:name=".LoadingScreen"></activity>
+        <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <activity android:name=".EventCreationDialog" />
-        <activity android:name=".Event_related_content.EventDisplayActivity" /> <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
+        <activity android:name=".Event_related_content.EventDisplay" /> <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
         <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.
@@ -48,30 +49,25 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name=".BaseActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name=".Authentication.LoginActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name=".UserSpecificActivities.UserProfileActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            />
+        <activity android:name=".BaseActivity"
+            />
+        <activity android:name=".Authentication.LoginActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".UserSpecificActivities.UserProfileActivity" />
         <activity
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name="Adapter.WheelSelectionAdapter"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            ></activity>
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            />
+        <activity android:name="Adapter.WheelSelectionAdapter"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
 
