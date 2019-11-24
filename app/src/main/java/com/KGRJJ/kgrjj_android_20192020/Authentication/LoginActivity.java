@@ -22,6 +22,8 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.concurrent.TimeUnit;
+
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
@@ -137,10 +139,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
     }
-    private void checkRequiredFields(){
+    private void checkRequiredFields() {
         if(email.getText().toString().isEmpty() ||
                 password.getText().toString().isEmpty()  ){
             mLoginBTN.setEnabled(false);
+//            TimeUnit.SECONDS.sleep(5);
+//            mLoginBTN.setEnabled(true);
 
         }
         else{

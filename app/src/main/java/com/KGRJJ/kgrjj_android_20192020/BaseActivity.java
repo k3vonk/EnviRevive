@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.cleveroad.sy.cyclemenuwidget.CycleMenuWidget;
 import com.cleveroad.sy.cyclemenuwidget.OnMenuItemClickListener;
@@ -136,16 +137,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentProfile);
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Intent myIntentEventsList = new Intent(getApplicationContext(), EventDisplayActivity.class);
+                                startActivity(myIntentEventsList);
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
                                 takePhoto(false,false);
                                 break;
                             case 4:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
                                 startActivity(myIntentEventCreate);
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
                                 break;
                             case 5:
                                 mAuth.signOut();
@@ -160,20 +160,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                     public void onMenuItemLongClick(View view, int itemPosition) {
                         switch (itemPosition) {
                             case 0:
-                                Toast.makeText(getApplicationContext(), "Home Button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Go to the Map", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "Profile button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "View your profile", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
-                                Toast.makeText(getApplicationContext(), "Search button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "See a List of Events", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Plus button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Take a photo", Toast.LENGTH_SHORT).show();
 
                                 break;
                             case 4:
-                                Toast.makeText(getApplicationContext(), "Profile2 button Clicked", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Create an Event", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 

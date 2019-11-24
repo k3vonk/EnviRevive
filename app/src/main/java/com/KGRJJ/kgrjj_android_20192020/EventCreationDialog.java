@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.Timestamp;
 
@@ -41,6 +42,7 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
     private Location mLocation;
     private boolean datePicked;
     private boolean timePicked;
+    public static Marker currentMaker;
 
 
 
@@ -105,8 +107,9 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
     }
 
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         //Small widgets for the map
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -120,7 +123,13 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
             markerOptions.position(latLng);
             markerOptions.title("Current Position");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-            mMap.addMarker(markerOptions);
+            if(currentMaker !=null){
+                currentMaker.setPosition(latLng);
+                currentMaker = mMap.addMarker(markerOptions);
+            }else{
+                currentMaker = mMap.addMarker(markerOptions);
+            }
+
             mLocation = new Location("");
             mLocation.setLatitude(latLng.latitude);
             mLocation.setLongitude(latLng.longitude);
