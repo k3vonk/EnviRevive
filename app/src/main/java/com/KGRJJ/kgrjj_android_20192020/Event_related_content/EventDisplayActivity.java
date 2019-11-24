@@ -16,24 +16,29 @@ import com.ramotion.cardslider.CardSnapHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class EventDisplayActivity extends BaseActivity {
 
-    private HashSet<EventDataObject> events;
+    private List<EventDataObject> events;
     private RecyclerView recyclerView;
+    private EventAdapter eventAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_display);
 
-        events = new HashSet<>();
+        events = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         getEvents();
+
+        eventAdapter = new EventAdapter(this, events);
+        recyclerView.setAdapter(eventAdapter);
     }
 
     @Override
