@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
     implementation 'com.firebaseui:firebase-ui-storage:3.2.1'
     implementation 'com.ramotion.cardslider:card-slider:0.3.1'
-
+    //
     //time and date
     implementation 'com.code-troopers.betterpickers:library:3.1.0'
 
