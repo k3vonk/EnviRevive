@@ -3,6 +3,7 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
@@ -68,10 +71,14 @@ import com.google.type.LatLng;
 
 import java.io.ByteArrayOutputStream;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -112,14 +119,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final int MAX_LABEL_RESULTS = 10;
-    private static final int MAX_DIMENSION = 1200;
+
 
     private static final String TAG = BaseActivity.class.getSimpleName();
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private TextView mImageDetails;
-    private ImageView mMainImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,7 +241,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 }
         );
-        mMainImage = findViewById(R.id.imageView);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -257,8 +262,31 @@ public abstract class BaseActivity extends AppCompatActivity {
         imageUri = getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+
+
     }
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
@@ -277,6 +305,25 @@ public abstract class BaseActivity extends AppCompatActivity {
                             .into(m);
                 } else {
                     UploadImage(thumbnail, mLastLocation,user);
+
+                    //Load bitmap and garbage collection
+                    try {
+                        //Write file
+                        String filename = "bitmap.png";
+                        FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+                        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                        //Cleanup
+                        stream.close();
+                        thumbnail.recycle();
+
+                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                        imageAnalysisScreen.putExtra("image", filename);
+                        startActivity(imageAnalysisScreen);
+                    }catch (Exception e){
+                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                    }
+
                 }
             }
         }
@@ -295,6 +342,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
+
+    String currFilePath;
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
         String imagename = new Random().nextInt(10000) + 0 + "_"+location;
@@ -314,11 +363,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         HashMap<String,Object> map = new HashMap<>();
         map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         map.put("URL",url+imagename);
+        currFilePath = url + imagename; //File path to firebase directory.
         db.collection("Images").add(map);
 
         //Call CloudVision API
         callCloudVision(thumbnail);
-        mMainImage.setImageBitmap(thumbnail);
+       // mMainImage.setImageBitmap(thumbnail);
     }
     //endregion
     //region Location Permission Content
