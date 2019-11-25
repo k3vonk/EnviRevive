@@ -85,7 +85,7 @@
                 android:textAlignment="center" />
 
             <com.google.android.gms.maps.MapView
-                android:id="@+id/eventMap"
+                android:id="@+id/imageMap"
                 android:layout_width="300dp"
                 android:layout_height="300dp"
                 android:layout_below="@+id/textViewTime"

@@ -32,7 +32,10 @@
         <activity android:name=".Event_related_content.EventAdapter" />
         <activity android:name=".Event_related_content.EventDataObject" />
         <activity android:name=".Event_related_content.EventCreation" />
-        <activity android:name=".Event_related_content.EventDisplayActivity" /> <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
+        <activity android:name=".Event_related_content.EventDisplayActivity" />
+        <activity android:name=".Image_related_content.ImageDisplayActivity" />
+
+        <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
         <!-- tools:ignore="GoogleAppIndexingWarning"> -->
         <!--
             The API key for Google Maps-based APIs is defined as a string resource.
