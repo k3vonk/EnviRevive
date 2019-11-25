@@ -1,8 +1,13 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -10,6 +15,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +24,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
+import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.KGRJJ.kgrjj_android_20192020.utilities.FirebaseStorageHandler;
+import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mukesh.countrypicker.CountryPicker;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class RegistrationActivity extends BaseActivity implements View.OnClickListener {
@@ -45,13 +55,18 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private EditText mName;
     private EditText mCity;
     private ProgressBar mProgress;
+    private LottieAnimationView mLottie;
+    private static Bitmap image;
     // [START declare_auth]
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser user;
     private boolean countryPicked;
+
+    private static ImageView mTakePhoto;
+
+
     // [END declare_auth]
-    private View v;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,16 +76,32 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         // TextViews need to be stored as their content will be used later
         mName = findViewById(R.id.Name);
         mCity = findViewById(R.id.city);
+        mTakePhoto = findViewById(R.id.takePhoto);
         mEmailField = findViewById(R.id.email_inputLoginScreen);
         mPasswordField = findViewById(R.id.password_Input);
         mUsername = findViewById(R.id.username_input);
         mRegButton = findViewById(R.id.registerBtn_regScreen);
         mCountry = findViewById(R.id.country_picker);
         mInfoReq = findViewById(R.id.infoRequired);
-        v = findViewById(R.id.itemCycleMenuWidget);
-        v.setVisibility(View.INVISIBLE);
-//        mProgress = findViewById(R.id.myProgress);
-//        mProgress.setVisibility(View.INVISIBLE);
+        mLottie = findViewById(R.id.animation_reg);
+        mLottie.setVisibility(View.INVISIBLE);
+
+
+
+        mTakePhoto.setOnClickListener(view-> {
+            takePhoto(false, true);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        });
+
+
+
+
 
 
         //Buttons don't need to be stored as they are jus just for listeners
@@ -188,7 +219,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
 
 
-
     /*
         Create a user method. We take in two strings for email and password.
         These are sent to a method defined in InputHandler which ensure the strings follow the
@@ -213,8 +243,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                                 Log.d(TAG, "createUserWithEmail:success");
 //                                FirebaseUser currentUser = mAuth.getCurrentUser();
                                 user = task.getResult().getUser();
+                                Log.i("TESTING", "uSER"+user.getUid());
                                 mAuth.updateCurrentUser(user);
                                 addUserData(user);
+                                getUserData(user);
 
 
                             } else {
@@ -224,6 +256,9 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
+
+
+
             }else{
                 Toast.makeText(getBaseContext(),                    "   Password must contain the following:    \n" +
                         "   atleast 1 digit\n"+
@@ -246,17 +281,19 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         This method is a standard method that simply connects to our firebase - finds the collection
         named "users" and adds a username to the specified user. Our users are stored with specific
         User IDS - this id from firebase auth is then used as a document ID in our fire Store
-        Each user has a username which is stored in the fire store along with profile image and
+        Each user has a username which is stored in the fire store along with profileImage image and
         other relevant data.
      */
     private void addUserData(FirebaseUser user){
 
 
-
+        String uri = "gs://kgrjj-android-2019.appspot.com/images";
 //        UserData.put("username",mUsername.getText().toString());
 
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) mTakePhoto.getDrawable();
+
         Map<String,Object> UserData = FDM.addDataToHashMap(mName.getText().toString(),mUsername.getText().toString(),
-                mCity.getText().toString(),mCountry.getText().toString());
+                mCity.getText().toString(),(uri+user.getUid()+"/profileImage.png"),mCountry.getText().toString());
 
         db.collection("user").document(user.getUid()).set(UserData)
                 .addOnSuccessListener(aVoid -> {
@@ -267,7 +304,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                     Log.d(TAG, "Error writing document", e);
                     Log.d("TESTING",": USER NOT CREATED");
                 });
-
+        image_upload.UplaodProfileImage(thumbnail,user);
     }
 
     private void checkRequiredFields(){
@@ -292,15 +329,25 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             mRegButton.setEnabled(false);
             mRegButton.setVisibility(View.INVISIBLE);
             if(createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString())) {
+                Log.i("TESTING","createaccount ocured");
 
-                mProgress.setVisibility(View.VISIBLE);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Intent myIntentProfile = new Intent(this, MapsActivity.class);
-                startActivity(myIntentProfile);
+                mRegButton.setVisibility(View.INVISIBLE);
+                mLottie.setVisibility(View.VISIBLE);
+                mLottie.playAnimation();
+
+                Thread loading = new Thread(){
+                    public void run(){
+                        try {
+                            Thread.sleep(6000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Intent myIntentProfile = new Intent(getApplicationContext(), MapsActivity.class);
+                        startActivity(myIntentProfile);
+                    }
+                };
+                loading.start();
+
             }else{
                 mRegButton.setEnabled(true);
                 mRegButton.setVisibility(View.VISIBLE);

@@ -8,42 +8,44 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.protobuf.DescriptorProtos;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Image_Upload {
     private FirebaseFirestore mDatabase;
     private StorageReference mStorageRef;
-    private FirebaseUser user;
     private Context context;
 
-    public Image_Upload(FirebaseFirestore db, StorageReference StorageRef, FirebaseUser user, Context context){
+    public Image_Upload(FirebaseFirestore db, StorageReference StorageRef,Context context){
         this.mDatabase=db;
         this.mStorageRef=StorageRef;
-        this.user = user;
         this.context = context;
     }
-    public void UplaodProfileImage(Bitmap bmp){
+    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user){
         StorageReference profileRef = mStorageRef.child(user.getUid() + "/profileImage.png");
-
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
+
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(context, "Uploaded image", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
-    public void UploadImage(Bitmap bmp,Location location){
+    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
 
 
@@ -63,7 +65,7 @@ public class Image_Upload {
             Toast.makeText(context, "Failed upload", Toast.LENGTH_SHORT).show();
         });
         HashMap<String,Object> map = new HashMap<>();
-        map.put("Location",location);
+        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         map.put("URL",url+imagename);
         mDatabase.collection("Images").add(map);
     }

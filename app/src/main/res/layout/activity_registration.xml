@@ -22,13 +22,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gradient_background3" />
+        app:srcCompat="@drawable/gradient_bg" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.2"
+        android:alpha="0.1"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/bgImage"
@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@mipmap/reggg" />
+        app:srcCompat="@mipmap/main_image" />
 
     <TextView
         android:id="@+id/RegisterTitle"
@@ -56,30 +56,32 @@
 
     <EditText
         android:id="@+id/email_inputLoginScreen"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textColor="#3949AB"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/username_input" />
 
     <EditText
         android:id="@+id/password_Input"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Password "
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
@@ -87,12 +89,14 @@
     <Button
         android:id="@+id/registerBtn_regScreen"
         style="@android:style/Widget.DeviceDefault.Light.Button"
-        android:layout_width="0dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/gradient_background2"
         android:text="Register"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -101,15 +105,16 @@
     <EditText
         android:id="@+id/username_input"
         style="@android:style/Widget.Material.Light.AutoCompleteTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name" />
@@ -160,6 +165,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
+        android:textColorHint="#000000"
         app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
 
     <TextView
@@ -173,67 +179,60 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen" />
+        app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen"
+        android:textColorHint="#000000"/>
 
     <EditText
         android:id="@+id/Name"
-        android:layout_width="wrap_content"
+        style="@android:style/Widget.EditText"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="124dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="Full Name"
         android:inputType="textPersonName"
         android:textAlignment="center"
         android:textColor="#000000"
+        android:textColorHint="#000000"
+
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoRequired" />
 
     <TextView
         android:id="@+id/country_picker"
-        android:layout_width="0dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:gravity="center_vertical"
         android:hint="City / Country"
         android:textAlignment="center"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="#000000"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="@+id/city"
         app:layout_constraintStart_toStartOf="@+id/city"
         app:layout_constraintTop_toBottomOf="@+id/city" />
 
     <EditText
         android:id="@+id/city"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#80FAF7F7"
+        android:background="@drawable/gradient_background"
         android:ems="10"
         android:hint="City"
         android:inputType="textPersonName"
         android:textAlignment="center"
+        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_Input" />
 
-<!--    <ProgressBar-->
-<!--        android:id="@+id/myProgress"-->
-<!--        style="?android:attr/progressBarStyle"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        android:layout_marginBottom="92dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.493"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/county_picker" />-->
-
     <include
-        android:visibility="gone"
         android:id="@+id/itemCycleMenuWidget"
         layout="@layout/activity_base"
         android:layout_width="0dp"
@@ -243,8 +242,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/takePhoto"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoRequired"
+        app:srcCompat="@drawable/ic_profile" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_reg"
 
+        android:layout_width="350dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="124dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:lottie_autoPlay="false"
+        app:lottie_fileName="loading_reg.json"
+        app:lottie_loop="true"
+        app:lottie_speed="1.25" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

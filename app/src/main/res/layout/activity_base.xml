@@ -16,14 +16,15 @@
 
         app:cm_autoMaxRadius="200dp"
         app:cm_autoMinRadius="10dp"
+        app:cm_background="#43A047"
         app:cm_corner="right_bottom"
-        app:cm_fixedRadius="200dp"
+        app:cm_corner_image_src="@drawable/ic_burger_menu"
+        app:cm_fixedRadius="130dp"
         app:cm_item_background_tint="#00C3FF"
-        app:cm_radius_scale_type="auto"
-        app:cm_ripple_color="#009933"
+        app:cm_radius_scale_type="fixed"
+        app:cm_ripple_color="#00C3FF"
         app:cm_scroll_type="endless"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:cm_corner_image_src="@drawable/ic_burger_menu"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

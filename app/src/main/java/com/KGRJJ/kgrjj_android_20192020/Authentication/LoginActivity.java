@@ -9,13 +9,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.cardview.widget.CardView;
+
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
+import com.KGRJJ.kgrjj_android_20192020.LoadingScreen;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.Services.UserProfileDataService;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
@@ -30,8 +37,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private TextView email;
     private TextView password;
     private Button mLoginBTN;
+    private LottieAnimationView animationView;
     FirebaseUser user;
-    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +50,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
          */
         findViewById(R.id.createAccount).setOnClickListener(this);
         // " create account is a clickable text to on the activity screen.
-        mLoginBTN = findViewById(R.id.LoginButton_loginScreen);
+        mLoginBTN = findViewById(R.id.loginBTN);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
-        v = findViewById(R.id.itemCycleMenuWidget);
-        v.setVisibility(View.INVISIBLE);
+        animationView = findViewById(R.id.aim);
+        animationView.setVisibility(View.INVISIBLE);
         //Essential for using firebase authentication
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -99,6 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
      */
     private void signIn(String email, String password){
+        animationView.setVisibility(View.VISIBLE);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -106,11 +114,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Log.d(TAG, "signInWithEmail:success");
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
+                        getUserData(user);
                         Intent service = new Intent(this, UserProfileDataService.class);
                         service.putExtra("ID",user.getUid());
                         startService(service);
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
+                        finish();
                        // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
 
 
@@ -120,16 +130,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Toast.makeText(LoginActivity.this, "Authentication failed: " +
                                         "username or password incorrect",
                                 Toast.LENGTH_LONG).show();
-
+                        mLoginBTN.setVisibility(View.VISIBLE);
+                        animationView.setVisibility(View.INVISIBLE);
                     }
 
                     // ...
                 });
+
+
     }
-    private void checkRequiredFields(){
-        if(email.getText().toString().isEmpty() &&
+    private void checkRequiredFields() {
+        if(email.getText().toString().isEmpty() ||
                 password.getText().toString().isEmpty()  ){
             mLoginBTN.setEnabled(false);
+//            TimeUnit.SECONDS.sleep(5);
+//            mLoginBTN.setEnabled(true);
+
         }
         else{
             mLoginBTN.setEnabled(true);
@@ -145,7 +161,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             startActivity(intent);
             //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
-        if(i == R.id.LoginButton_loginScreen){
+        if(i == R.id.loginBTN){
+
+            mLoginBTN.setVisibility(View.INVISIBLE);
             signIn(email.getText().toString(), password.getText().toString());
         }
     }

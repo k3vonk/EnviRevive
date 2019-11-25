@@ -23,7 +23,11 @@
         android:id="@+id/create_event"
         android:icon="@drawable/ic_event_black_24dp"
         tools:ignore="MenuTitle"/>
-
+    <item
+        android:id="@+id/signout"
+        android:icon="@drawable/ic_logout"
+        tools:ignore="MenuTitle"
+        />
 
 
 </menu>
