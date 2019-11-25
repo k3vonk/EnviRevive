@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
@@ -30,6 +32,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     //USER PROFILE PAGE VARIABLES
     private TextView profile_name, profile_rank, profile_city_country, profile_points;
     protected  ImageView mProfileImage;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
         user = mAuth.getCurrentUser();
         getUserData(user);
+        getRegisteredEvents(user);
         profile_name.setText(fullname);
         profile_rank.setText(Rank);
         profile_city_country.setText(Country);
@@ -66,8 +70,11 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 .apply(RequestOptions.circleCropTransform())
                 .into(mProfileImage);
         //findViewById(R.id.CreateEventBTN).setOnClickListener(this);
-        mProfileImage.setOnClickListener(this);
 
+        mProfileImage.setOnClickListener(this);
+        recyclerView = findViewById(R.id.profileRecycle);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
 
     }
 

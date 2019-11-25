@@ -24,12 +24,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventAdapter;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDataObject;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
+import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
+import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -58,6 +63,7 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
@@ -77,6 +83,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import io.opencensus.metrics.export.MetricProducerManager;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -88,9 +96,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ArrayList<LatLng> list;
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     protected static final int RESULT_OK = -1;
-
+    protected ArrayList<EventDataObject> user_registered_events;
     public static Bitmap thumbnail;
-
+    private RecyclerView recyclerView;
+    private EventAdapter eventAdapter;
     protected static Uri imageUri;
     public static String fullname;
     public static String Rank;
@@ -430,6 +439,33 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                 });
         Toast.makeText(getApplicationContext(),"Pulled values from cloud",Toast.LENGTH_LONG).show();
+    }
+    public void getRegisteredEvents(FirebaseUser user){
+        db.collection("user").document(user.getUid()).get()
+                .addOnSuccessListener(doc->{
+                    ArrayList<DocumentReference> eventsSubbed =
+                            (ArrayList<DocumentReference>) doc.get("subscribedEvents");
+                    for(int i = 0;i < eventsSubbed.size();i++ ){
+                        DocumentReference ref = eventsSubbed.get(i);
+                        ref.get().addOnSuccessListener(event ->{
+                            HashMap<String, Long> tempDat3 = (HashMap<String, Long>) event.get("Date");
+                            HashMap<String, Long> temptime = (HashMap<String, Long>) event.get("Time");
+                            Time time = new Time(Math.toIntExact(temptime.get("hour")),Math.toIntExact(temptime.get("minute")));
+                            Date date = new Date(Math.toIntExact(tempDat3.get("year")),Math.toIntExact(tempDat3.get("month")),Math.toIntExact(tempDat3.get("day")));
+                            EventDataObject EDO =
+                                    new EventDataObject(
+                                            (String) event.get("Title"),
+                                            (String) event.get("Description"),
+                                            date,
+                                            time,
+                                            (GeoPoint) event.get("Location"),
+                                            (ArrayList<String>) event.get("Images"));
+                            user_registered_events.add(EDO);
+                        });
+                    }
+                });
+        eventAdapter = new EventAdapter(getApplicationContext(), user_registered_events);
+        recyclerView.setAdapter(eventAdapter);
     }
 
 
