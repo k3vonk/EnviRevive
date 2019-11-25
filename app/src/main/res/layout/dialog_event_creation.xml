@@ -31,8 +31,10 @@
         android:src="@mipmap/grass_water"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/EVENT_TITLE"
@@ -66,37 +68,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EVENT_TITLE" />
 
-    <EditText
-        android:id="@+id/EVENT_DATE"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Date"
-        android:inputType="date"
-        android:padding="10dp"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EVENT_DESCRIPTION" />
-
-    <EditText
-        android:id="@+id/EVENT_TIME"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="time"
-        android:inputType="time"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textStyle="bold"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EVENT_DATE" />
-
     <TextView
         android:id="@+id/PAGE_TITLE"
         android:layout_width="wrap_content"
@@ -127,14 +98,51 @@
     <fragment
         android:id="@+id/map_frag"
         android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="402dp"
-        android:layout_height="223dp"
+        android:layout_width="0dp"
+        android:layout_height="229dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.603"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/EVENT_TIME"
         tools:context=".MapsActivity" />
 
     <include
         layout="@layout/activity_base" />
+
+    <Button
+        android:id="@+id/EVETNT_DATE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="select date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EVENT_DESCRIPTION" />
+
+    <Button
+        android:id="@+id/EVENT_TIME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="select time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/EVETNT_DATE" />
+
+    <TextView
+        android:id="@+id/EVENT_DATE_TEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/EVETNT_DATE"
+        app:layout_constraintStart_toEndOf="@+id/EVETNT_DATE"
+        app:layout_constraintTop_toTopOf="@+id/EVETNT_DATE" />
+
+    <TextView
+        android:id="@+id/EVENT_TIME_TEXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/EVENT_TIME"
+        app:layout_constraintStart_toEndOf="@+id/EVENT_TIME"
+        app:layout_constraintTop_toBottomOf="@+id/EVETNT_DATE" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

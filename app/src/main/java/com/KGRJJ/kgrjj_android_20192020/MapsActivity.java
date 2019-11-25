@@ -1,24 +1,16 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,13 +24,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
@@ -55,14 +47,18 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     //Static variables
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
     public static final String MAP_TAG = "ENVIVE_MAP_TAG";
-
+    @Override
+    public void onBackPressed() {
+        this.recreate();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_maps);
+        Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
 
 
-//Instantiation
+        //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -79,6 +75,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     protected int getLayoutResourceID() {
         return R.layout.activity_maps;
     }
+
 
 
     /**
@@ -119,6 +116,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             checkLocationPermissions();
         }
 
+        //TODO: heatmap update
+        addHeatMap();
     }
 
 
@@ -180,6 +179,36 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         }
     };
 
+    HeatmapTileProvider mHeatMapTileProvider;
+    TileOverlay mTileOverlay;
+    //TODO: adding heatmap
+    private void addHeatMap() {
+
+        readItems();
+
+    }
+
+    private void readItems() {
+        ArrayList<LatLng> list = new ArrayList<>();
+
+        db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                Log.i("TESTING", doc.get("Location").toString());
+                GeoPoint location = (GeoPoint) doc.get("Location");
+                list.add(new LatLng(location.getLatitude(), location.getLongitude()));
+
+            }
+            // Create a heat map tile provider, passing it the latlngs of the police stations
+            mHeatMapTileProvider = new HeatmapTileProvider.Builder()
+                    .data(list)
+                    .build();
+
+            // Add a tile overlay to the map, using the heat map tile provider.
+            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+        });
+
+    }
+
     //TODO: different states
     @Override
     public void onPause(){
@@ -189,6 +218,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
+
+
+
 
 
 
