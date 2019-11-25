@@ -1,9 +1,5 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,6 +7,9 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -27,25 +26,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 

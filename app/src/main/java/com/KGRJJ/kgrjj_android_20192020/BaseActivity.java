@@ -46,17 +46,21 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.type.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -210,6 +214,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         image_upload = new Image_Upload(db,mStorageReference,getApplicationContext());
     }
 
+    //region Photo Related Content
 
     protected void takePhoto(boolean PI,boolean Reg) {
 
@@ -229,12 +234,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
                 thumbnail  = (Bitmap) data.getExtras().get("data");
-
-                Log.i("TESTING",""+thumbnail.getGenerationId());
                 if (isInProfile) {
-                    image_upload.UplaodProfileImage(thumbnail,user);
+                    UplaodProfileImage(thumbnail,user);
                 } else if (isInReg) {
-                    Log.i("TESTING", "image taken from reg");
                     ImageView m = findViewById(R.id.takePhoto);
                     Glide
                             .with(getApplicationContext())
@@ -244,11 +246,51 @@ public abstract class BaseActivity extends AppCompatActivity {
                             .apply(RequestOptions.circleCropTransform())
                             .into(m);
                 } else {
-                    image_upload.UploadImage(thumbnail, mLastLocation,user);
+                    UploadImage(thumbnail, mLastLocation,user);
                 }
             }
         }
     }
+
+    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user){
+        StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.png");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = profileRef.putBytes(data);
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
+        });
+    }
+    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
+
+
+
+
+        String imagename = new Random().nextInt(10000) + 0 + "_"+location;
+        StorageReference profileRef = mStorageReference.child("images/"+imagename);
+
+        String url = "gs://kgrjj-android-2019.appspot.com/images/";
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = profileRef.putBytes(data);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
+        });
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
+        map.put("URL",url+imagename);
+        db.collection("Images").add(map);
+    }
+    //endregion
+    //region Location Permission Content
     /**
      * Check for application permission to access location
      */
@@ -303,7 +345,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     };
 
-
+//endregion
     protected abstract int getLayoutResourceID();
 
     public void getUserData(FirebaseUser user) {
