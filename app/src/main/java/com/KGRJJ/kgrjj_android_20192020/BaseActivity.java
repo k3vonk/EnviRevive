@@ -32,6 +32,7 @@ import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
+import com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -194,13 +195,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentEventsList);
                                 break;
                             case 3:
-                                takePhoto(false,false);
+                                Intent myIntentImagesList = new Intent(getApplicationContext(), ImageDisplayActivity.class);
+                                startActivity(myIntentImagesList);
                                 break;
                             case 4:
+                                takePhoto(false,false);
+                                break;
+                            case 5:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
                                 startActivity(myIntentEventCreate);
                                 break;
-                            case 5:
+                            case 6:
                                 mAuth.signOut();
                                 user = null;
                                 Intent myIntentLogout = new Intent(getApplicationContext(), LoginActivity.class);
@@ -216,17 +221,24 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Go to the Map", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "View your profile", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "View your Profile", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
                                 Toast.makeText(getApplicationContext(), "See a List of Events", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Take a photo", Toast.LENGTH_SHORT).show();
-
+                                Toast.makeText(getApplicationContext(), "See a List of Images", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
+                                Toast.makeText(getApplicationContext(), "Take a Photo", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case 5:
                                 Toast.makeText(getApplicationContext(), "Create an Event", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case 6:
+                                Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 

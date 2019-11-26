@@ -15,6 +15,10 @@
         android:icon="@drawable/ic_search"
         tools:ignore="MenuTitle"/>
     <item
+        android:id="@+id/find_image"
+        android:icon="@drawable/ic_search_holo_light"
+        tools:ignore="MenuTitle"/>
+    <item
         android:id="@+id/take_photo"
         android:icon="@drawable/ic_add_a_photo_black_24dp"
         tools:ignore="MenuTitle"/>
