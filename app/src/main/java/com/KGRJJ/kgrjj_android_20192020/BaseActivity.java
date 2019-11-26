@@ -237,7 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private File createImageFile(){
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageName = "PNG_"+timeStamp+"_";
-        File storageDir = getExternalFilesDir(Environment.getExternalStorageDirectory().toString()+"Pictures");
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = null;
         try {
             image = File.createTempFile(
@@ -254,11 +254,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.i("TESTING",mostRecentPhotoPath);
         return image;
     }
-    private void addPicToGallery(){
+    private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri contentURI = Uri.fromFile(new File(mostRecentPhotoPath));
-        mediaScanIntent.setData(contentURI);
-        getApplicationContext().sendBroadcast(mediaScanIntent);
+        File f = new File(mostRecentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
     protected void takePhoto(boolean PI,boolean Reg) {
 
@@ -281,7 +282,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
                 //thumbnail  = (Bitmap) data.getExtras().get("data");
-                addPicToGallery();
+                galleryAddPic();
 
             Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
                 if (isInProfile) {
