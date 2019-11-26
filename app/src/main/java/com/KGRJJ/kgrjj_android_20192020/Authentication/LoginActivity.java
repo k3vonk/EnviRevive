@@ -115,7 +115,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
                         getUserData(user);
-                        getRegisteredEvents(user);
+                        //getRegisteredEvents(user);
                         Intent service = new Intent(this, UserProfileDataService.class);
                         service.putExtra("ID",user.getUid());
                         startService(service);

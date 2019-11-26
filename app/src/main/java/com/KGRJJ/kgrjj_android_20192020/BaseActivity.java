@@ -183,6 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             checkLocationPermissions();
         }
 
+
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
         if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration){
@@ -402,16 +403,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     //Load bitmap and garbage collection
                     try {
                         //Write file
-                        String filename = mostRecentPhotoPath;
-                        FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
-                        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-                        //Cleanup
-                        stream.close();
-                        thumbnail.recycle();
-
                         Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
-                        imageAnalysisScreen.putExtra("image", filename);
+                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
                         startActivity(imageAnalysisScreen);
                     }catch (Exception e){
                         Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
@@ -580,6 +573,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 });
         Toast.makeText(getApplicationContext(), "Pulled values from cloud", Toast.LENGTH_LONG).show();
     }
+
 
 
 }

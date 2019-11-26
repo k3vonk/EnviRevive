@@ -37,9 +37,14 @@
 
     <string name="title_activity_maps">Map</string>
 
+    <string name="loading_message">Loading image analysis&#8230;</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_btn">Menu_btn</string>
     <string name="captured_image">captured_image</string>
+    <string name="image_classification_labels">Image Classification Labels</string>
+    <string name="_100">100%</string>
+    <string name="label">Label</string>
+    <string name="backbutton">backbutton</string>
 
 </resources>

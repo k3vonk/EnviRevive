@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ImageAnalysisScreen">
@@ -30,7 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/gallery_image_view"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/captured_image" />
 
             <ImageButton
                 android:id="@+id/imageButton"
@@ -42,15 +44,34 @@
                 android:layout_marginTop="-2dp"
                 android:backgroundTint="@color/bpBlue_focused"
                 android:tint="#110D0D"
-                app:srcCompat="?attr/actionModeCloseDrawable" />
-
+                app:srcCompat="?attr/actionModeCloseDrawable"
+                android:contentDescription="@string/backbutton" />
 
         </RelativeLayout>
 
-        <GridView
+        <TextView
+            android:id="@+id/loading_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="40"/>
+            android:layout_weight="5"
+            android:background="#A3D3FD"
+            android:backgroundTint="#90CEF8"
+            android:backgroundTintMode="screen"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="@string/image_classification_labels"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="35" />
+
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
