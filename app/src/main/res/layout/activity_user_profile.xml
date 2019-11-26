@@ -10,31 +10,19 @@
     tools:context=".UserSpecificActivities.UserProfileActivity">
 
     <ImageView
-        android:id="@+id/cover"
+        android:id="@+id/gradient3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.2"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/glenda" />
-
-    <ImageView
-        android:id="@+id/background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.8"
-        android:fadingEdge="horizontal|vertical"
-        android:foregroundTint="#00BCD4"
-        android:foregroundTintMode="add"
+        android:alpha="1"
+        android:contentDescription="image of a bridge with green gradient"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/gradient_background3" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/gradient_bg" />
 
     <TextView
         android:id="@+id/profile_points"
@@ -89,11 +77,14 @@
 
     <ImageButton
         android:id="@+id/change_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="41dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="144dp"
+        android:background="@drawable/gradient_background2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_profile" />
+        app:srcCompat="@mipmap/takephoto" />
 
     <ImageView
         android:id="@+id/profile_portrait_image"
@@ -118,35 +109,43 @@
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="20sp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/profile_city_country"
         app:layout_constraintStart_toStartOf="@+id/profile_city_country"
-        app:layout_constraintTop_toBottomOf="@+id/profile_city_country" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_city_country"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/rank_image"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="27dp"
-        app:layout_constraintEnd_toStartOf="@+id/profile_rank"
-        app:layout_constraintTop_toBottomOf="@+id/profile_username"
-        tools:srcCompat="@tools:sample/avatars[2]" />
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="76dp"
+        android:alpha="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_image"
+        tools:srcCompat="@android:drawable/btn_star_big_on" />
 
     <Button
         android:id="@+id/profile_sign_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_width="89dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/gradient_background2"
+        android:fontFamily="sans-serif"
         android:text="Sign Out"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="64dp"
+        android:background="@drawable/amu_bubble_shadow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

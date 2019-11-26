@@ -38,7 +38,21 @@
         <activity
             android:name=".Authentication.LoginActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
+
         <activity
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
@@ -49,22 +63,15 @@
         <activity
             android:name="Adapter.WheelSelectionAdapter"
             android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
-            android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -90,6 +97,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
