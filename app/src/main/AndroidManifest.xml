@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.KGRJJ.kgrjj_android_20192020">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -21,72 +20,77 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LoadingScreen"/>
-        <!-- android:theme="@style/AppTheme.NoActionBar" -->
-        <activity android:name=".EventCreationDialog" />
-        <activity android:name=".Event_related_content.EventAdapter" />
-        <activity android:name=".Event_related_content.EventDataObject" />
-        <activity android:name=".Event_related_content.EventCreation" />
-        <activity android:name=".Event_related_content.EventDisplayActivity" /> <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
-        <!-- tools:ignore="GoogleAppIndexingWarning"> -->
-        <!--
-            The API key for Google Maps-based APIs is defined as a string resource.
-            (See the file "res/values/google_maps_api.xml").
-            Note that the API key is linked to the encryption key used to sign the APK.
-            You need a different API key for each encryption key, including the release key that is used to
-            sign the APK for publishing.
-            You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
+
         <!-- META-DATA -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" /> <!-- ACTIVITY -->
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <!-- ACTIVITY -->
+        <activity
+            android:name=".LoadingScreen"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".EventCreationDialog"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".Event_related_content.EventAdapter"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".Event_related_content.EventDataObject"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".Event_related_content.EventCreation"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".Event_related_content.EventDisplayActivity"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".BaseActivity"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".UserSpecificActivities.UserProfileActivity"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".ImageAnalysisScreen"
+            android:screenOrientation = "portrait" />
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            />
-        <activity android:name=".BaseActivity"
-            />
-        <activity android:name=".Authentication.LoginActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".UserSpecificActivities.UserProfileActivity" />
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".Authentication.LoginActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:screenOrientation = "portrait" />
         <activity
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan"
-            />
-        <activity android:name=".MainActivity"
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name=".MainActivity"
             android:windowSoftInputMode="stateVisible|adjustPan"
-            />
-        <activity android:name="Adapter.WheelSelectionAdapter"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".ImageAnalysisScreen"/>
+            android:screenOrientation = "portrait" />
+        <activity
+            android:name="Adapter.WheelSelectionAdapter"
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:screenOrientation = "portrait"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation = "portrait">
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
 
-        <!--
- continue a user-initiated action
-        <service
-            android:name="MapsActivity"
-            android:foregroundServiceType="location" ></service>
-        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.KGRJJ.kgrjj_android_20192020.provider"
@@ -96,10 +100,5 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
-
 </manifest>
