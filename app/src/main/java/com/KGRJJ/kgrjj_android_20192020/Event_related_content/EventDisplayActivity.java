@@ -52,12 +52,13 @@ public class EventDisplayActivity extends BaseActivity {
     private void getEvents(){
         db.collection("Events").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for(QueryDocumentSnapshot doc : queryDocumentSnapshots){
+                String id = doc.getId();
                 HashMap<String, Long> tempDat3 = (HashMap<String, Long>) doc.get("Date");
                 HashMap<String, Long> temptime = (HashMap<String, Long>) doc.get("Time");
                 Time time = new Time(Math.toIntExact(temptime.get("hour")),Math.toIntExact(temptime.get("minute")));
                 Date date = new Date(Math.toIntExact(tempDat3.get("year")),Math.toIntExact(tempDat3.get("month")),Math.toIntExact(tempDat3.get("day")));
                 EventDataObject EDO =
-                        new EventDataObject(
+                        new EventDataObject(id,
                                 (String) doc.get("Title"),
                                 (String) doc.get("Description"),
                                 date,

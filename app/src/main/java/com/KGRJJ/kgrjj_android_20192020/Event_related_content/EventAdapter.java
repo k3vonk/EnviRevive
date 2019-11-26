@@ -4,11 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,9 +21,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewHolder>{
@@ -50,10 +58,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         holder.textViewDate.setText(eventDataObject.getDate().toString());
         holder.textViewTime.setText(eventDataObject.getTime().toString());
         holder.location = eventDataObject.getLocation();
+
+        holder.button.setOnClickListener(v -> {
+            String event = eventDataObject.getID();
+           RegisterToEvent(event);
+           holder.button.setEnabled(false);
+           holder.button.setText("Already Registered");
+
+            Toast.makeText(mCtxEvent,"Registered to event",Toast.LENGTH_SHORT).show();
+        });
+
+
         GoogleMap thisMap = holder.mapViewLocation;
         if(thisMap!=null){
             thisMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(holder.location.getLatitude(),holder.location.getLongitude())));
         }
+
         //holder.textViewLocation
 
     }
@@ -64,11 +84,21 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
     }
 
 
+    public void RegisterToEvent(String event){
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference eventRef =
+                FirebaseFirestore.getInstance().collection("Events").document(event);
+
+                eventRef.update("Attendees",FieldValue.arrayUnion(user));
+        FirebaseFirestore.getInstance().collection("user").document(user)
+                .update("subscribedEvents",FieldValue.arrayUnion(eventRef));
+    }
 
     class ProductViewHolder extends RecyclerView.ViewHolder  implements OnMapReadyCallback {
 
         TextView textViewTitle, textViewDescription, textViewDate, textViewTime;
         GeoPoint location;
+        Button button;
         GoogleMap mapViewLocation;
         MapView map;
 
@@ -79,6 +109,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             textViewDescription = itemView.findViewById(R.id.textViewDesc);
             textViewDate = itemView.findViewById(R.id.textViewDate);
             textViewTime = itemView.findViewById(R.id.textViewTime);
+            button = itemView.findViewById(R.id.button);
 
 
             map = itemView.findViewById(R.id.imageMap);

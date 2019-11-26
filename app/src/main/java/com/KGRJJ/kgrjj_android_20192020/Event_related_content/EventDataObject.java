@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 public class EventDataObject {
 
+    private String ID;
     private String Title;
     private String description;
     private Date date;
@@ -21,7 +22,8 @@ public class EventDataObject {
     private ArrayList<String> imageURLS;
 
 
-    public EventDataObject(String title, String description, Date date, Time time, GeoPoint location, ArrayList<String> imageURLS) {
+    public EventDataObject(String id,String title, String description, Date date, Time time, GeoPoint location, ArrayList<String> imageURLS) {
+        this.ID = id;
         Title = title;
         this.description = description;
         this.date = date;
@@ -31,7 +33,7 @@ public class EventDataObject {
 
     }
 
-
+    public String getID(){return ID;}
     public String getTitle() {
         return Title;
     }
