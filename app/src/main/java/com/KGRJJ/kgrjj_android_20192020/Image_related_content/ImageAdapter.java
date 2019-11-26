@@ -1,15 +1,23 @@
 package com.KGRJJ.kgrjj_android_20192020.Image_related_content;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -19,6 +27,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -26,10 +36,13 @@ public class ImageAdapter extends RecyclerView.Adapter<com.KGRJJ.kgrjj_android_2
 
     private Context mCtxImage;
     private List<ImageDataObject> imageobjList;
+    private StorageReference mStorage;
 
     public ImageAdapter(Context mCtx, List<ImageDataObject> imageobjList) {
         this.mCtxImage = mCtx;
         this.imageobjList = imageobjList;
+        mStorage = FirebaseStorage.getInstance().getReferenceFromUrl(
+                "gs://kgrjj-android-2019.appspot.com/images");
     }
 
     @NonNull
@@ -44,8 +57,15 @@ public class ImageAdapter extends RecyclerView.Adapter<com.KGRJJ.kgrjj_android_2
     @Override
     public void onBindViewHolder(@NonNull com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageAdapter.ProductViewHolder holder, int position) {
         ImageDataObject imageDataObject = imageobjList.get(position);
+        Log.i("UWU",imageDataObject.getImage());
+        StorageReference profileRef = mStorage.child("images/"+imageDataObject.getImage());
+        profileRef.getDownloadUrl()
+                .addOnSuccessListener(uri-> {
+                    Glide.with(mCtxImage)
+                            .load(uri)
+                            .into(holder.urlImage);
+                });
 
-        holder.urlImage = imageDataObject.getImageURL();
         holder.geoPointImage = imageDataObject.getGeoPoint();
         GoogleMap thisMap = holder.googleMapImage;
         if (thisMap != null) {

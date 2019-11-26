@@ -2,11 +2,14 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 
 import android.Manifest;
+
 import android.content.ContentValues;
 import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -71,12 +74,18 @@ import com.google.type.LatLng;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
+
+import java.io.ByteArrayOutputStream;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.lang.ref.WeakReference;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,32 +97,48 @@ import java.util.Random;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected CycleMenuWidget cycleMenuWidget;
-
-    protected Location mLastLocation;
-    protected FusedLocationProviderClient mFusedLocationProviderClient;
-    protected LocationRequest mLocationRequest;
-    protected ArrayList<LatLng> list;
+    public static final String MAP_TAG = "ENVIVE_MAP_TAG";
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     protected static final int RESULT_OK = -1;
-
+    protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
     public static Bitmap thumbnail;
-
-    protected static Uri imageUri;
     public static String fullname;
     public static String Rank;
     public static String Country;
     public static String Points;
-    public  static Bitmap profileImage;
-    protected  Image_Upload image_upload;
-    protected  FirebaseFirestore db;
+    public static Bitmap profileImage;
+    protected static Uri imageUri;
     protected static StorageReference mStorageReference;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
     private static boolean isInProfile;
     private static boolean isInReg;
-    protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
-    public static final String MAP_TAG = "ENVIVE_MAP_TAG";
+    protected CycleMenuWidget cycleMenuWidget;
+    protected String mostRecentPhotoPath;
+    protected Location mLastLocation;
+    protected FusedLocationProviderClient mFusedLocationProviderClient;
+    protected LocationRequest mLocationRequest;
+    protected ArrayList<LatLng> list;
+    protected Image_Upload image_upload;
+    protected FirebaseFirestore db;
+    /**
+     * Callback function to obtain new location and store the old one.
+     * Update any additional features in regards to this new location
+     */
+
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            List<Location> locationList = locationResult.getLocations();
+
+            if (!locationList.isEmpty()) {
+                //The last location in the list is the newest
+                Location location = locationList.get(locationList.size() - 1);
+                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
+                mLastLocation = location;
+            }
+        }
+    };
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAtV-bOc020EN9DQSxbnTbG_8NYnHBa33M";
     public static final String FILE_NAME = "temp.jpg";
@@ -199,7 +224,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentImagesList);
                                 break;
                             case 4:
-                                takePhoto(false,false);
+                                takePhoto(false, false);
                                 break;
                             case 5:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
@@ -247,7 +272,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         );
 
 
-
         cycleMenuWidget.setStateSaveListener(
                 (itemPosition, lastItemAngleShift) -> {
 
@@ -258,22 +282,57 @@ public abstract class BaseActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
                 "gs://kgrjj-android-2019.appspot.com/images");
-        image_upload = new Image_Upload(db,mStorageReference,getApplicationContext());
+        image_upload = new Image_Upload(db, mStorageReference, getApplicationContext());
     }
 
     //region Photo Related Content
+    private File createImageFile() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "PNG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageName,  /* prefix */
+                    ".png",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    protected void takePhoto(boolean PI,boolean Reg) {
+        // Save a file: path for use with ACTION_VIEW intents
+        mostRecentPhotoPath = image.getAbsolutePath();
+        Log.i("TESTING", mostRecentPhotoPath);
+        return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mostRecentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+    protected void takePhoto(boolean PI, boolean Reg) {
 
 
         isInProfile = PI;
         isInReg = Reg;
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New picture");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-        imageUri = getContentResolver().insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File photoFIle = createImageFile();
+        if (photoFIle != null) {
+            Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+        }
+
+    }
+
+
 
         startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
 
@@ -299,29 +358,50 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
-                thumbnail  = (Bitmap) data.getExtras().get("data");
+                //thumbnail  = (Bitmap) data.getExtras().get("data");
+                galleryAddPic();
+
+                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
                 if (isInProfile) {
-                    UplaodProfileImage(thumbnail,user);
+                    ImageView m = findViewById(R.id.profile_portrait_image);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                    try {
+
+                        UploadProfileImage(bmp, user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else if (isInReg) {
                     ImageView m = findViewById(R.id.takePhoto);
                     Glide
                             .with(getApplicationContext())
-                            .load(thumbnail)
+                            .load(mostRecentPhotoPath)
                             //.apply(RequestOptions.overrideOf(400,400))
                             .apply(RequestOptions.centerCropTransform())
                             .apply(RequestOptions.circleCropTransform())
                             .into(m);
                 } else {
-                    UploadImage(thumbnail, mLastLocation,user);
+
+                    UploadImage(bmp, mLastLocation, user);
 
                     //Load bitmap and garbage collection
                     try {
                         //Write file
-                        String filename = "bitmap.png";
+                        String filename = mostRecentPhoto;
                         FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
                         thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
@@ -335,16 +415,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }catch (Exception e){
                         Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
                     }
-
                 }
             }
         }
     }
 
-    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user){
-        StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.png");
+    public void UploadProfileImage(Bitmap bmp, FirebaseUser user) throws IOException {
+        StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
 
@@ -353,18 +432,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
         });
+
+
     }
+    //endregion
+    //region Location Permission Content
+
 
     String currFilePath;
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
-        String imagename = new Random().nextInt(10000) + 0 + "_"+location;
-        StorageReference profileRef = mStorageReference.child("images/"+imagename);
+
+        String imagename = new Random().nextInt(10000) + 0 + "_" + location + ".jpg";
+        StorageReference profileRef = mStorageReference.child("images/" + imagename);
 
         String url = "gs://kgrjj-android-2019.appspot.com/images/";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
@@ -372,18 +457,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
         });
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
-        map.put("URL",url+imagename);
-        currFilePath = url + imagename; //File path to firebase directory.
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Location", new GeoPoint(location.getLatitude(), location.getLongitude()));
+        map.put("URL", imagename);
+
         db.collection("Images").add(map);
 
         //Call CloudVision API
         callCloudVision(thumbnail);
        // mMainImage.setImageBitmap(thumbnail);
     }
-    //endregion
-    //region Location Permission Content
+
     /**
      * Check for application permission to access location
      */
@@ -419,6 +504,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+
+    //endregion
+
     /**
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
@@ -438,10 +526,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     };
 
 //endregion
+
     protected abstract int getLayoutResourceID();
 
     public void getUserData(FirebaseUser user) {
-        Log.i("TESTING","cloud function called");
+        Log.i("TESTING", "cloud function called");
 
         db.collection("user").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -449,25 +538,25 @@ public abstract class BaseActivity extends AppCompatActivity {
                         fullname = (String.format("%s %s",
                                 documentSnapshot.getString("FName"),
                                 documentSnapshot.getString("LName")));
-                        Log.i("TESTING",fullname);
+                        Log.i("TESTING", fullname);
                         Rank = (documentSnapshot.getString("Rank"));
-                        Log.i("TESTING",Rank);
+                        Log.i("TESTING", Rank);
                         Country = (String.format("%s,%s",
                                 documentSnapshot.getString("City"),
                                 documentSnapshot.getString("Country")));
-                        Log.i("TESTING",Country);
-                        Points =  String.valueOf(documentSnapshot.getDouble("Points").intValue());
-                        Log.i("TESTING",Points);
+                        Log.i("TESTING", Country);
+                        Points = String.valueOf(documentSnapshot.getDouble("Points").intValue());
+                        Log.i("TESTING", Points);
 
                         StorageReference profileRef = mStorageReference
-                                .child(user.getUid() + "/profileImage.png");
+                                .child(user.getUid() + "/profileImage.jpg");
 
                         profileRef.getDownloadUrl()
-                                .addOnSuccessListener(uri-> {
+                                .addOnSuccessListener(uri -> {
                                     Glide.with(getApplicationContext())
                                             .asBitmap()
                                             .load(uri)
-                                            .into(new CustomTarget<Bitmap>(){
+                                            .into(new CustomTarget<Bitmap>() {
 
                                                 @Override
                                                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -483,15 +572,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                         //Glide
 
 
-
-
-
-
                         //Log.i("TESTING",profileImage);
 
                     }
                 });
-        Toast.makeText(getApplicationContext(),"Pulled values from cloud",Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Pulled values from cloud", Toast.LENGTH_LONG).show();
     }
 
 
