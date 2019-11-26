@@ -242,6 +242,8 @@ public class ImageAnalysisScreen extends AppCompatActivity {
                      imageDetail.setText(message);
                  }
 
+                 //TODO: pass these results to Database
+
             }
         }
     }

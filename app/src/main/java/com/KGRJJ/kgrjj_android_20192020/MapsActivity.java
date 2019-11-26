@@ -33,6 +33,12 @@ import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The MapsActivity allows the tracking of users and display Google Maps
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 26-11-2019
+ */
 public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
     //Map variables
@@ -40,23 +46,21 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
-
-    //image capture
-
     Location mLastLocation;
-    //Static variables
+
+    //HeatMap variables
+    HeatmapTileProvider mHeatMapTileProvider;
+    TileOverlay mTileOverlay;
+
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
-    public static final String MAP_TAG = "ENVIVE_MAP_TAG";
-    @Override
-    public void onBackPressed() {
-        this.recreate();
-    }
+
+    /**
+     * Instantiate Google Maps
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_maps);
         Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
-
 
         //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
@@ -66,17 +70,20 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+    }
 
-
-
+    /**
+     * Recreate this activity on button back press.
+     */
+    @Override
+    public void onBackPressed() {
+        this.recreate();
     }
 
     @Override
     protected int getLayoutResourceID() {
         return R.layout.activity_maps;
     }
-
-
 
     /**
      * Manipulates the map once available.
@@ -86,6 +93,8 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
+     * <p>
+     * Reference: https://developers.google.com/maps/documentation/android-sdk/start
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -96,7 +105,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
-
 
         //Requesting location
         mLocationRequest = new LocationRequest();
@@ -121,9 +129,11 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
 
+    /**
+     * Update map when permission is given
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         switch (requestCode) {
             case REQUEST_PERMISSION_LOCATION_KEY:
 
@@ -132,7 +142,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                     //If permission location is granted...
                     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                       // mMap.setMyLocationEnabled(true);
+                        // mMap.setMyLocationEnabled(true);
                     } else { //Permission denied...
                         Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                     }
@@ -144,7 +154,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
      */
-
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -171,7 +180,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 mCurrLocationMarker = mMap.addMarker(markerOptions);
 
                 //move map camera & animation
-                //TODO: add a boundary here so it doesnt change positions
+                //TODO: add a boundary here so it doesn't change positions
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
 
@@ -179,25 +188,29 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
         }
     };
 
-    HeatmapTileProvider mHeatMapTileProvider;
-    TileOverlay mTileOverlay;
-    //TODO: adding heatmap
+    /**
+     * Add HeatMap items to display new features on the map
+     */
     private void addHeatMap() {
-
         readItems();
-
     }
 
+    /**
+     * Acquires various images from FireBase and adds it to the HeatMap
+     */
     private void readItems() {
         ArrayList<LatLng> list = new ArrayList<>();
 
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
-            for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                Log.i("TESTING", doc.get("Location").toString());
-                GeoPoint location = (GeoPoint) doc.get("Location");
-                list.add(new LatLng(location.getLatitude(), location.getLongitude()));
+            if (queryDocumentSnapshots != null) {
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Log.i("TESTING", doc.get("Location").toString());
+                    GeoPoint location = (GeoPoint) doc.get("Location");
+                    list.add(new LatLng(location.getLatitude(), location.getLongitude()));
 
+                }
             }
+
             // Create a heat map tile provider, passing it the latlngs of the police stations
             mHeatMapTileProvider = new HeatmapTileProvider.Builder()
                     .data(list)
@@ -211,17 +224,11 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
     //TODO: different states
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
 
-        if(mFusedLocationProviderClient != null) {
+        if (mFusedLocationProviderClient != null) {
             mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback);
         }
     }
-
-
-
-
-
-
 }

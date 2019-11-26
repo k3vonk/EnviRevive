@@ -24,7 +24,10 @@ import java.util.Map;
 import static java.util.stream.Collectors.*;
 
 /**
- * LabelAdapter a class that provides features to the GridView in Image Analysis Screen
+ * LabelAdapter class provides implementations to the GridView in Image Analysis Screen
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 26-11-2019
  */
 public class LabelAdapter extends BaseAdapter {
 
@@ -34,6 +37,10 @@ public class LabelAdapter extends BaseAdapter {
 
     private final String[] candidates = {"Pollution", "Waste", "Litter"};
 
+    /**
+     * Constructor instantiate multiple private variables and
+     * carry out sorting of the HashMap to display them in descending order
+     */
     public LabelAdapter(Context context, HashMap<String, Float> labels){
         this.mContext = context;
         this.labels = labels;
@@ -70,21 +77,34 @@ public class LabelAdapter extends BaseAdapter {
         keyList = new ArrayList<>(badLabels.keySet()); //Create a list of String
     }
 
+    /**
+     * Obtains the size of the label HashMap
+     */
     @Override
     public int getCount(){
         return labels.size();
     }
 
+    /**
+     * getItemId is a mandatory implementation from BaseAdapter
+     */
     @Override
     public long getItemId(int position){
         return 0;
     }
 
+    /**
+     * getItem is a mandatory implementation from BaseAdapter
+     */
     @Override
     public Object getItem(int position){
         return null;
     }
 
+    /**
+     * getView returns a specific view for a cell of GridView based on the
+     * position index that is queried.
+     */
     @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
@@ -123,7 +143,7 @@ public class LabelAdapter extends BaseAdapter {
             progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
         }else{
             progressBar.setProgress(intPart);
-            progressBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D06AE467")));
+            progressBar.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#D06AE467"))); //Pale green color
 
         }
         return convertView;

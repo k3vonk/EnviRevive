@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 
 /**
  * Provides utility logic for getting the app's SHA1 signature. Used with restricted API keys.
- *
+ * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
  */
 public class PackageManagerUtils {
 

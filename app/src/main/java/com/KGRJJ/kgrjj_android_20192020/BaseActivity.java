@@ -3,9 +3,6 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 import android.Manifest;
 
-import android.content.ContentValues;
-import android.content.Context;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,9 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
@@ -23,7 +18,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,7 +28,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
-import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageDisplayActivity;
@@ -51,52 +44,24 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.vision.v1.Vision;
-import com.google.api.services.vision.v1.VisionRequest;
-import com.google.api.services.vision.v1.VisionRequestInitializer;
-import com.google.api.services.vision.v1.model.AnnotateImageRequest;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
-import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
-import com.google.api.services.vision.v1.model.EntityAnnotation;
-import com.google.api.services.vision.v1.model.Feature;
-import com.google.api.services.vision.v1.model.Image;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.type.LatLng;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-
-import java.io.ByteArrayOutputStream;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.lang.ref.WeakReference;
-
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 
@@ -112,7 +77,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public static String Country;
     public static String Points;
     public static Bitmap profileImage;
-    protected static Uri imageUri;
     protected static StorageReference mStorageReference;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
@@ -126,37 +90,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ArrayList<LatLng> list;
     protected Image_Upload image_upload;
     protected FirebaseFirestore db;
-    /**
-     * Callback function to obtain new location and store the old one.
-     * Update any additional features in regards to this new location
-     */
-
-    LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            List<Location> locationList = locationResult.getLocations();
-
-            if (!locationList.isEmpty()) {
-                //The last location in the list is the newest
-                Location location = locationList.get(locationList.size() - 1);
-                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
-                mLastLocation = location;
-            }
-        }
-    };
-
-    private static final String CLOUD_VISION_API_KEY = "AIzaSyAtV-bOc020EN9DQSxbnTbG_8NYnHBa33M";
-    public static final String FILE_NAME = "temp.jpg";
-    private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
-    private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
-
 
     private static final String TAG = BaseActivity.class.getSimpleName();
-    public static final int CAMERA_PERMISSIONS_REQUEST = 2;
-    public static final int CAMERA_IMAGE_REQUEST = 3;
 
-    private TextView mImageDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -575,5 +511,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    //======================== LOCATION FINDER =============================//
+    /**
+     * Callback function to obtain new location and store the old one.
+     * Update any additional features in regards to this new location
+     */
+    LocationCallback mLocationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            List<Location> locationList = locationResult.getLocations();
 
+            if (!locationList.isEmpty()) {
+                //The last location in the list is the newest
+                Location location = locationList.get(locationList.size() - 1);
+                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
+                mLastLocation = location;
+            }
+        }
+    };
 }
