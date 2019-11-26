@@ -6,23 +6,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
-
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
-import com.KGRJJ.kgrjj_android_20192020.LoadingScreen;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.KGRJJ.kgrjj_android_20192020.Services.UserProfileDataService;
-import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
@@ -39,12 +35,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private Button mLoginBTN;
     private LottieAnimationView animationView;
     FirebaseUser user;
+    private TextView signUp;
+    private Animation fadein;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        signUp = findViewById(R.id.Log_in_title);
+        fadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_fade_in);
+        signUp.startAnimation(fadein);
         /* Adding listeners to both button - no need to store them in a variable since they
             are only ever used for listening. "This links to the OnClick method defined below
          */
@@ -53,7 +53,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         mLoginBTN = findViewById(R.id.loginBTN);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
-        animationView = findViewById(R.id.aim);
+        animationView = findViewById(R.id.animation);
         animationView.setVisibility(View.INVISIBLE);
         //Essential for using firebase authentication
         mAuth = FirebaseAuth.getInstance();

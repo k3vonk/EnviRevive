@@ -21,103 +21,186 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/gradient_bg" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.1"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/bgImage"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@mipmap/main_image" />
+        app:srcCompat="@drawable/gradient_bg" />
 
     <TextView
         android:id="@+id/RegisterTitle"
-        android:layout_width="288dp"
-        android:layout_height="105dp"
-        android:layout_marginTop="28dp"
-        android:fontFamily="sans-serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:padding="10dp"
         android:text="Sign Up"
-        android:textAlignment="center"
         android:textColor="#000000"
-        android:textSize="56sp"
-        android:textStyle="bold"
+
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/email_inputLoginScreen"
-        android:layout_width="250dp"
+
+    <TextView
+        android:id="@+id/infoRequired"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="* Please Provide required information "
+        android:textColor="#000000"
+        android:textColorHint="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
+
+
+    <ImageView
+        android:id="@+id/takePhoto"
+        android:layout_width="93dp"
+        android:layout_height="94dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoRequired"
+        app:srcCompat="@mipmap/icons8name100" />
+
+    <EditText
+        android:id="@+id/Name"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="124dp"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@android:drawable/ic_menu_sort_alphabetically"
         android:ems="10"
-        android:hint="Email"
+        android:fontFamily="sans-serif"
+        android:hint="Full Name"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
-        android:textColor="#3949AB"
-        android:textColorHint="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_input" />
+        android:textColor="#090808"
+        android:textSize="18sp"
 
-    <EditText
-        android:id="@+id/password_Input"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_background"
-        android:ems="10"
-        android:hint="Password "
-        android:inputType="textPassword"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="#000000"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
+        app:layout_constraintTop_toBottomOf="@+id/infoRequired" />
 
-    <Button
-        android:id="@+id/registerBtn_regScreen"
-        style="@android:style/Widget.DeviceDefault.Light.Button"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/gradient_background2"
-        android:text="Register"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/country_picker" />
 
     <EditText
         android:id="@+id/username_input"
-        style="@android:style/Widget.Material.Light.AutoCompleteTextView"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_background"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@android:drawable/ic_menu_sort_alphabetically"
         android:ems="10"
-        android:hint="Username"
-        android:inputType="textPersonName"
+        android:fontFamily="sans-serif"
+        android:hint="User Name"
+        android:inputType="textEmailAddress"
         android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="#000000"
+        android:textColor="#090808"
+        android:textSize="18sp"
+
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Name" />
+
+    <EditText
+        android:id="@+id/email_inputLoginScreen"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@drawable/ic_action_username"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textColor="#090808"
+        android:textSize="18sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_input" />
+
+
+    <EditText
+        android:id="@+id/password_Input"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@drawable/ic_action_passwrd"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="Password"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textColor="#090808"
+        android:textSize="18sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
+
+
+    <EditText
+        android:id="@+id/city"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@drawable/ic_public_black_24dp"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:hint="City"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textColor="#090808"
+        android:textSize="18sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_Input" />
+
+    <TextView
+        android:id="@+id/country_picker"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/gradient_background2"
+        android:drawableLeft="@drawable/ic_public_black_24dp"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:gravity="center_vertical"
+        android:hint="Country"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/city"
+        app:layout_constraintStart_toStartOf="@+id/city"
+        app:layout_constraintTop_toBottomOf="@+id/city" />
+
+
+    <Button
+        android:id="@+id/registerBtn_regScreen"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/gradient_background2"
+        android:fontFamily="sans-serif"
+        android:text="Register"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/country_picker" />
 
     <TextView
         android:id="@+id/textView"
@@ -157,18 +240,6 @@
         app:layout_constraintTop_toTopOf="@+id/password_Input" />
 
     <TextView
-        android:id="@+id/infoRequired"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="* Please Provide required information "
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColorHint="#000000"
-        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle" />
-
-    <TextView
         android:id="@+id/cancelSignUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -182,56 +253,6 @@
         app:layout_constraintTop_toBottomOf="@+id/registerBtn_regScreen"
         android:textColorHint="#000000"/>
 
-    <EditText
-        android:id="@+id/Name"
-        style="@android:style/Widget.EditText"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="124dp"
-        android:background="@drawable/gradient_background"
-        android:ems="10"
-        android:hint="Full Name"
-        android:inputType="textPersonName"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textColorHint="#000000"
-
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoRequired" />
-
-    <TextView
-        android:id="@+id/country_picker"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_background"
-        android:gravity="center_vertical"
-        android:hint="City / Country"
-        android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceMediumInverse"
-        android:textColor="#000000"
-        android:textColorHint="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/city"
-        app:layout_constraintStart_toStartOf="@+id/city"
-        app:layout_constraintTop_toBottomOf="@+id/city" />
-
-    <EditText
-        android:id="@+id/city"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/gradient_background"
-        android:ems="10"
-        android:hint="City"
-        android:inputType="textPersonName"
-        android:textAlignment="center"
-        android:textColorHint="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_Input" />
-
     <include
         android:id="@+id/itemCycleMenuWidget"
         layout="@layout/activity_base"
@@ -242,31 +263,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/takePhoto"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoRequired"
-        app:srcCompat="@drawable/ic_profile" />
-
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_reg"
-
-        android:layout_width="350dp"
-        android:layout_height="71dp"
-        android:layout_marginBottom="124dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="47dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RegisterTitle"
         app:lottie_autoPlay="false"
         app:lottie_fileName="loading_reg.json"
         app:lottie_loop="true"
-        app:lottie_speed="1.25" />
+        app:lottie_speed="1.25"
+        tools:layout_editor_absoluteY="77dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

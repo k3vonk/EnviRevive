@@ -13,6 +13,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +45,7 @@ import java.util.Map;
 public class RegistrationActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
+    private TextView regTitle;
     private InputHandler inputHandler = new InputHandler();
     private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
     private FirestoreDocumentModel FDM = new FirestoreDocumentModel();
@@ -64,6 +67,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private boolean countryPicked;
 
     private static ImageView mTakePhoto;
+    private Animation fadein;
 
 
     // [END declare_auth]
@@ -71,6 +75,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        regTitle = findViewById(R.id.RegisterTitle);
+        fadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_fade_in);
+        regTitle.startAnimation(fadein);
         
         countryPicked = false;
         // TextViews need to be stored as their content will be used later

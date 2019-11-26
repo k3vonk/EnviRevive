@@ -26,46 +26,37 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+
         <activity android:name=".LoadingScreen"></activity>
-        <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <activity android:name=".EventCreationDialog" />
         <activity android:name=".Event_related_content.EventAdapter" />
         <activity android:name=".Event_related_content.EventDataObject" />
         <activity android:name=".Event_related_content.EventCreation" />
-        <activity android:name=".Event_related_content.EventDisplayActivity" /> <!-- <activity android:name=".TestActivityWheel" /> &lt;!&ndash; android:theme="@style/AppTheme.NoActionBar" &ndash;&gt; -->
-        <!-- tools:ignore="GoogleAppIndexingWarning"> -->
-        <!--
-            The API key for Google Maps-based APIs is defined as a string resource.
-            (See the file "res/values/google_maps_api.xml").
-            Note that the API key is linked to the encryption key used to sign the APK.
-            You need a different API key for each encryption key, including the release key that is used to
-            sign the APK for publishing.
-            You can define the keys for the debug and release targets in src/debug/ and src/release/.
-        -->
-        <!-- META-DATA -->
+        <activity android:name=".Event_related_content.EventDisplayActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" /> <!-- ACTIVITY -->
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            />
-        <activity android:name=".BaseActivity"
-            />
+            android:resource="@array/preloaded_fonts" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".MapsActivity" android:label="@string/title_activity_maps" />
+        <activity android:name=".BaseActivity" />
         <activity android:name=".Authentication.LoginActivity"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity android:name=".UserSpecificActivities.UserProfileActivity" />
+
         <activity
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            ></activity>
+            android:windowSoftInputMode="stateVisible|adjustPan"></activity>
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity android:name="Adapter.WheelSelectionAdapter"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
@@ -76,20 +67,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!-- <intent-filter> &lt;!&ndash; Intent received &ndash;&gt; -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
-        <!--
- continue a user-initiated action
-        <service
-            android:name="MapsActivity"
-            android:foregroundServiceType="location" ></service>
-        -->
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.KGRJJ.kgrjj_android_20192020.provider"
@@ -100,9 +79,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

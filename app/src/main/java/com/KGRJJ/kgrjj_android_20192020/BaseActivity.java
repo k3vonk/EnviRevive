@@ -146,7 +146,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             checkLocationPermissions();
         }
 
-
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
 
@@ -221,6 +220,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 break;
                             case 4:
                                 Toast.makeText(getApplicationContext(), "Create an Event", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 5:
+                                Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 
