@@ -334,28 +334,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
 
-        startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
 
 
-    }
+
+
 
     String currentPhotoPath;
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
 
 
 
@@ -401,7 +387,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     //Load bitmap and garbage collection
                     try {
                         //Write file
-                        String filename = mostRecentPhoto;
+                        String filename = mostRecentPhotoPath;
                         FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
                         thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
@@ -511,19 +497,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
      */
-    LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            List<Location> locationList = locationResult.getLocations();
 
-            if (!locationList.isEmpty()) {
-                //The last location in the list is the newest
-                Location location = locationList.get(locationList.size() - 1);
-                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
-                mLastLocation = location;
-            }
-        }
-    };
 
 //endregion
 
