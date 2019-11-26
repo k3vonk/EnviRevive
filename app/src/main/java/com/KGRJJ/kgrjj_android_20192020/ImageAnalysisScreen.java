@@ -37,21 +37,29 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * An Activity class that produces the image and analysis to users
+ * The ImageAnalysisScreen activity produces a screen consisting of
+ * the image taken and CloudVision analysis of that image
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 26-11-2019
  */
 public class ImageAnalysisScreen extends AppCompatActivity {
 
     private static final String CLOUD_VISION_API_KEY = "AIzaSyAtV-bOc020EN9DQSxbnTbG_8NYnHBa33M";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
-    private static final int MAX_LABEL_RESULTS = 10;
     private static final String TAG = ImageAnalysisScreen.class.getSimpleName();
+    private static final int MAX_LABEL_RESULTS = 15;
 
     private TextView mLoadingText;
     ImageButton imgButton;
     ImageView imgView;
     GridView gridView;
 
+    /**
+     * onCreate method instantiates the components of our activity screen layout
+     * Calls CloudVision API to analyse the image taken
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +79,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
 
         //Call Cloud Vision API to analyse image
        callCloudVision(bmp);
-
     }
 
     /**
@@ -93,6 +100,7 @@ public class ImageAnalysisScreen extends AppCompatActivity {
     /*=================== CLOUD VISION ===================*/
     /**
      * Call Cloud Vision API to compute labels
+     * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
      * @param bitmap Bitmap image to be analyzed
      */
     private void callCloudVision(final Bitmap bitmap) {
@@ -111,6 +119,8 @@ public class ImageAnalysisScreen extends AppCompatActivity {
 
     /**
      * Call Cloud Vision API to annotate the image provided
+     * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
+     * @param bitmap the image to analyse using the CloudVision API
      */
     private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
@@ -180,7 +190,8 @@ public class ImageAnalysisScreen extends AppCompatActivity {
     }
 
     /**
-     * An inner class to detect labels
+     * An inner class to detect labels and retrieve them as a HashMap
+     * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
      */
     private static class LabelDetectionTask extends AsyncTask<Object, Void, HashMap<String, Float>> {
         private final WeakReference<ImageAnalysisScreen> mActivityWeakReference;
@@ -209,6 +220,10 @@ public class ImageAnalysisScreen extends AppCompatActivity {
             return invalid;
         }
 
+        /**
+         * After the execution of the Cloud Vision API, this function is called to carry
+         * out updates to our image analysis screen.
+         */
         protected void onPostExecute(HashMap<String, Float> result) {
             ImageAnalysisScreen activity = mActivityWeakReference.get();
             if (activity != null && !activity.isFinishing()) {
@@ -244,7 +259,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
                 hashMap.put(label.getDescription(), label.getScore());
             }
         }
-
         return hashMap;
     }
 
