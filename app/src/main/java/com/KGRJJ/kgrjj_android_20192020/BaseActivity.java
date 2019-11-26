@@ -6,10 +6,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -22,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
@@ -55,10 +59,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -67,7 +74,7 @@ import java.util.Scanner;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected CycleMenuWidget cycleMenuWidget;
-
+    protected String mostRecentPhotoPath;
     protected Location mLastLocation;
     protected FusedLocationProviderClient mFusedLocationProviderClient;
     protected LocationRequest mLocationRequest;
@@ -227,47 +234,97 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     //region Photo Related Content
+    private File createImageFile(){
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "PNG_"+timeStamp+"_";
+        File storageDir = getExternalFilesDir(Environment.getExternalStorageDirectory().toString()+"Pictures");
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageName,  /* prefix */
+                    ".png",         /* suffix */
+                    storageDir      /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        // Save a file: path for use with ACTION_VIEW intents
+        mostRecentPhotoPath = image.getAbsolutePath();
+        Log.i("TESTING",mostRecentPhotoPath);
+        return image;
+    }
+    private void addPicToGallery(){
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Uri contentURI = Uri.fromFile(new File(mostRecentPhotoPath));
+        mediaScanIntent.setData(contentURI);
+        getApplicationContext().sendBroadcast(mediaScanIntent);
+    }
     protected void takePhoto(boolean PI,boolean Reg) {
 
 
         isInProfile = PI;
         isInReg = Reg;
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New picture");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-        imageUri = getContentResolver().insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+        File photoFIle = createImageFile();
+        if(photoFIle!=null){
+            Uri photoURI = FileProvider.getUriForFile(this,"com.KGRJJ.kgrjj_android_20192020.provider",photoFIle);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT,photoURI);
+            startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+        }
+
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
-                thumbnail  = (Bitmap) data.getExtras().get("data");
+                //thumbnail  = (Bitmap) data.getExtras().get("data");
+                addPicToGallery();
+
+            Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
                 if (isInProfile) {
-                    UplaodProfileImage(thumbnail,user);
+                    ImageView m = findViewById(R.id.profile_portrait_image);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                    try {
+
+                        UplaodProfileImage(bmp,user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                 } else if (isInReg) {
                     ImageView m = findViewById(R.id.takePhoto);
                     Glide
                             .with(getApplicationContext())
-                            .load(thumbnail)
+                            .load(mostRecentPhotoPath)
                             //.apply(RequestOptions.overrideOf(400,400))
                             .apply(RequestOptions.centerCropTransform())
                             .apply(RequestOptions.circleCropTransform())
                             .into(m);
                 } else {
-                    UploadImage(thumbnail, mLastLocation,user);
+                    UploadImage(bmp,mLastLocation,user);
                 }
             }
         }
     }
 
-    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user){
-        StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.png");
+    public void UplaodProfileImage(Bitmap bmp,FirebaseUser user) throws IOException {
+
+
+
+
+        StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
 
@@ -276,19 +333,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
         });
+
     }
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
-
-
-
-        String imagename = new Random().nextInt(10000) + 0 + "_"+location;
+        String imagename = new Random().nextInt(10000) + 0 + "_"+location+".jpg";
         StorageReference profileRef = mStorageReference.child("images/"+imagename);
 
         String url = "gs://kgrjj-android-2019.appspot.com/images/";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
@@ -298,7 +353,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
         HashMap<String,Object> map = new HashMap<>();
         map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
-        map.put("URL",url+imagename);
+        map.put("URL",imagename);
         db.collection("Images").add(map);
     }
     //endregion
@@ -380,7 +435,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         Log.i("TESTING",Points);
 
                         StorageReference profileRef = mStorageReference
-                                .child(user.getUid() + "/profileImage.png");
+                                .child(user.getUid() + "/profileImage.jpg");
 
                         profileRef.getDownloadUrl()
                                 .addOnSuccessListener(uri-> {

@@ -1,5 +1,6 @@
 package com.KGRJJ.kgrjj_android_20192020.Image_related_content;
 
+import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -11,17 +12,17 @@ import java.util.ArrayList;
 
 public class ImageDataObject {
 
-    private ImageView imageURL;
+    private String image;
     private GeoPoint geoPoint;
 
 
-    public ImageDataObject(GeoPoint geoPoint, ImageView imageURL) {
-        this.imageURL = imageURL;
+    public ImageDataObject(GeoPoint geoPoint, String image) {
+        this.image = image;
         this.geoPoint = geoPoint;
     }
 
-    public ImageView getImageURL() {
-        return imageURL;
+    public String  getImage() {
+        return image;
     }
     public GeoPoint getGeoPoint() {
         return geoPoint;
