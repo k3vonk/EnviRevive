@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +70,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -182,7 +185,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
-
+        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration){
+            cycleMenuWidget.setEnabled(false);
+            cycleMenuWidget.setVisibility(View.INVISIBLE);
+        }
+        else{
+            cycleMenuWidget.setEnabled(true);
+            cycleMenuWidget.setVisibility(View.VISIBLE);
+        }
 
         cycleMenuWidget.setStateChangeListener(
                 new OnStateChangedListener() {
@@ -213,9 +223,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentMap);
                                 break;
                             case 1:
-                                Intent myIntentProfile = new Intent(getApplicationContext(), UserProfileActivity.class);
-                                startActivity(myIntentProfile);
-                                break;
+                                if(getLayoutResourceID() == R.layout.activity_user_profile) {
+                                    break;
+                                }else{
+                                    getUserData(user);
+                                    Intent myIntentProfile = new Intent(getApplicationContext(), UserProfileActivity.class);
+                                    startActivity(myIntentProfile);
+                                    break;
+                                }
+
                             case 2:
                                 Intent myIntentEventsList = new Intent(getApplicationContext(), EventDisplayActivity.class);
                                 startActivity(myIntentEventsList);
@@ -364,7 +380,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             .into(m);
                     try {
 
-                        UploadProfileImage(bmp, user);
+                        UploadProfileImage(bmp ,user);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -406,6 +422,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void UploadProfileImage(Bitmap bmp, FirebaseUser user) throws IOException {
+
         StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -423,9 +440,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     //endregion
     //region Location Permission Content
 
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
+    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
     String currFilePath;
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
+
 
 
         String imagename = new Random().nextInt(10000) + 0 + "_" + location + ".jpg";

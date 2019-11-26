@@ -2,6 +2,8 @@ package com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
@@ -16,10 +20,13 @@ import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 public class UserProfileActivity extends BaseActivity implements View.OnClickListener {
@@ -60,11 +67,13 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         mProfileImage.setImageBitmap(profileImage);
         findViewById(R.id.profile_sign_out).setOnClickListener(this);
         findViewById(R.id.change_image).setOnClickListener(this);
+
         Glide.with(getApplicationContext())
                 .load(profileImage)
                 .apply(RequestOptions.centerCropTransform())
                 .apply(RequestOptions.circleCropTransform())
                 .into(mProfileImage);
+
         //findViewById(R.id.CreateEventBTN).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
 
