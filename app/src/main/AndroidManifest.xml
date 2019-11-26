@@ -51,6 +51,8 @@
         <activity
             android:name=".Event_related_content.EventDisplayActivity"
             android:screenOrientation = "portrait" />
+        <activity android:name=".Image_related_content.ImageDisplayActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".BaseActivity"
             android:screenOrientation = "portrait" />
