@@ -302,7 +302,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // Save a file: path for use with ACTION_VIEW intents
         mostRecentPhotoPath = image.getAbsolutePath();
         Log.i("TESTING", mostRecentPhotoPath);
