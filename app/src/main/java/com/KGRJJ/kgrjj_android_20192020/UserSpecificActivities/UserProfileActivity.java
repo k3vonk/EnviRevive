@@ -55,7 +55,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
 
         user = mAuth.getCurrentUser();
         getUserData(user);
-        getRegisteredEvents(user);
+        //getRegisteredEvents(user);
         profile_name.setText(fullname);
         profile_rank.setText(Rank);
         profile_city_country.setText(Country);
