@@ -1,11 +1,9 @@
 package com.KGRJJ.kgrjj_android_20192020.Event_related_content;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +17,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -40,7 +37,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
     @Override
     public EventAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtxEvent);
-        View view = inflater.inflate(R.layout.list_layout, null);
+        View view = inflater.inflate(R.layout.event_list_layout, null);
         ProductViewHolder holder = new ProductViewHolder(view);
         return holder;
     }
@@ -84,7 +81,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             textViewTime = itemView.findViewById(R.id.textViewTime);
 
 
-            map = itemView.findViewById(R.id.eventMap);
+            map = itemView.findViewById(R.id.imageMap);
             if(map!=null){
                 map.onCreate(null);
                 map.onResume();

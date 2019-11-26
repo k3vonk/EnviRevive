@@ -3,6 +3,7 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,17 +26,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.FileProvider;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
 import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
-import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventAdapter;
-import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDataObject;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
+import com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
-import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
-import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -63,7 +62,6 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
@@ -74,16 +72,18 @@ import com.google.type.LatLng;
 
 import java.io.ByteArrayOutputStream;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-
-import io.opencensus.metrics.export.MetricProducerManager;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -96,10 +96,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ArrayList<LatLng> list;
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     protected static final int RESULT_OK = -1;
-    protected ArrayList<EventDataObject> user_registered_events;
+
     public static Bitmap thumbnail;
-    private RecyclerView recyclerView;
-    private EventAdapter eventAdapter;
+
     protected static Uri imageUri;
     public static String fullname;
     public static String Rank;
@@ -121,14 +120,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
     private static final String ANDROID_PACKAGE_HEADER = "X-Android-Package";
     private static final int MAX_LABEL_RESULTS = 10;
-    private static final int MAX_DIMENSION = 1200;
+
 
     private static final String TAG = BaseActivity.class.getSimpleName();
     public static final int CAMERA_PERMISSIONS_REQUEST = 2;
     public static final int CAMERA_IMAGE_REQUEST = 3;
 
     private TextView mImageDetails;
-    private ImageView mMainImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,13 +195,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentEventsList);
                                 break;
                             case 3:
-                                takePhoto(false,false);
+                                Intent myIntentImagesList = new Intent(getApplicationContext(), ImageDisplayActivity.class);
+                                startActivity(myIntentImagesList);
                                 break;
                             case 4:
+                                takePhoto(false,false);
+                                break;
+                            case 5:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
                                 startActivity(myIntentEventCreate);
                                 break;
-                            case 5:
+                            case 6:
                                 mAuth.signOut();
                                 user = null;
                                 Intent myIntentLogout = new Intent(getApplicationContext(), LoginActivity.class);
@@ -219,17 +221,24 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Go to the Map", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                Toast.makeText(getApplicationContext(), "View your profile", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "View your Profile", Toast.LENGTH_SHORT).show();
                                 break;
                             case 2:
                                 Toast.makeText(getApplicationContext(), "See a List of Events", Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
-                                Toast.makeText(getApplicationContext(), "Take a photo", Toast.LENGTH_SHORT).show();
-
+                                Toast.makeText(getApplicationContext(), "See a List of Images", Toast.LENGTH_SHORT).show();
                                 break;
                             case 4:
+                                Toast.makeText(getApplicationContext(), "Take a Photo", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case 5:
                                 Toast.makeText(getApplicationContext(), "Create an Event", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case 6:
+                                Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_SHORT).show();
                                 break;
                         }
 
@@ -244,7 +253,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 }
         );
-        mMainImage = findViewById(R.id.imageView);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -266,8 +274,31 @@ public abstract class BaseActivity extends AppCompatActivity {
         imageUri = getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
+
+
     }
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
@@ -286,6 +317,25 @@ public abstract class BaseActivity extends AppCompatActivity {
                             .into(m);
                 } else {
                     UploadImage(thumbnail, mLastLocation,user);
+
+                    //Load bitmap and garbage collection
+                    try {
+                        //Write file
+                        String filename = "bitmap.png";
+                        FileOutputStream stream = this.openFileOutput(filename, Context.MODE_PRIVATE);
+                        thumbnail.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                        //Cleanup
+                        stream.close();
+                        thumbnail.recycle();
+
+                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                        imageAnalysisScreen.putExtra("image", filename);
+                        startActivity(imageAnalysisScreen);
+                    }catch (Exception e){
+                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                    }
+
                 }
             }
         }
@@ -304,6 +354,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
         });
     }
+
+    String currFilePath;
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
 
         String imagename = new Random().nextInt(10000) + 0 + "_"+location;
@@ -323,11 +375,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         HashMap<String,Object> map = new HashMap<>();
         map.put("Location",new GeoPoint(location.getLatitude(),location.getLongitude()));
         map.put("URL",url+imagename);
+        currFilePath = url + imagename; //File path to firebase directory.
         db.collection("Images").add(map);
 
         //Call CloudVision API
         callCloudVision(thumbnail);
-        mMainImage.setImageBitmap(thumbnail);
+       // mMainImage.setImageBitmap(thumbnail);
     }
     //endregion
     //region Location Permission Content
@@ -439,33 +492,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                 });
         Toast.makeText(getApplicationContext(),"Pulled values from cloud",Toast.LENGTH_LONG).show();
-    }
-    public void getRegisteredEvents(FirebaseUser user){
-        db.collection("user").document(user.getUid()).get()
-                .addOnSuccessListener(doc->{
-                    ArrayList<DocumentReference> eventsSubbed =
-                            (ArrayList<DocumentReference>) doc.get("subscribedEvents");
-                    for(int i = 0;i < eventsSubbed.size();i++ ){
-                        DocumentReference ref = eventsSubbed.get(i);
-                        ref.get().addOnSuccessListener(event ->{
-                            HashMap<String, Long> tempDat3 = (HashMap<String, Long>) event.get("Date");
-                            HashMap<String, Long> temptime = (HashMap<String, Long>) event.get("Time");
-                            Time time = new Time(Math.toIntExact(temptime.get("hour")),Math.toIntExact(temptime.get("minute")));
-                            Date date = new Date(Math.toIntExact(tempDat3.get("year")),Math.toIntExact(tempDat3.get("month")),Math.toIntExact(tempDat3.get("day")));
-                            EventDataObject EDO =
-                                    new EventDataObject(
-                                            (String) event.get("Title"),
-                                            (String) event.get("Description"),
-                                            date,
-                                            time,
-                                            (GeoPoint) event.get("Location"),
-                                            (ArrayList<String>) event.get("Images"));
-                            user_registered_events.add(EDO);
-                        });
-                    }
-                });
-        eventAdapter = new EventAdapter(getApplicationContext(), user_registered_events);
-        recyclerView.setAdapter(eventAdapter);
     }
 
 
