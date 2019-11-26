@@ -30,7 +30,6 @@ import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -66,35 +65,29 @@ public class ImageAnalysisScreen extends AppCompatActivity {
         imgButton.setOnClickListener(v -> onBackPressed());
 
         //Load up bitmap
-        Bitmap bmp = null;
+        Bitmap bmp;
         String filename = getIntent().getStringExtra("image");
-        setPic(filename);
+        bmp = setPic(filename);
 
-        callCloudVision(bmp);
+        //Call Cloud Vision API to analyse image
+       callCloudVision(bmp);
 
     }
-    private void setPic(String filename) {
-        // Get the dimensions of the View
-        int targetW = imgView.getWidth();
-        int targetH = imgView.getHeight();
 
+    /**
+     * Set picture for ImageAnalysis Screen
+     */
+    private Bitmap setPic(String currPhotoPath) {
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(filename, bmOptions);
+        Bitmap bitmap = BitmapFactory.decodeFile(currPhotoPath, bmOptions);
         imgView.setImageBitmap(bitmap);
+
+        return bitmap;
     }
 
     /*=================== CLOUD VISION ===================*/

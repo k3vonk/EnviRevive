@@ -3,14 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.KGRJJ.kgrjj_android_20192020">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
-    -->
+
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
@@ -26,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LoadingScreen"></activity>
+        <activity android:name=".LoadingScreen"/>
         <!-- android:theme="@style/AppTheme.NoActionBar" -->
         <activity android:name=".EventCreationDialog" />
         <activity android:name=".Event_related_content.EventAdapter" />
@@ -62,13 +57,13 @@
             android:name=".Authentication.RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateVisible|adjustPan"
-            ></activity>
+            />
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="stateVisible|adjustPan"
             />
         <activity android:name="Adapter.WheelSelectionAdapter"
             android:windowSoftInputMode="stateVisible|adjustPan"/>
-        <activity android:name=".Image_related_content.ImageDisplayActivity"></activity>
+        <activity android:name=".ImageAnalysisScreen"/>
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -85,6 +80,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+
         <!--
  continue a user-initiated action
         <service
