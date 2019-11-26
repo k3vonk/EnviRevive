@@ -64,62 +64,58 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * An Activity that glues all other activities together
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 26-11-2019
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public static final String MAP_TAG = "ENVIVE_MAP_TAG";
-    protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
-    protected static final int RESULT_OK = -1;
+    //Error Message Tag
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
+    //Map & Location Variables
     protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+    protected FusedLocationProviderClient mFusedLocationProviderClient;
+    protected Location mLastLocation;
+    protected LocationRequest mLocationRequest;
+
+    //Image Variables
+    protected static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
+    protected static final int RESULT_OK = -1;
     public static Bitmap thumbnail;
+    public static Bitmap profileImage;
+    protected Image_Upload image_upload;
+    protected String mostRecentPhotoPath;
+
+    //FireBase/Internal Storage & Image Info Variables
+    protected static FirebaseUser user;
+    protected static FirebaseAuth mAuth;
+    protected static StorageReference mStorageReference;
+    protected FirebaseFirestore db;
+    protected ArrayList<LatLng> list;
     public static String fullname;
     public static String Rank;
     public static String Country;
     public static String Points;
-    public static Bitmap profileImage;
-    protected static StorageReference mStorageReference;
-    protected static FirebaseUser user;
-    protected static FirebaseAuth mAuth;
+
+    //Cycle Hamburger menu
     private static boolean isInProfile;
     private static boolean isInReg;
     protected CycleMenuWidget cycleMenuWidget;
-    protected String mostRecentPhotoPath;
-    protected Location mLastLocation;
-    protected FusedLocationProviderClient mFusedLocationProviderClient;
-    protected LocationRequest mLocationRequest;
-    protected ArrayList<LatLng> list;
-    protected Image_Upload image_upload;
-    protected FirebaseFirestore db;
 
-    private static final String TAG = BaseActivity.class.getSimpleName();
-
-
+    /**
+     * Setup location tracker, wheel widget, FireBase and Internal storage
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceID());
 
-        //Instantiation
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        //Requesting location
-        mLocationRequest = new LocationRequest();
+        setupLocationTracker(); //instantiate location tracking and carry out various tasks
 
-        //Frequency settings
-        mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
-        mLocationRequest.setFastestInterval(2 * 60 * 1000);
-
-        //Accuracy settings
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
-        //If permission is granted...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-
-        } else { //Request permission...
-            checkLocationPermissions();
-        }
-
-
+        //TODO: clean up cycleMenuWidget to several functions
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
         if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration){
@@ -226,52 +222,28 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
         );
 
-
         cycleMenuWidget.setStateSaveListener(
                 (itemPosition, lastItemAngleShift) -> {
 
                 }
         );
+
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
-                "gs://kgrjj-android-2019.appspot.com/images");
+        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://kgrjj-android-2019.appspot.com/images");
         image_upload = new Image_Upload(db, mStorageReference, getApplicationContext());
     }
 
-    //region Photo Related Content
-    private File createImageFile() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageName = "PNG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = null;
-        try {
-            image = File.createTempFile(
-                    imageName,  /* prefix */
-                    ".png",         /* suffix */
-                    storageDir      /* directory */
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Save a file: path for use with ACTION_VIEW intents
-        mostRecentPhotoPath = image.getAbsolutePath();
-        Log.i("TESTING", mostRecentPhotoPath);
-        return image;
-    }
 
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mostRecentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
+    //====================== IMAGE TAKEN ===========================//
 
+    /**
+     * Take a photo using phone's hardware
+     * @param PI true if in profile activity
+     * @param Reg true if in registration activity
+     */
     protected void takePhoto(boolean PI, boolean Reg) {
-
-
         isInProfile = PI;
         isInReg = Reg;
 
@@ -281,75 +253,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (photoFIle != null) {
             Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
-        }
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
-                //thumbnail  = (Bitmap) data.getExtras().get("data");
-                galleryAddPic();
-
-                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
-                if (isInProfile) {
-                    ImageView m = findViewById(R.id.profile_portrait_image);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-                    try {
-
-                        UploadProfileImage(bmp ,user);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                } else if (isInReg) {
-                    ImageView m = findViewById(R.id.takePhoto);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-                } else {
-
-                    UploadImage(bmp, mLastLocation, user);
-
-                    //Load bitmap and garbage collection
-                    try {
-                        //Write file
-                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
-                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
-                        startActivity(imageAnalysisScreen);
-                    }catch (Exception e){
-                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
-                    }
-                }
-            }
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
 
+    /**
+     * Upload personal profile image onto FireBase and into user's account
+     * @param bmp image of user
+     * @param user users personal FireBase
+     */
     public void UploadProfileImage(Bitmap bmp, FirebaseUser user) throws IOException {
 
         StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.jpg");
@@ -358,107 +270,101 @@ public abstract class BaseActivity extends AppCompatActivity {
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
 
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
-        });
-
-
-    }
-    //endregion
-    //region Location Permission Content
-
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        uploadTask.addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT)
+                .show())
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show());
     }
 
-    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
-        Matrix matrix = new Matrix();
-        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-    String currFilePath;
+    /**
+     * Upload image to FireBase with set data, location
+     * @param bmp image user photographed
+     * @param location image geo-location
+     * @param user user information
+     */
     public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
-
-
 
         String imagename = new Random().nextInt(10000) + 0 + "_" + location + ".jpg";
         StorageReference profileRef = mStorageReference.child("images/" + imagename);
 
-        String url = "gs://kgrjj-android-2019.appspot.com/images/";
+        //String url = "gs://kgrjj-android-2019.appspot.com/images/";
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
-        });
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show());
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("Location", new GeoPoint(location.getLatitude(), location.getLongitude()));
         map.put("URL", imagename);
 
         db.collection("Images").add(map);
-
     }
 
     /**
-     * Check for application permission to access location
+     * createImageFile create a collision-resistant file name
+     * Reference: https://developer.android.com/training/camera/photobasics.html
+     * @return unique file name
      */
-    protected void checkLocationPermissions() {
+    private File createImageFile() {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "PNG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = null;
 
-        //If there is no permission...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
-        } else { //else granted...
-            Log.d(MAP_TAG, "getLocation: permissions granted");
+        try {
+            image = File.createTempFile(
+                    imageName,        /* prefix */
+                    ".png",     /* suffix */
+                    storageDir       /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
-    /**
-     * Handle requests based on requestCode
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_PERMISSION_LOCATION_KEY:
-
-                //If the request is granted...
-                if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                    //If permission location is granted...
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        // mMap.setMyLocationEnabled(true);
-                    } else { //Permission denied...
-                        Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
-                    }
-                }
+        // Save a file: path for use with ACTION_VIEW intents
+        if (image != null) {
+            mostRecentPhotoPath = image.getAbsolutePath();
         }
+        Log.i("TESTING", mostRecentPhotoPath);
+        return image;
     }
 
-
-    //endregion
+    /**
+     * Add photo to a set gallery database
+     * Reference: https://developer.android.com/training/camera/photobasics.html
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mostRecentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
 
     /**
-     * Callback function to obtain new location and store the old one.
-     * Update any additional features in regards to this new location
+     * Bitmap transformation by rotation
      */
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
+    /**
+     * Bitmap transformation by flipping
+     */
+    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
-//endregion
-
+    //============================================ FIREBASE ==================================================================//
     protected abstract int getLayoutResourceID();
-
-    public void getRegisteredEvents(){
-
-    }
 
     public void getUserData(FirebaseUser user) {
         Log.i("TESTING", "cloud function called");
@@ -513,8 +419,52 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //======================== LOCATION FINDER =============================//
     /**
+     * Instantiate location tracker
+     */
+    private void setupLocationTracker(){
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        //Requesting location
+        mLocationRequest = new LocationRequest();
+
+        //Frequency settings
+        mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
+        mLocationRequest.setFastestInterval(2 * 60 * 1000);
+
+        //Accuracy settings
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        onLocationPermissionTask();
+    }
+
+    /**
+     * Carry out various location tasks based on permission
+     */
+    private void onLocationPermissionTask(){
+        //If permission is granted...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        } else { //Request permission...
+            checkLocationPermissions();
+        }
+    }
+
+    /**
+     * Check for application permission to access location
+     */
+    protected void checkLocationPermissions() {
+
+        //If there is no permission...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
+        } else { //else granted...
+            Log.d(TAG, "getLocation: permissions granted");
+        }
+    }
+
+    /**
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
+     * Reference: https://developers.google.com/maps/documentation/android-sdk/start
      */
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -524,9 +474,81 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (!locationList.isEmpty()) {
                 //The last location in the list is the newest
                 Location location = locationList.get(locationList.size() - 1);
-                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
+                Log.i(TAG, "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
                 mLastLocation = location;
             }
         }
     };
+
+    /**
+     * Handle requests based on requestCode
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_PERMISSION_LOCATION_KEY) {//If the request is granted...
+            if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
+                //If permission location is granted...
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                    // mMap.setMyLocationEnabled(true);
+                } else { //Permission denied...
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    //================================  ACTIVITY RESULTS =====================================//
+    /**
+     * Based on parameters, carry out different tasks after an activity
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+                galleryAddPic();
+
+                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+                if (isInProfile) { //In Profile, upload profile picture
+                    ImageView m = findViewById(R.id.profile_portrait_image);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+
+                    try {
+                        UploadProfileImage(bmp ,user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (isInReg) { //In registration
+                    ImageView m = findViewById(R.id.takePhoto);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                } else { //Upload image to FireBase and output to activity screen
+                    UploadImage(bmp, mLastLocation, user);
+
+                    //Load bitmap and garbage collection
+                    try {
+                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
+                        startActivity(imageAnalysisScreen);
+                    }catch (Exception e){
+                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
 }
