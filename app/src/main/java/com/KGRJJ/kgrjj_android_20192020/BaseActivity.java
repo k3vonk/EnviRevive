@@ -122,7 +122,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
-        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration){
+        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration
+        ||getLayoutResourceID()==R.layout.activity_image_analysis_screen){
             cycleMenuWidget.setEnabled(false);
             cycleMenuWidget.setVisibility(View.INVISIBLE);
         }
@@ -334,7 +335,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             .into(m);
                 } else {
 
-                    UploadImage(bmp, mLastLocation, user);
+                    //UploadImage(bmp, mLastLocation, user);
 
                     //Load bitmap and garbage collection
                     try {

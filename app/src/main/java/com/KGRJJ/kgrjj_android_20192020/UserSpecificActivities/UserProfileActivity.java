@@ -47,6 +47,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     protected  ImageView mProfileImage;
     protected ArrayList<EventDataObject> my_events;
     private RecyclerView recyclerView;
+
     private EventAdapter eventAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
