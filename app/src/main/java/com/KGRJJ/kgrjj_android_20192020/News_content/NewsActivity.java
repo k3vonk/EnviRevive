@@ -1,6 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020.News_content;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class NewsActivity extends BaseActivity {
-   // private TextView mTextViewResult;
+    private TextView mTextViewResult;
     private RequestQueue mQueue;
 
     private ArrayList<NewsObjects> mNewsObj;
@@ -33,18 +34,30 @@ public class NewsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+        mNewsObj = new ArrayList<>();
+
+        mTextViewResult = findViewById(R.id.news_TextView);
+
 
         mRecycleView = findViewById(R.id.recycler_view);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        mNewsObj = new ArrayList<>();
-        jsonParse();
+        testInputs();
+    //    jsonParse();
 
     }
 
     @Override
     protected int getLayoutResourceID() { return R.layout.activity_news;}
+
+
+    //remove for later
+    public void testInputs(){
+        mTextViewResult.setText("WELCOME");
+        String img_test = "https://www.weareopen.ie/wp-content/uploads/UCD-Logo.jpg";
+        mNewsObj.add(new NewsObjects("title_test", "desc_test", "auth_test", "date_test", img_test, "haha"));
+    }
 
     public void jsonParse(){
         String URL = "https://newsapi.org/v2/top-headlines?country=ie&category=business&apiKey=f05bc125586849b5b53391ce06b75ae9";
@@ -77,8 +90,9 @@ public class NewsActivity extends BaseActivity {
                                 String image = article.getString("urlToImage");
                                 String date = article.getString("publishedAt");
 
+                                mNewsObj.add(new NewsObjects(title, description, author, date, image, url));
                             //    mTextViewResult.setText(title);
-                      //          mNewsObj.add(new NewsObjects(title, description, author, date, image, url));
+
                      //           mNewsObj.add(new NewsObjects("haha", "haha", "haha", "haha", "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200", "haha"));
                             }
                                 mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
