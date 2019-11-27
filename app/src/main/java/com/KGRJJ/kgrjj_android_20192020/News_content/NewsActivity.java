@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
+import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventAdapter;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -57,6 +58,11 @@ public class NewsActivity extends BaseActivity {
         mTextViewResult.setText("WELCOME");
         String img_test = "https://www.weareopen.ie/wp-content/uploads/UCD-Logo.jpg";
         mNewsObj.add(new NewsObjects("title_test", "desc_test", "auth_test", "date_test", img_test, "haha"));
+
+        //MOVED THESE THINGS TO HERE
+        // THEY WERE IN JSONPARSE
+        mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
+        mRecycleView.setAdapter(mNewsAdapter);
     }
 
     public void jsonParse(){
@@ -95,8 +101,7 @@ public class NewsActivity extends BaseActivity {
 
                      //           mNewsObj.add(new NewsObjects("haha", "haha", "haha", "haha", "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200", "haha"));
                             }
-                                mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
-                                mRecycleView.setAdapter(mNewsAdapter);
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
