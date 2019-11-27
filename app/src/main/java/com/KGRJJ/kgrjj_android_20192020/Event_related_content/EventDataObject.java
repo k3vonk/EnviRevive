@@ -6,6 +6,7 @@ import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.google.firebase.firestore.GeoPoint;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class EventDataObject {
@@ -20,9 +21,9 @@ public class EventDataObject {
 
 
     private ArrayList<String> imageURLS;
+    private ArrayList<String> registeredUsers;
 
-
-    public EventDataObject(String id,String title, String description, Date date, Time time, GeoPoint location, ArrayList<String> imageURLS) {
+    public EventDataObject(String id,String title, String description, Date date, Time time, GeoPoint location, ArrayList<String> imageURLS,ArrayList<String> registeredUsers) {
         this.ID = id;
         Title = title;
         this.description = description;
@@ -30,6 +31,7 @@ public class EventDataObject {
         this.time = time;
         this.location = location;
         this.imageURLS = imageURLS;
+        this.registeredUsers = registeredUsers;
 
     }
 
@@ -58,5 +60,5 @@ public class EventDataObject {
         return imageURLS;
     }
 
-
+    public ArrayList<String> getRegisteredUsers(){return registeredUsers;}
 }

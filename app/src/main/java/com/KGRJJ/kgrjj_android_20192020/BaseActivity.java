@@ -456,9 +456,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract int getLayoutResourceID();
 
-    public void getRegisteredEvents(){
-
-    }
 
     public void getUserData(FirebaseUser user) {
         Log.i("TESTING", "cloud function called");

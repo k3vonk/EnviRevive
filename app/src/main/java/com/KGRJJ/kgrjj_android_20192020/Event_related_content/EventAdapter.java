@@ -58,7 +58,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         holder.textViewDate.setText(eventDataObject.getDate().toString());
         holder.textViewTime.setText(eventDataObject.getTime().toString());
         holder.location = eventDataObject.getLocation();
-
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if(eventDataObject.getRegisteredUsers().contains(user)){
+            holder.button.setVisibility(View.INVISIBLE);
+            holder.button.setEnabled(false);
+        }
         holder.button.setOnClickListener(v -> {
             String event = eventDataObject.getID();
            RegisterToEvent(event);

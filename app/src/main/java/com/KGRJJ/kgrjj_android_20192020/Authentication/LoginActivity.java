@@ -20,6 +20,15 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * The Login activity produces an authentication screen that prompts the user to login using
+ * their credentials. Should the user not have an account already created, an option to create
+ * an account is present.
+ *
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 07-10-2019
+ */
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
@@ -49,7 +58,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             are only ever used for listening. "This links to the OnClick method defined below
          */
         findViewById(R.id.createAccount).setOnClickListener(this);
-        // " create account is a clickable text to on the activity screen.
+        //create account is a clickable text to on the activity screen.
         mLoginBTN = findViewById(R.id.loginBTN);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
@@ -61,10 +70,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
-//        mVideoView = findViewById(R.id.videoView);
-//        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.mountains_video2);
-//        mVideoView.setVideoURI(uri);
-//        mVideoView.start();
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -140,13 +145,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
     }
+
+    /*
+        checkRequiredFields ensures that the user has input text into both text boxes
+     */
     private void checkRequiredFields() {
         if(email.getText().toString().isEmpty() ||
                 password.getText().toString().isEmpty()  ){
             mLoginBTN.setEnabled(false);
-//            TimeUnit.SECONDS.sleep(5);
-//            mLoginBTN.setEnabled(true);
-
         }
         else{
             mLoginBTN.setEnabled(true);
@@ -168,6 +174,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             signIn(email.getText().toString(), password.getText().toString());
         }
     }
+
+    /*
+        Function derived from BaseActivity
+     */
     @Override
     protected int getLayoutResourceID() {
         return R.layout.activity_login;
