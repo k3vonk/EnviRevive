@@ -289,16 +289,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-
-
-
-
-
-
 /*
     Function to handle any Results returned from launching activities.
  */
