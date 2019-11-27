@@ -71,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
     protected static final int RESULT_OK = -1;
     protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+    protected  static final int REQUEST_ANALYSIS = 70;
     public static Bitmap thumbnail;
     public static String fullname;
     public static String Rank;
@@ -300,8 +301,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK) {
+        if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
+            Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+            HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
+            UploadImage(bmp,mLastLocation,results);
+        }
+        else if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
                 //thumbnail  = (Bitmap) data.getExtras().get("data");
                 galleryAddPic();
@@ -342,7 +347,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         //Write file
                         Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
                         imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
-                        startActivity(imageAnalysisScreen);
+                        startActivityForResult(imageAnalysisScreen,REQUEST_ANALYSIS);
                     }catch (Exception e){
                         Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
                     }
@@ -382,7 +387,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
     String currFilePath;
-    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
+    public void UploadImage(Bitmap bmp,Location location,HashMap<String,Float> results){
 
 
 
@@ -404,7 +409,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         HashMap<String, Object> map = new HashMap<>();
         map.put("Location", new GeoPoint(location.getLatitude(), location.getLongitude()));
         map.put("URL", imagename);
-
+        map.put("AnalysisResults",results);
         db.collection("Images").add(map);
 
     }
