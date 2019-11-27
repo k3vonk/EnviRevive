@@ -491,7 +491,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 //If permission location is granted...
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    // mMap.setMyLocationEnabled(true);
                 } else { //Permission denied...
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                 }

@@ -2,6 +2,8 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -21,7 +23,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -29,9 +33,12 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The MapsActivity allows the tracking of users and display Google Maps
@@ -52,6 +59,18 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     HeatmapTileProvider mHeatMapTileProvider;
     TileOverlay mTileOverlay;
 
+    //Used for Weighted HeatMap
+    int[] colors = {
+            Color.GREEN,    // green(0-50)
+            Color.YELLOW,    // yellow(51-100)
+            Color.rgb(255,165,0), //Orange(101-150)
+            Color.RED,              //red(151-200)
+            Color.rgb(153,50,204), //dark orchid(201-300)
+            Color.rgb(165,42,42) //brown(301-500)
+    };
+
+    //Time
+    Calendar time;
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
 
     /**
@@ -61,6 +80,9 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Toast.makeText(this, "Map Loaded or Reloaded", Toast.LENGTH_SHORT).show();
+
+        time = Calendar.getInstance();
+
 
         //Instantiation
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
@@ -99,12 +121,30 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        //Change Map based on time
+        if(time.get(Calendar.HOUR_OF_DAY) >= 19 || time.get(Calendar.HOUR_OF_DAY) < 6) {
+            try {
+                // Customise the styling of the base map using a JSON object defined
+                // in a raw resource file.
+                boolean success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.mp_night_style));
+
+                if (!success) {
+                    Log.i("MapActivity", "Style parsing failed.");
+                }
+            } catch (Resources.NotFoundException e) {
+                Log.e("MapActivity", "Can't find style. Error: ", e);
+            }
+        }
+
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         //Small widgets for the map
-        mMap.getUiSettings().setZoomControlsEnabled(false);
-        mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         //Requesting location
         mLocationRequest = new LocationRequest();
@@ -134,19 +174,16 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION_LOCATION_KEY:
-
-                //If the request is granted...
-                if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                    //If permission location is granted...
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        // mMap.setMyLocationEnabled(true);
-                    } else { //Permission denied...
-                        Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
-                    }
+        if (requestCode == REQUEST_PERMISSION_LOCATION_KEY) {//If the request is granted...
+            if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
+                //If permission location is granted...
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                    mMap.setMyLocationEnabled(true);
+                } else { //Permission denied...
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                 }
+            }
         }
     }
 
@@ -201,6 +238,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private void readItems() {
         ArrayList<LatLng> list = new ArrayList<>();
 
+        //TODO: Weighted HeatMap here
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
