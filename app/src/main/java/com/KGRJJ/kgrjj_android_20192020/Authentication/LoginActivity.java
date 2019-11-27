@@ -20,7 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-/**
+/***
  * The Login activity produces an authentication screen that prompts the user to login using
  * their credentials. Should the user not have an account already created, an option to create
  * an account is present.
@@ -32,12 +32,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
-    // Essential for using Firebase Authentication
-    private FirebaseAuth mAuth;
-    FirebaseUser user;
-
     // Useful for Log messaged - assign a tag (this is placeholder for now)
-    private String TAG = "log";
+    private String TAG = "LOGIN_ACTIVITY: ";
 
     //These variables will be assigned the text input areas of this screen.
     private TextView email;
@@ -71,13 +67,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         animationView.setVisibility(View.INVISIBLE);
 
         //Essential for using Firebase authentication
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
 
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
-        email.addTextChangedListener(new TextWatcher() {
+
+        email.addTextChangedListener(new TextWatcher() { //check for input updates
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -111,9 +106,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         });
     }
 
-    /* Function written using Firebase tips. Note we dont use our input handlers here.
+    /* Method "signIn" written using Firebase tips. Note we dont use our input handlers here.
         This is because if the input isnt correct the FirebaseAuthentication method
-        "signInWithEmailAndPassword" does this.
+        "signInWithEmailAndPassword" handles this.
 
      */
     private void signIn(String email, String password){
@@ -125,13 +120,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Log.d(TAG, "signInWithEmail:success");
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
-                        getUserData(user);
-                        Intent service = new Intent(this, UserProfileDataService.class);
-                        service.putExtra("ID",user.getUid());
-                        startService(service);
+                        getUserData(user); //pre-load the data required in userProfile
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
-                        finish();
+                        finish(); // end the login activity
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());

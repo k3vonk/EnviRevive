@@ -1,20 +1,16 @@
 package com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities;
 
-
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDataObject;
@@ -23,11 +19,8 @@ import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,54 +39,52 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     private TextView profile_name, profile_rank, profile_city_country, profile_points;
     protected  ImageView mProfileImage;
     protected ArrayList<EventDataObject> my_events;
-    private RecyclerView recyclerView;
 
+    //RecyclerView variables
+    private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
-                "gs://kgrjj-android-2019.appspot.com/images");
-
         profile_name = findViewById(R.id.profile_username);
         profile_rank = findViewById(R.id.profile_rank);
         profile_city_country = findViewById(R.id.profile_city_country);
         profile_points = findViewById(R.id.profile_points);
-        /* method that connects to firestore and finds the user with the same ID as the currently signed
-        in user. "Username" string is then assigned the value found form the database.
-     */
         mProfileImage = findViewById(R.id.profile_portrait_image);
         my_events = new ArrayList<>();
-        user = mAuth.getCurrentUser();
-        getUserData(user);
 
-        //getRegisteredEvents(user);
+
+        user = mAuth.getCurrentUser();   //ensure we have the correct user
+
+        getUserData(user);  //retrieve necessary data. Must come before the following
         profile_name.setText(fullname);
         profile_rank.setText(Rank);
         profile_city_country.setText(Country);
         profile_points.setText(Points);
-        //Log.i("TESTING","PROFILEIMAGE CODE"+profileImage.getDensity());
         mProfileImage.setImageBitmap(profileImage);
 
-        findViewById(R.id.change_image).setOnClickListener(this);
 
+        //load profile images into image view using Glide
         Glide.with(getApplicationContext())
                 .load(profileImage)
                 .apply(RequestOptions.centerCropTransform())
                 .apply(RequestOptions.circleCropTransform())
                 .into(mProfileImage);
 
-        //findViewById(R.id.CreateEventBTN).setOnClickListener(this);
 
+        //Add listeners to each button
+        findViewById(R.id.change_image).setOnClickListener(this);
         mProfileImage.setOnClickListener(this);
+
+
         recyclerView = findViewById(R.id.profileRecycle);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        GetRegisteredEvents();
+        GetRegisteredEvents(); //Retrieves event data and inserts it into recyclerview
     }
 
     @Override
@@ -112,6 +103,10 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    /*
+            Method to retrieve all the events the user is currently subscribed to.
+            Insert events into RecyclerView to be displayed
+     */
     private void GetRegisteredEvents(){
 
         db.collection("user").document(user.getUid()).get()
@@ -125,10 +120,16 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                             ref.get().addOnSuccessListener(doc -> {
 
                                 String id = doc.getId();
-                                HashMap<String, Long> tempDat3 = (HashMap<String, Long>) doc.get("Date");
-                                HashMap<String, Long> temptime = (HashMap<String, Long>) doc.get("Time");
-                                Time time = new Time(Math.toIntExact(temptime.get("hour")),Math.toIntExact(temptime.get("minute")));
-                                Date date = new Date(Math.toIntExact(tempDat3.get("year")),Math.toIntExact(tempDat3.get("month")),Math.toIntExact(tempDat3.get("day")));
+
+                                HashMap<String, Long> temp_date = (HashMap<String, Long>) doc.get("Date");
+                                HashMap<String, Long> temp_time = (HashMap<String, Long>) doc.get("Time");
+                                Time time = new Time(Math.toIntExact(temp_time.get("hour")),
+                                        Math.toIntExact(temp_time.get("minute")));
+
+                                Date date = new Date(Math.toIntExact(temp_date.get("year")),
+                                        Math.toIntExact(temp_date.get("month")),
+                                        Math.toIntExact(temp_date.get("day")));
+                                //create a EventDataObject to be used by the eventAdapter
                                 EventDataObject EDO =
                                         new EventDataObject(id,
                                                 (String) doc.get("Title"),
@@ -149,5 +150,6 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
                 });
 
     }
+
 
 }

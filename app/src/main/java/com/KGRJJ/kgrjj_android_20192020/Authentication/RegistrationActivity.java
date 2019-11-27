@@ -1,18 +1,13 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -21,27 +16,28 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
-import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
-import com.KGRJJ.kgrjj_android_20192020.MainActivity;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
-import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
-import com.KGRJJ.kgrjj_android_20192020.utilities.FirebaseStorageHandler;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mukesh.countrypicker.CountryPicker;
-
 import java.io.IOException;
 import java.util.Map;
 
+/***
+ * The Registration activity produces an screen that prompts users to creat a profile.
+ * Including profile image,Email,Password,Username,City and Country
+ *
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 07-10-2019
+ */
 public class RegistrationActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
@@ -49,7 +45,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     private TextView regTitle, mUsername, mInfoReq, mCountry;
 
     // Essential for using Firebase Authentication
-    private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
     private FirestoreDocumentModel FDM = new FirestoreDocumentModel();
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -93,6 +88,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
         mTakePhoto.setOnClickListener(view-> {
             takePhoto(false, true);
+            ImageView m = findViewById(R.id.takePhoto);
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -100,7 +96,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-        //Note: Buttons don't need to be stored as they are just just for listeners
+        //Note: Buttons don't need to be stored as they are just used for listeners
         mRegButton.setOnClickListener(this);
         findViewById(R.id.cancelSignUp).setOnClickListener(this);
         mRegButton.setEnabled(false);
@@ -201,17 +197,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         return R.layout.activity_registration;
     }
 
-    // [START on_start_check_user]
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //TODO
-    }
-    // [END on_start_check_user]
-
-
 
 
     /*
@@ -278,11 +263,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
      */
     private void addUserData(FirebaseUser user){
 
-        String uri = "gs://kgrjj-android-2019.appspot.com/images";
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) mTakePhoto.getDrawable();
+        String uri = "gs://kgrjj-android-2019.appspot.com/images/";
 
         Map<String,Object> UserData = FDM.addDataToHashMap(mName.getText().toString(),mUsername.getText().toString(),
-                mCity.getText().toString(),(uri+user.getUid()+"/profileImage.png"),mCountry.getText().toString());
+                mCity.getText().toString(),(uri+user.getUid()+"/profileImage.jpg"),mCountry.getText().toString());
 
         db.collection("user").document(user.getUid()).set(UserData)
                 .addOnSuccessListener(aVoid -> {
@@ -293,16 +277,26 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                     Log.d(TAG, "Error writing document", e);
                     Log.d("TESTING",": USER NOT CREATED");
                 });
-        image_upload.UplaodProfileImage(thumbnail,user);
+        Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+        try {
+            UploadProfileImage(bmp,user);
+            profileImage = bmp; // circumvents download issues
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /***
+     * Method to ensure that all input fields have been completed
+     */
     private void checkRequiredFields(){
         if(!mEmailField.getText().toString().isEmpty() &&
                 !mPasswordField.getText().toString().isEmpty() &&
                 !mUsername.getText().toString().isEmpty()
         && countryPicked &&
         !mName.getText().toString().isEmpty() &&
-        !mCity.getText().toString().isEmpty()){
+        !mCity.getText().toString().isEmpty()
+        &&mTakePhoto.getDrawable()!=null){
             mRegButton.setEnabled(true);
             mInfoReq.setEnabled(false);
         }
@@ -311,6 +305,10 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
+    /*
+            Method the handles all the button listeners.
+            Code is housed here to keep the "onCreate" tidy.
+     */
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -318,16 +316,14 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             mRegButton.setEnabled(false);
             mRegButton.setVisibility(View.INVISIBLE);
             if(createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString())) {
-                Log.i("TESTING","createaccount ocured");
-
                 mRegButton.setVisibility(View.INVISIBLE);
                 mLottie.setVisibility(View.VISIBLE);
                 mLottie.playAnimation();
-
+                //allow the system time to create the user account by waiting a few seconds
                 Thread loading = new Thread(){
                     public void run(){
                         try {
-                            Thread.sleep(6000);
+                            Thread.sleep(5000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -335,7 +331,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                         startActivity(myIntentProfile);
                     }
                 };
-                loading.start();
+                loading.start(); //start teh new thread
 
             }else{
                 mRegButton.setEnabled(true);
@@ -359,4 +355,5 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             countryPicked = true;
         }
     }
+
 }
