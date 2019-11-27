@@ -76,10 +76,6 @@
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation = "portrait" />
         <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation = "portrait" />
-        <activity
             android:name="Adapter.WheelSelectionAdapter"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation = "portrait"/>

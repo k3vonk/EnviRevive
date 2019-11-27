@@ -69,6 +69,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         holder.textViewDate.setText(eventDataObject.getDate().toString());
         holder.textViewTime.setText(eventDataObject.getTime().toString());
         holder.location = eventDataObject.getLocation();
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        holder.un_sub.setEnabled(false);
+        holder.un_sub.setVisibility(View.INVISIBLE);
+        if(eventDataObject.getRegisteredUsers().contains(user)){
+            holder.button.setVisibility(View.INVISIBLE);
+            holder.button.setEnabled(false);
+            holder.un_sub.setEnabled(true);
+            holder.un_sub.setVisibility(View.VISIBLE);
+        }
+        holder.un_sub.setOnClickListener(v -> {
+            String event = eventDataObject.getID();
+            UnRegisterToEvent(event);
+            holder.un_sub.setEnabled(false);
+            holder.un_sub.setText("No longer Registered");
+            Toast.makeText(mCtxEvent,"Registered to event",Toast.LENGTH_SHORT).show();
+        });
 
         holder.button.setOnClickListener(v -> {
             String event = eventDataObject.getID();
@@ -104,7 +120,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         FirebaseFirestore.getInstance().collection("user").document(user)
                 .update("subscribedEvents",FieldValue.arrayUnion(eventRef));
     }
+    public void UnRegisterToEvent(String event){
+        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DocumentReference eventRef =
+                FirebaseFirestore.getInstance().collection("Events").document(event);
 
+        eventRef.update("Attendees",FieldValue.arrayRemove(user));
+        FirebaseFirestore.getInstance().collection("user").document(user)
+                .update("subscribedEvents",FieldValue.arrayRemove(eventRef));
+        this.notifyDataSetChanged();
+    }
     /**
      * initialising the skeleton structure of each card in the Recycler Product Holder
      * stylised using the 'event_list_layout' resource layout file.
@@ -113,7 +138,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
 
         TextView textViewTitle, textViewDescription, textViewDate, textViewTime;
         GeoPoint location;
-        Button button;
+        Button button,un_sub;
         GoogleMap mapViewLocation;
         MapView map;
 
@@ -125,7 +150,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             textViewDate = itemView.findViewById(R.id.textViewDate);
             textViewTime = itemView.findViewById(R.id.textViewTime);
             button = itemView.findViewById(R.id.button);
-
+            un_sub = itemView.findViewById(R.id.unregister);
 
             map = itemView.findViewById(R.id.imageMap);
             if(map!=null){

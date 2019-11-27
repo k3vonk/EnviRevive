@@ -64,7 +64,8 @@ public class EventDisplayActivity extends BaseActivity {
                                 date,
                                 time,
                                 (GeoPoint) doc.get("Location"),
-                                (ArrayList<String>) doc.get("Images"));
+                                (ArrayList<String>) doc.get("Images"),
+                                (ArrayList<String>) doc.get("Attendees"));
                 events.add(EDO);
             }
             eventAdapter = new EventAdapter(getApplicationContext(), events);
