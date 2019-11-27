@@ -3,7 +3,6 @@
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="AppTitle">EnviRevive</string>
     <string name="register">Register</string>
-    <string name="sign_in">Sign In</string>
     <string name="password_not_valid">\n
         a digit must occur at least once\n
         a lower case letter must occur at least once\n
@@ -46,5 +45,11 @@
     <string name="_100">100%</string>
     <string name="label">Label</string>
     <string name="backbutton">backbutton</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email_address_hint">Email Address</string>
+    <string name="password_hint">Password</string>
+    <string name="create_a_free_account">Create a free account.</string>
+    <string name="can_t_login">Can\'t login?</string>
+    <string name="login">Login</string>
 
 </resources>
