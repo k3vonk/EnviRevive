@@ -74,6 +74,7 @@
         <GridView
             android:id="@+id/gridView"
             android:background="@drawable/gradient_bg"
+            android:alpha="0.9"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="35" />
