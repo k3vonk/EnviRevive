@@ -32,26 +32,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtxNews);
-        View view = inflater.inflate(R.layout.list_news, parent, false);
+        View view = inflater.inflate(R.layout.list_news, null);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder( ViewHolder holder, int position) {
-
+        NewsObjects eventDataObject = mNewsObjList.get(position);
         /*
         holder.title.setText(mNewsObjList.get(position).getTitle());
         holder.description.setText(mNewsObjList.get(position).getDescription());
         holder.author.setText(mNewsObjList.get(position).getAuthor());
         holder.date.setText(mNewsObjList.get(position).getDate());
-      //  holder.preview.setImageResource(mNewsObjList.get(position).getPreviewImg());
+
         Picasso.get().load(mNewsObjList.get(position).getURL()).fit().centerInside().into(holder.preview);
 
          */
-        holder.title.setText(mNewsObjList.get(position).getTitle());
-        holder.description.setText(mNewsObjList.get(position).getDescription());
-        holder.author.setText(mNewsObjList.get(position).getAuthor());
+        holder.title.setText(eventDataObject.getTitle());
+        holder.description.setText(eventDataObject.getDescription());
+        holder.author.setText(eventDataObject.getAuthor());
+        holder.date.setText(eventDataObject.getDate());
+
        // holder.date.setText(mNewsObjList.get(position).getDate());
 
         /*
@@ -71,7 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     //constructor
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, description, author, URL, date;
+        TextView title, description, author, date;
         ImageView preview;
         LinearLayout view_container;
 
