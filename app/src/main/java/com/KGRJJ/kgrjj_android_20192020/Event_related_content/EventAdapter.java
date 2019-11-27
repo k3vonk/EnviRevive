@@ -7,11 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,10 +23,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-
-
-import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * The EventAdapter activity produces allows the contents
+ * of Recycler cards to be filled with the latest event
+ * content - works in tandem with the activity "EventDisplayActivity"
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 27-11-2019
+ */
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewHolder>{
 
@@ -41,6 +43,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         this.eventobjList = eventobjList;
     }
 
+
+    /**
+     * encasulation of the list of events inside a Product Holder.
+     */
     @NonNull
     @Override
     public EventAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,6 +56,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         return holder;
     }
 
+    /**
+     * retrieving event object data and binding it to the Product Holder
+     * capability to register to the events held within each card.
+     * Google Map API allows users to see the event geo point.
+     */
     @Override
     public void onBindViewHolder(@NonNull EventAdapter.ProductViewHolder holder, int position) {
         EventDataObject eventDataObject = eventobjList.get(position);
@@ -68,14 +79,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             Toast.makeText(mCtxEvent,"Registered to event",Toast.LENGTH_SHORT).show();
         });
 
-
         GoogleMap thisMap = holder.mapViewLocation;
         if(thisMap!=null){
             thisMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(holder.location.getLatitude(),holder.location.getLongitude())));
         }
-
-        //holder.textViewLocation
-
     }
 
     @Override
@@ -84,6 +91,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
     }
 
 
+    /**
+     * functionality to register to the events held within each card.
+     * register status is held within Firebase
+     */
     public void RegisterToEvent(String event){
         String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DocumentReference eventRef =
@@ -94,6 +105,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
                 .update("subscribedEvents",FieldValue.arrayUnion(eventRef));
     }
 
+    /**
+     * initialising the skeleton structure of each card in the Recycler Product Holder
+     * stylised using the 'event_list_layout' resource layout file.
+     */
     class ProductViewHolder extends RecyclerView.ViewHolder  implements OnMapReadyCallback {
 
         TextView textViewTitle, textViewDescription, textViewDate, textViewTime;
@@ -120,6 +135,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             }
 
         }
+
         @Override
         public void onMapReady(GoogleMap googleMap) {
             MapsInitializer.initialize(mCtxEvent);
