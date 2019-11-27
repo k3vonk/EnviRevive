@@ -29,6 +29,7 @@ import androidx.core.content.FileProvider;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageDisplayActivity;
+import com.KGRJJ.kgrjj_android_20192020.News_content.NewsActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -189,6 +190,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 startActivity(myIntentEventCreate);
                                 break;
                             case 6:
+                                Intent myIntentNewsCreate = new Intent(getApplicationContext(), NewsActivity.class);
+                                startActivity(myIntentNewsCreate);
+                                break;
+                            case 7:
                                 mAuth.signOut();
                                 user = null;
                                 Intent myIntentLogout = new Intent(getApplicationContext(), LoginActivity.class);
@@ -221,6 +226,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                                 break;
                             case 6:
+                                Toast.makeText(getApplicationContext(), "See the latest News", Toast.LENGTH_SHORT).show();
+
+                                break;
+                            case 7:
                                 Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_SHORT).show();
                                 break;
 

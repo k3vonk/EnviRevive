@@ -27,6 +27,11 @@
         android:id="@+id/create_event"
         android:icon="@mipmap/eventadd"
         tools:ignore="MenuTitle"/>
+<!--    NEWS-->
+    <item
+        android:id="@+id/news"
+        android:icon="@mipmap/news"
+        tools:ignore="MenuTitle"/>
     <item
         android:id="@+id/signout"
         android:icon="@mipmap/logout"
