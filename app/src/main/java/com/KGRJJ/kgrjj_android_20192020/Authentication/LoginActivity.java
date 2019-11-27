@@ -34,6 +34,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     // Essential for using Firebase Authentication
     private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     // Useful for Log messaged - assign a tag (this is placeholder for now)
     private String TAG = "log";
@@ -42,31 +43,37 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private TextView email;
     private TextView password;
     private Button mLoginBTN;
-    private LottieAnimationView animationView;
-    FirebaseUser user;
     private TextView signUp;
     private Animation fadein;
+
+    //Provides animation transition between login and next activity
+    private LottieAnimationView animationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //"Sign In" title fades in upon activity start up
         signUp = findViewById(R.id.Log_in_title);
         fadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_fade_in);
         signUp.startAnimation(fadein);
-        /* Adding listeners to both button - no need to store them in a variable since they
-            are only ever used for listening. "This links to the OnClick method defined below
-         */
+
+        // Adding listeners to both button - no need to store them in a variable since they
+        // are only ever used for listening. "This links to the OnClick method defined below
         findViewById(R.id.createAccount).setOnClickListener(this);
         //create account is a clickable text to on the activity screen.
+
+        // create account is a clickable text to on the activity screen.
         mLoginBTN = findViewById(R.id.loginBTN);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
         animationView = findViewById(R.id.animation);
         animationView.setVisibility(View.INVISIBLE);
-        //Essential for using firebase authentication
+
+        //Essential for using Firebase authentication
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
@@ -104,7 +111,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         });
     }
 
-
     /* Function written using Firebase tips. Note we dont use our input handlers here.
         This is because if the input isnt correct the FirebaseAuthentication method
         "signInWithEmailAndPassword" does this.
@@ -120,38 +126,34 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
                         getUserData(user);
-                        //getRegisteredEvents(user);
                         Intent service = new Intent(this, UserProfileDataService.class);
                         service.putExtra("ID",user.getUid());
                         startService(service);
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
                         finish();
-                       // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
-
-
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed: " +
                                         "username or password incorrect",
                                 Toast.LENGTH_LONG).show();
+                        //gives the user the capability to try to log in again
                         mLoginBTN.setVisibility(View.VISIBLE);
+                        //loading animation is stopped if authentication fails
                         animationView.setVisibility(View.INVISIBLE);
                     }
-
-                    // ...
                 });
-
-
     }
 
-    /*
-        checkRequiredFields ensures that the user has input text into both text boxes
-     */
+
+    /* login button is available if all details are entered correctly
+        if they are not, the button will be inactive until this is
+        resolved
+    */
     private void checkRequiredFields() {
         if(email.getText().toString().isEmpty() ||
-                password.getText().toString().isEmpty()  ){
+                password.getText().toString().isEmpty()){
             mLoginBTN.setEnabled(false);
         }
         else{
@@ -166,7 +168,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         if(i == R.id.createAccount){
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
-            //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
         if(i == R.id.loginBTN){
 

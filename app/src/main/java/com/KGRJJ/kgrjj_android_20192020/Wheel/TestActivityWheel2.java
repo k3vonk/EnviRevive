@@ -8,9 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.hitomi.cmlibrary.CircleMenu;
-import com.hitomi.cmlibrary.OnMenuSelectedListener;
 import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 
+/**
+ * Second prototype for application navigation
+ * Reference: https://github.com/Hitomis/CircleMenu
+ */
 public class TestActivityWheel2 extends AppCompatActivity {
 
     CircleMenu circleMenu;

@@ -16,6 +16,10 @@ import java.util.List;
 
 import github.hellocsl.cursorwheel.CursorWheelLayout;
 
+/**
+ * First prototype for application navigation
+ * Reference: https://github.com/BCsl/CursorWheelLayout
+ */
 public class TestActivityWheel extends AppCompatActivity implements CursorWheelLayout.OnMenuSelectedListener{
 
 

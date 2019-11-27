@@ -77,7 +77,7 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
         profile_points.setText(Points);
         //Log.i("TESTING","PROFILEIMAGE CODE"+profileImage.getDensity());
         mProfileImage.setImageBitmap(profileImage);
-        findViewById(R.id.profile_sign_out).setOnClickListener(this);
+
         findViewById(R.id.change_image).setOnClickListener(this);
 
         Glide.with(getApplicationContext())
@@ -103,16 +103,6 @@ public class UserProfileActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.profile_sign_out) {
-            mAuth.signOut();
-
-
-
-
-            Intent myIntent = new Intent(this, LoginActivity.class);
-            Toast.makeText(this, "Starting main activity", Toast.LENGTH_SHORT).show();
-            startActivity(myIntent);
-        }
         if (i == R.id.change_image) {
             int REQUEST_CODE = 1;
             ActivityCompat.requestPermissions(this,

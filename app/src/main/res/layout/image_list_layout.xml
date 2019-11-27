@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/blackboard"
+    android:background="@color/bpblack"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@mipmap/backgroun_gradient"
+        android:background="#000000"
+        app:cardBackgroundColor="#00000000"
         app:cardCornerRadius="15dp"
         app:cardElevation="100dp">
 
@@ -21,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:background="@drawable/gradient_background3">
+            android:background="@drawable/gradient_bg">
 
             <ImageView
                 android:id="@+id/imageImage"
