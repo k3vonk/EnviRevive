@@ -45,56 +45,51 @@ import java.util.Map;
 public class RegistrationActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
-    private TextView regTitle;
-    private InputHandler inputHandler = new InputHandler();
+    private boolean countryPicked;
+    private TextView regTitle, mUsername, mInfoReq, mCountry;
+
+    // Essential for using Firebase Authentication
     private FirebaseStorageHandler fbh = new FirebaseStorageHandler();
     private FirestoreDocumentModel FDM = new FirestoreDocumentModel();
-    private EditText mEmailField;
-    private EditText mPasswordField;
-    private TextView mUsername;
-    private Button mRegButton;
-    private TextView mInfoReq;
-    private TextView mCountry;
-    private EditText mName;
-    private EditText mCity;
-    private ProgressBar mProgress;
-    private LottieAnimationView mLottie;
-    private static Bitmap image;
-    // [START declare_auth]
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser user;
-    private boolean countryPicked;
 
-    private static ImageView mTakePhoto;
+    //Visuals and user interaction
+    private Button mRegButton;
+    private EditText mEmailField, mPasswordField, mName, mCity;
+    private InputHandler inputHandler = new InputHandler();
+    private ProgressBar mProgress;
+    private LottieAnimationView mLottie;
     private Animation fadein;
+    private static Bitmap image;
+    private static ImageView mTakePhoto;
 
-
-    // [END declare_auth]
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
+        countryPicked = false;
+
+        //fade in animation for the "Sign Up" title and transition animation initialised
         regTitle = findViewById(R.id.RegisterTitle);
         fadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_fade_in);
         regTitle.startAnimation(fadein);
-        
-        countryPicked = false;
-        // TextViews need to be stored as their content will be used later
-        mName = findViewById(R.id.Name);
-        mCity = findViewById(R.id.city);
-        mTakePhoto = findViewById(R.id.takePhoto);
-        mEmailField = findViewById(R.id.email_inputLoginScreen);
-        mPasswordField = findViewById(R.id.password_Input);
-        mUsername = findViewById(R.id.username_input);
-        mRegButton = findViewById(R.id.registerBtn_regScreen);
-        mCountry = findViewById(R.id.country_picker);
-        mInfoReq = findViewById(R.id.infoRequired);
         mLottie = findViewById(R.id.animation_reg);
         mLottie.setVisibility(View.INVISIBLE);
 
+        // TextViews need to be stored as their content will be used later
+        mUsername = findViewById(R.id.username_input);
+        mInfoReq = findViewById(R.id.infoRequired);
+        mCountry = findViewById(R.id.country_picker);
 
+        mName = findViewById(R.id.Name);
+        mCity = findViewById(R.id.city);
+        mEmailField = findViewById(R.id.email_inputLoginScreen);
+        mPasswordField = findViewById(R.id.password_Input);
+        mRegButton = findViewById(R.id.registerBtn_regScreen);
+        mTakePhoto = findViewById(R.id.takePhoto);
 
         mTakePhoto.setOnClickListener(view-> {
             takePhoto(false, true);
@@ -103,20 +98,15 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         });
 
-
-
-
-
-
-        //Buttons don't need to be stored as they are jus just for listeners
-
+        //Note: Buttons don't need to be stored as they are just just for listeners
         mRegButton.setOnClickListener(this);
         findViewById(R.id.cancelSignUp).setOnClickListener(this);
-        //KEEP THESE 3 MINIMISED TO AVOID CLUTTER
+        mRegButton.setEnabled(false);
+        mCountry.setOnClickListener(this);
+
+        //listeners for the when the user inputs into the fields
         mEmailField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -199,8 +189,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-        mRegButton.setEnabled(false);
-        mCountry.setOnClickListener(this);
         // [START initialize_auth]
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -212,7 +200,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
     protected int getLayoutResourceID() {
         return R.layout.activity_registration;
     }
-
 
     // [START on_start_check_user]
     @Override
@@ -240,7 +227,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
     private boolean createAccount(String email, String password){
 
-
         if(inputHandler.isValidEmailInput(email)) {
             if (inputHandler.isValidPasswordCombination(password)) {
                 // [START create_user_with_email]
@@ -255,8 +241,6 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
                                 mAuth.updateCurrentUser(user);
                                 addUserData(user);
                                 getUserData(user);
-
-
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -268,14 +252,14 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
 
 
             }else{
-                Toast.makeText(getBaseContext(),                    "   Password must contain the following:    \n" +
-                        "   atleast 1 digit\n"+
-                        "   upper and lowerclass letters\n" +
-                        "   special characters\n"+
-                        "   8 characters\n",Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(),
+                        "   Password must contain the following:    \n" +
+                                "   atleast 1 digit\n"+
+                                "   upper and lowerclass letters\n" +
+                                "   special characters\n"+
+                                "   8 characters\n",Toast.LENGTH_LONG).show();
                 return false;
             }
-
         }
         else{
             Toast.makeText(getBaseContext(),"Email not valid",Toast.LENGTH_LONG).show();
@@ -294,10 +278,7 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
      */
     private void addUserData(FirebaseUser user){
 
-
         String uri = "gs://kgrjj-android-2019.appspot.com/images";
-//        UserData.put("username",mUsername.getText().toString());
-
         BitmapDrawable bitmapDrawable = (BitmapDrawable) mTakePhoto.getDrawable();
 
         Map<String,Object> UserData = FDM.addDataToHashMap(mName.getText().toString(),mUsername.getText().toString(),
@@ -377,6 +358,5 @@ public class RegistrationActivity extends BaseActivity implements View.OnClickLi
             picker.showDialog(this);
             countryPicked = true;
         }
-    //fix test
     }
 }
