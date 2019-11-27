@@ -16,7 +16,7 @@
         tools:ignore="MenuTitle"/>
     <item
         android:id="@+id/find_image"
-        android:icon="@drawable/ic_search_holo_light"
+        android:icon="@mipmap/searchimages"
         tools:ignore="MenuTitle"/>
     <item
         android:id="@+id/take_photo"
