@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,7 +20,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsActivity extends BaseActivity {
    // private TextView mTextViewResult;
     private RequestQueue mQueue;
 
@@ -41,6 +42,9 @@ public class NewsActivity extends AppCompatActivity {
         jsonParse();
 
     }
+
+    @Override
+    protected int getLayoutResourceID() { return R.layout.activity_news;}
 
     public void jsonParse(){
         String URL = "https://newsapi.org/v2/top-headlines?country=ie&category=business&apiKey=f05bc125586849b5b53391ce06b75ae9";
