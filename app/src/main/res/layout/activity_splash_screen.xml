@@ -44,13 +44,14 @@
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="10dp"
+        android:fontFamily="sans-serif-thin"
 
+        android:padding="10dp"
         android:text="Envi Revive"
         android:textColor="#000000"
-        android:textSize="30sp"
+        android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/animation" />
 

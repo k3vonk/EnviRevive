@@ -53,6 +53,7 @@
         android:layout_height="50dp"
         android:background="#00FFFFFF"
         android:fontFamily="sans-serif"
+        android:textStyle="bold"
         android:text="Full Name Here"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -125,18 +126,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/change_image"
         tools:srcCompat="@android:drawable/btn_star_big_on" />
-
-    <Button
-        android:id="@+id/profile_sign_out"
-        android:layout_width="89dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/gradient_background2"
-        android:fontFamily="sans-serif"
-        android:text="Sign Out"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profileRecycle"
