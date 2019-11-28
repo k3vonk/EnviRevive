@@ -10,10 +10,21 @@
     tools:context=".UserSpecificActivities.UserProfileActivity">
 
     <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/main_image" />
+
+    <ImageView
         android:id="@+id/gradient3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="1"
+        android:alpha="0.8"
         android:contentDescription="image of a bridge with green gradient"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"

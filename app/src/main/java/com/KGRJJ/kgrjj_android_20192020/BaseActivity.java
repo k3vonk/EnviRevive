@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -303,39 +305,68 @@ public abstract class BaseActivity extends AppCompatActivity {
         else if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
                 Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
-                if (isInProfile) {
-                    ImageView m = findViewById(R.id.profile_portrait_image);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-                    try {
+                try {
+                    ExifInterface ei = new ExifInterface(mostRecentPhotoPath);
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.ORIENTATION_UNDEFINED);
 
-                        UploadProfileImage(bmp ,user);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    Bitmap rotatedBitmap = null;
+                    switch (orientation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            rotatedBitmap = rotateImage(bmp, 90);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            rotatedBitmap = rotateImage(bmp, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            rotatedBitmap = rotateImage(bmp, 270);
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            rotatedBitmap = bmp;
                     }
-                } else if (isInReg) {
-                    ImageView m = findViewById(R.id.takePhoto);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-                } else {
-                    try {
-                       //analyse the image with new intent and return then values
-                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
-                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
-                        startActivityForResult(imageAnalysisScreen,REQUEST_ANALYSIS);
-                    }catch (Exception e){
-                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+
+
+                    if (isInProfile) {
+                        ImageView m = findViewById(R.id.profile_portrait_image);
+                        Glide
+                                .with(getApplicationContext())
+                                .load(mostRecentPhotoPath)
+                                //.apply(RequestOptions.overrideOf(400,400))
+                                .apply(RequestOptions.centerCropTransform())
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(m);
+                        try {
+
+                            UploadProfileImage(rotatedBitmap, user);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (isInReg) {
+                        ImageView m = findViewById(R.id.takePhoto);
+                        Glide
+                                .with(getApplicationContext())
+                                .load(mostRecentPhotoPath)
+                                //.apply(RequestOptions.overrideOf(400,400))
+                                .apply(RequestOptions.centerCropTransform())
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(m);
+                    } else {
+                        try {
+                            //analyse the image with new intent and return then values
+                            Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                            imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
+                            startActivityForResult(imageAnalysisScreen, REQUEST_ANALYSIS);
+                        } catch (Exception e) {
+                            Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                        }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -388,6 +419,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         db.collection("Images").add(map);
 
     }
+
+    /*
+            Method from https://stackoverflow.com/questions/14066038/why-does-an-image-captured-using-camera-intent-gets-rotated-on-some-devices-on-a
+
+            Fixes rotation issue with taking a photo
+     */
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
     //endregion
 
 
@@ -463,7 +507,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 .addOnSuccessListener(uri -> {
                                     Glide.with(getApplicationContext())
                                             .asBitmap()
-                                            .load(uri)
+                                            .apply(RequestOptions.centerCropTransform())
+                                            .apply(RequestOptions.circleCropTransform())                               .load(uri)
                                             .into(new CustomTarget<Bitmap>() {
 
                                                 @Override

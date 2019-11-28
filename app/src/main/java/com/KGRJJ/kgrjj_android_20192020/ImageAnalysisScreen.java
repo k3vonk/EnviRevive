@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -109,13 +112,48 @@ public class ImageAnalysisScreen extends AppCompatActivity {
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
 
+        Bitmap rotatedBitmap = null;
         Bitmap bitmap = BitmapFactory.decodeFile(currPhotoPath, bmOptions);
-        imgView.setImageBitmap(bitmap);
 
-        return bitmap;
-    }
+        //get the correct rotation
+        try {
+            ExifInterface ei = new ExifInterface(currPhotoPath);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
 
-    /*=================== CLOUD VISION ===================*/
+
+            switch (orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
+
+            Glide
+                    .with(getApplicationContext())
+                    .load(rotatedBitmap)
+                    .fitCenter()
+                    .into(imgView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rotatedBitmap;
+
+        }
+
+        /*=================== CLOUD VISION ===================*/
     /**
      * Call Cloud Vision API to compute labels
      * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
