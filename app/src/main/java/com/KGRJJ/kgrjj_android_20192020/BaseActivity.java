@@ -28,7 +28,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
-import com.KGRJJ.kgrjj_android_20192020.Data.Image_Upload;
 import com.KGRJJ.kgrjj_android_20192020.Event_related_content.EventDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.Image_related_content.ImageDisplayActivity;
 import com.KGRJJ.kgrjj_android_20192020.UserSpecificActivities.UserProfileActivity;
@@ -83,10 +82,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //Image Variables
     protected static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
+    protected  static final int REQUEST_ANALYSIS = 70;
     protected static final int RESULT_OK = -1;
-    public static Bitmap thumbnail;
     public static Bitmap profileImage;
-    protected Image_Upload image_upload;
     protected String mostRecentPhotoPath;
 
     //FireBase/Internal Storage & Image Info Variables
@@ -229,6 +227,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 }
         );
+
+        //Initialise FireBase related variables
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -278,31 +278,32 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Upload image to FireBase with set data, location
-     * @param bmp image user photographed
-     * @param location image geo-location
-     * @param user user information
+            Method called only after image analysis has completed.
+            Current location, URL of image and analysis results are store in a
+            FireBase FireStore Image Collection.
      */
-    public void UploadImage(Bitmap bmp,Location location,FirebaseUser user){
-
+    public void UploadImage(Bitmap bmp,Location location,HashMap<String,Float> results){
         String imagename = new Random().nextInt(10000) + 0 + "_" + location + ".jpg";
         StorageReference profileRef = mStorageReference.child("images/" + imagename);
 
-        //String url = "gs://kgrjj-android-2019.appspot.com/images/";
-
+        //Compress bitmap into byte Array to be uploaded using upload Task
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
+        });
 
-        uploadTask.addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show());
-
+        //Store Location/URL/results of analysis into a new Document in the Image Collection
         HashMap<String, Object> map = new HashMap<>();
         map.put("Location", new GeoPoint(location.getLatitude(), location.getLongitude()));
         map.put("URL", imagename);
-
+        map.put("AnalysisResults",results);
         db.collection("Images").add(map);
+
     }
 
     /**
@@ -364,7 +365,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     //============================================ FIREBASE ==================================================================//
     protected abstract int getLayoutResourceID();
 
-    /*
+    /**
             Method to retrieve user data from Firebase Firestore
      */
     public void getUserData(FirebaseUser user) {
@@ -502,67 +503,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-
-                galleryAddPic();
-
-                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
-                if (isInProfile) { //In Profile, upload profile picture
-                    ImageView m = findViewById(R.id.profile_portrait_image);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-
-                    try {
-                        UploadProfileImage(bmp ,user);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (isInReg) { //In registration
-                    ImageView m = findViewById(R.id.takePhoto);
-                    Glide
-                            .with(getApplicationContext())
-                            .load(mostRecentPhotoPath)
-                            //.apply(RequestOptions.overrideOf(400,400))
-                            .apply(RequestOptions.centerCropTransform())
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(m);
-                } else { //Upload image to FireBase and output to activity screen
-                    UploadImage(bmp, mLastLocation, user);
-
-                    //Load bitmap and garbage collection
-                    try {
-                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
-                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
-                        startActivity(imageAnalysisScreen);
-                    }catch (Exception e){
-                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-    /*
-        Function to handle any Results returned from launching activities.
-     */
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
         if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
             Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
             HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
             UploadImage(bmp,mLastLocation,results);
         }
         else if (resultCode == RESULT_OK) {
-            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
                 Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
                 if (isInProfile) {
                     ImageView m = findViewById(R.id.profile_portrait_image);
@@ -601,3 +548,5 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
     }
+}
+

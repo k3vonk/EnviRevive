@@ -63,16 +63,6 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     HeatmapTileProvider mHeatMapTileProvider;
     TileOverlay mTileOverlay;
 
-    //Used for Weighted HeatMap
-    int[] colors = {
-            Color.GREEN,    // green(0-50)
-            Color.YELLOW,    // yellow(51-100)
-            Color.rgb(255,165,0), //Orange(101-150)
-            Color.RED,              //red(151-200)
-            Color.rgb(153,50,204), //dark orchid(201-300)
-            Color.rgb(165,42,42) //brown(301-500)
-    };
-
     //Time
     Calendar time;
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
@@ -269,7 +259,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                     else{
                         weightedLatLng = new WeightedLatLng(latLng,0.1);
                     }
-                   list.add(weightedLatLng);
+                    list.add(weightedLatLng);
 
                 }
             }
