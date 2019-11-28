@@ -354,7 +354,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //endregion
 
-
     //region Location Permission Content
 
 
