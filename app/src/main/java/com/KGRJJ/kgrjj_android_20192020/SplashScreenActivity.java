@@ -1,8 +1,10 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -44,9 +46,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         appName.startAnimation(fadein);
 
         new Handler().postDelayed(() -> {
-            Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
+            SharedPreferences preference =
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            if(!preference.getBoolean("firstTime",false)){
+                Intent i = new Intent(SplashScreenActivity.this,FirstTimeUserScreen.class);
+                startActivity(i);
+                finish();
+            }else{
+                SharedPreferences.Editor e = preference.edit();
+                e.putBoolean("firstTime",false);
+                e.commit();
+                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+
         },msplashTimeOut);
 
 
