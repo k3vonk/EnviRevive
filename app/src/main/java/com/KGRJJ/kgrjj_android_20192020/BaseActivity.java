@@ -2,16 +2,14 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 
 import android.Manifest;
-
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,12 +55,12 @@ import com.google.type.LatLng;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 /**
  * The BaseActivity houses any code that is reusable in multiple activities
@@ -87,9 +85,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected  static final int REQUEST_ANALYSIS = 70;
     protected static final int RESULT_OK = -1;
     public static Bitmap profileImage;
-    protected String mostRecentPhotoPath;
+    protected static String mostRecentPhotoPath;
 
     //FireBase/Internal Storage & Image Info Variables
+    protected static final int REQUEST_PERMISSION_STORAGE_KEY = 10;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
     protected static StorageReference mStorageReference;
@@ -155,6 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             case 0:
                                 Intent myIntentMap = new Intent(getApplicationContext(), MapsActivity.class);
                                 startActivity(myIntentMap);
+                                finish();
                                 break;
                             case 1:
                                 if(getLayoutResourceID() == R.layout.activity_user_profile) {
@@ -163,16 +163,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     getUserData(user);
                                     Intent myIntentProfile = new Intent(getApplicationContext(), UserProfileActivity.class);
                                     startActivity(myIntentProfile);
+                                    finish();
                                     break;
                                 }
 
                             case 2:
                                 Intent myIntentEventsList = new Intent(getApplicationContext(), EventDisplayActivity.class);
                                 startActivity(myIntentEventsList);
+                                finish();
                                 break;
                             case 3:
                                 Intent myIntentImagesList = new Intent(getApplicationContext(), ImageDisplayActivity.class);
                                 startActivity(myIntentImagesList);
+                                finish();
                                 break;
                             case 4:
                                 takePhoto(false, false);
@@ -180,12 +183,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                             case 5:
                                 Intent myIntentEventCreate = new Intent(getApplicationContext(), EventCreationDialog.class);
                                 startActivity(myIntentEventCreate);
+                                finish();
                                 break;
                             case 6:
                                 mAuth.signOut();
                                 user = null;
                                 Intent myIntentLogout = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(myIntentLogout);
+                                finish();
                                 break;
                         }
                     }
@@ -248,17 +253,44 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param Reg true if in registration activity
      */
     protected void takePhoto(boolean PI, boolean Reg) {
-        isInProfile = PI;
-        isInReg = Reg;
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE )!= PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_STORAGE_KEY);
+            } else {
 
-        File photoFIle = createImageFile();
-        if (photoFIle != null) {
-            Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSION_STORAGE_KEY);
+
+
+
+
+            }
+        }else{
+            isInProfile = PI;
+            isInReg = Reg;
+
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            File photoFIle = createImageFile();
+            if (photoFIle != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
+                mostRecentPhotoPath = photoURI.toString();
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
         }
+
     }
 
     /**
@@ -332,8 +364,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return unique file name
      */
     private File createImageFile() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageName = "ENVIREVIVE_JPG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(new Date());
+        String imageName = "JPG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = null;
 
@@ -343,13 +375,30 @@ public abstract class BaseActivity extends AppCompatActivity {
                     ".jpg",     /* suffix */
                     storageDir       /* directory */
             );
+            //mostRecentPhotoPath = image.getAbsolutePath()Path();
+            mostRecentPhotoPath = image.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Save a file: path for use with ACTION_VIEW intents
-        mostRecentPhotoPath = image.getAbsolutePath();
+        galleryAddPic();
+
+
+
         return image;
+    }
+
+    /**
+     * Add photo to a set gallery database
+     * Reference: https://developer.android.com/training/camera/photobasics.html
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mostRecentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
 
@@ -460,6 +509,29 @@ public abstract class BaseActivity extends AppCompatActivity {
             Log.d(TAG, "getLocation: permissions granted");
         }
     }
+    /**
+     * Check for application permission to access storage
+     */
+    protected void checkStoragePermissions() {
+
+        //If there is no permission...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION_STORAGE_KEY);
+        } else { //else granted...
+            Log.d(TAG, "getLocation: permissions granted");
+        }
+    }
+    /**
+     * Carry out various location tasks based on permission
+     */
+    private void onStoragePermissionTask(){
+        //If permission is granted...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+
+        } else { //Request permission...
+            checkStoragePermissions();
+        }
+    }
 
     /**
      * Callback function to obtain new location and store the old one.
@@ -491,6 +563,16 @@ public abstract class BaseActivity extends AppCompatActivity {
                 //If permission location is granted...
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                } else { //Permission denied...
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        else if(requestCode == REQUEST_PERMISSION_STORAGE_KEY){
+            if((grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)&&(permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))){
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission Accessed", Toast.LENGTH_LONG).show();
                 } else { //Permission denied...
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                 }

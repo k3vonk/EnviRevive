@@ -52,22 +52,22 @@
     <string name="can_t_login">Can\'t login?</string>
     <string name="login">Login</string>
 
-    <string name = "TakePhoto">Our Image anaylsis tool rates the enviornmental impact of the chosen area.\n
+    <string name="TakePhoto">Our Image anaylsis tool rates the enviornmental impact of the chosen area.\n
         Simply Click this button from the wheel menuIand our tool wil analyse the photo taken!
     </string>
-    <string name = "BrowsePhoto">If you wish to browse photos taken by other users simple click this button.
+    <string name="BrowsePhoto">If you wish to browse photos taken by other users simple click this button.
     </string>
-    <string name = "CreateEvent">Is there anything better than a community working together for the common good?\n
+    <string name="CreateEvent">Is there anything better than a community working together for the common good?\n
         Those beaches could sure use a good clean up?\n Create your own clean up Event!
     </string>
-    <string name = "BrowseEvents">Not sure about creating your own event just yet?\n
+    <string name="BrowseEvents">Not sure about creating your own event just yet?\n
         You can browse a list of clean-up event already organised and register to participate!
     </string>
-    <string name = "UserProfile">View/Change your profile picture, see your points or have a personalised view of all the events you are registered to !
+    <string name="UserProfile">View/Change your profile picture, see your points or have a personalised view of all the events you are registered to !
     </string>
-    <string name = "Map">See the average ratings of photos taken through a colour coded map. Red areas have presence of enviornmental damage!
+    <string name="Map">See the average ratings of photos taken through a colour coded map. Red areas have presence of enviornmental damage!
     </string>
-    <string name = "Logout">If you wish to Log out or switch accounts click this icon!
+    <string name="Logout">If you wish to Log out or switch accounts click this icon!
     </string>
 
 </resources>
