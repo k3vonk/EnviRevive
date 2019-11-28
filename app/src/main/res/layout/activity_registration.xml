@@ -31,8 +31,8 @@
         android:layout_marginTop="32dp"
         android:padding="10dp"
         android:text="Sign Up"
+        android:textStyle="bold"
         android:textColor="#000000"
-
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"

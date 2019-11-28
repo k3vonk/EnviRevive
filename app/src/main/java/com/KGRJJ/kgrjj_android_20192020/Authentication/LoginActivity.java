@@ -20,52 +20,59 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/***
+ * The Login activity produces an authentication screen that prompts the user to login using
+ * their credentials. Should the user not have an account already created, an option to create
+ * an account is present.
+ *
+ *
+ * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
+ * @since 07-10-2019
+ */
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
 
-    // Essential for using Firebase Authentication
-    private FirebaseAuth mAuth;
-
     // Useful for Log messaged - assign a tag (this is placeholder for now)
-    private String TAG = "log";
+    private String TAG = "LOGIN_ACTIVITY: ";
 
     //These variables will be assigned the text input areas of this screen.
     private TextView email;
     private TextView password;
     private Button mLoginBTN;
-    private LottieAnimationView animationView;
-    FirebaseUser user;
     private TextView signUp;
     private Animation fadein;
+
+    //Provides animation transition between login and next activity
+    private LottieAnimationView animationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //"Sign In" title fades in upon activity start up
         signUp = findViewById(R.id.Log_in_title);
         fadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_fade_in);
         signUp.startAnimation(fadein);
-        /* Adding listeners to both button - no need to store them in a variable since they
-            are only ever used for listening. "This links to the OnClick method defined below
-         */
+
+        // Adding listeners to both button - no need to store them in a variable since they
+        // are only ever used for listening. "This links to the OnClick method defined below
         findViewById(R.id.createAccount).setOnClickListener(this);
-        // " create account is a clickable text to on the activity screen.
+        //create account is a clickable text to on the activity screen.
+
+        // create account is a clickable text to on the activity screen.
         mLoginBTN = findViewById(R.id.loginBTN);
         mLoginBTN.setOnClickListener(this);
         mLoginBTN.setEnabled(false);
         animationView = findViewById(R.id.animation);
         animationView.setVisibility(View.INVISIBLE);
-        //Essential for using firebase authentication
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser();
+
+        //Essential for using Firebase authentication
+
         // find the text inputs based on their ID.
         email = findViewById(R.id.email_inputLoginScreen);
         password = findViewById(R.id.password_input_loginScreen);
-//        mVideoView = findViewById(R.id.videoView);
-//        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.mountains_video2);
-//        mVideoView.setVideoURI(uri);
-//        mVideoView.start();
-        email.addTextChangedListener(new TextWatcher() {
+
+        email.addTextChangedListener(new TextWatcher() { //check for input updates
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -99,10 +106,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         });
     }
 
-
-    /* Function written using Firebase tips. Note we dont use our input handlers here.
+    /* Method "signIn" written using Firebase tips. Note we dont use our input handlers here.
         This is because if the input isnt correct the FirebaseAuthentication method
-        "signInWithEmailAndPassword" does this.
+        "signInWithEmailAndPassword" handles this.
 
      */
     private void signIn(String email, String password){
@@ -114,39 +120,33 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                         Log.d(TAG, "signInWithEmail:success");
                         user = task.getResult().getUser();
                         mAuth.updateCurrentUser(user);
-                        getUserData(user);
-                        //getRegisteredEvents(user);
-                        Intent service = new Intent(this, UserProfileDataService.class);
-                        service.putExtra("ID",user.getUid());
-                        startService(service);
+                        getUserData(user); //pre-load the data required in userProfile
                         Intent intent = new Intent(this, MapsActivity.class);
                         startActivity(intent);
-                        finish();
-                       // overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_botton);
-
-
+                        finish(); // end the login activity
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed: " +
                                         "username or password incorrect",
                                 Toast.LENGTH_LONG).show();
+                        //gives the user the capability to try to log in again
                         mLoginBTN.setVisibility(View.VISIBLE);
+                        //loading animation is stopped if authentication fails
                         animationView.setVisibility(View.INVISIBLE);
                     }
-
-                    // ...
                 });
-
-
     }
+
+
+    /* login button is available if all details are entered correctly
+        if they are not, the button will be inactive until this is
+        resolved
+    */
     private void checkRequiredFields() {
         if(email.getText().toString().isEmpty() ||
-                password.getText().toString().isEmpty()  ){
+                password.getText().toString().isEmpty()){
             mLoginBTN.setEnabled(false);
-//            TimeUnit.SECONDS.sleep(5);
-//            mLoginBTN.setEnabled(true);
-
         }
         else{
             mLoginBTN.setEnabled(true);
@@ -160,7 +160,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         if(i == R.id.createAccount){
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
-            //overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left);
         }
         if(i == R.id.loginBTN){
 
@@ -168,6 +167,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             signIn(email.getText().toString(), password.getText().toString());
         }
     }
+
+    /*
+        Function derived from BaseActivity
+     */
     @Override
     protected int getLayoutResourceID() {
         return R.layout.activity_login;

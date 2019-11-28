@@ -63,13 +63,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
 /**
- * An Activity that glues all other activities together
+ * The BaseActivity houses any code that is reusable in multiple activities
  *
  * @author Ga Jun Young, Jackie Ju, Joiedel Agustin, Kiowa Daly, Rebecca Lobo
- * @since 26-11-2019
+ * @since 07-10-2019
  */
+
 public abstract class BaseActivity extends AppCompatActivity {
 
     //Error Message Tag
@@ -118,7 +118,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         //TODO: clean up cycleMenuWidget to several functions
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
-        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration){
+        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration
+        ||getLayoutResourceID()==R.layout.activity_image_analysis_screen){
             cycleMenuWidget.setEnabled(false);
             cycleMenuWidget.setVisibility(View.INVISIBLE);
         }
@@ -222,17 +223,18 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
         );
 
+
         cycleMenuWidget.setStateSaveListener(
                 (itemPosition, lastItemAngleShift) -> {
 
                 }
         );
-
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl("gs://kgrjj-android-2019.appspot.com/images");
-        image_upload = new Image_Upload(db, mStorageReference, getApplicationContext());
+        mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
+                "gs://kgrjj-android-2019.appspot.com/images");
+
     }
 
 
@@ -309,16 +311,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return unique file name
      */
     private File createImageFile() {
-        // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageName = "PNG_" + timeStamp + "_";
+        String imageName = "ENVIREVIVE_JPG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = null;
 
         try {
             image = File.createTempFile(
                     imageName,        /* prefix */
-                    ".png",     /* suffix */
+                    ".jpg",     /* suffix */
                     storageDir       /* directory */
             );
         } catch (IOException e) {
@@ -326,10 +327,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         // Save a file: path for use with ACTION_VIEW intents
-        if (image != null) {
-            mostRecentPhotoPath = image.getAbsolutePath();
-        }
-        Log.i("TESTING", mostRecentPhotoPath);
+        mostRecentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -366,6 +364,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     //============================================ FIREBASE ==================================================================//
     protected abstract int getLayoutResourceID();
 
+    /*
+            Method to retrieve user data from Firebase Firestore
+     */
     public void getUserData(FirebaseUser user) {
         Log.i("TESTING", "cloud function called");
 
@@ -406,14 +407,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                                                 }
                                             });
                                 });
-                        //Glide
-
-
-                        //Log.i("TESTING",profileImage);
-
                     }
                 });
-        Toast.makeText(getApplicationContext(), "Pulled values from cloud", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Pulled user values from cloud", Toast.LENGTH_LONG).show();
+        Log.i("FirebaseResults", "cloud function called and retrieved user info");
     }
 
 
@@ -466,7 +463,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Update any additional features in regards to this new location
      * Reference: https://developers.google.com/maps/documentation/android-sdk/start
      */
-    LocationCallback mLocationCallback = new LocationCallback() {
+    final LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             List<Location> locationList = locationResult.getLocations();
@@ -474,7 +471,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (!locationList.isEmpty()) {
                 //The last location in the list is the newest
                 Location location = locationList.get(locationList.size() - 1);
-                Log.i(TAG, "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
+                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude()); //Log message for newest location
                 mLastLocation = location;
             }
         }
@@ -551,3 +548,56 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 }
+
+
+    /*
+        Function to handle any Results returned from launching activities.
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
+            Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+            HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
+            UploadImage(bmp,mLastLocation,results);
+        }
+        else if (resultCode == RESULT_OK) {
+            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
+                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+                if (isInProfile) {
+                    ImageView m = findViewById(R.id.profile_portrait_image);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                    try {
+
+                        UploadProfileImage(bmp ,user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (isInReg) {
+                    ImageView m = findViewById(R.id.takePhoto);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                } else {
+                    try {
+                        //analyse the image with new intent and return then values
+                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
+                        startActivityForResult(imageAnalysisScreen,REQUEST_ANALYSIS);
+                    }catch (Exception e){
+                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }

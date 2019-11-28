@@ -1,24 +1,22 @@
 package com.KGRJJ.kgrjj_android_20192020.Wheel;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
-
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
-import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.cleveroad.sy.cyclemenuwidget.CycleMenuWidget;
 import com.cleveroad.sy.cyclemenuwidget.OnMenuItemClickListener;
 import com.cleveroad.sy.cyclemenuwidget.OnStateChangedListener;
-import com.cleveroad.sy.cyclemenuwidget.StateSaveListener;
-import com.hitomi.cmlibrary.OnMenuStatusChangeListener;
 
+/**
+ * Final prototype for application navigation
+ * Reference: https://github.com/Cleveroad/CycleMenu
+ */
 public class TestActivityWheel3 extends AppCompatActivity {
 
     CycleMenuWidget cycleMenuWidget;
