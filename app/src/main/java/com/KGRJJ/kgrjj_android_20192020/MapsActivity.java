@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -29,9 +30,13 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The MapsActivity allows the tracking of users and display Google Maps
@@ -46,6 +51,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
+
     Location mLastLocation;
 
     //HeatMap variables
@@ -53,6 +59,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
     TileOverlay mTileOverlay;
 
     private static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+
 
     /**
      * Instantiate Google Maps
@@ -199,21 +206,42 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      * Acquires various images from FireBase and adds it to the HeatMap
      */
     private void readItems() {
-        ArrayList<LatLng> list = new ArrayList<>();
+        ArrayList<WeightedLatLng> list = new ArrayList<>();
 
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
+
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
                     Log.i("TESTING", doc.get("Location").toString());
                     GeoPoint location = (GeoPoint) doc.get("Location");
-                    list.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                    WeightedLatLng weightedLatLng;
+                    LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    HashMap<String,Double> results = (HashMap<String, Double>) doc.get("AnalysisResults");
+                    double pollution = 0.10000000f;
+                    float count = 0;
+                    for(Map.Entry<String,Double> entry : results.entrySet()){
+
+                        boolean result = Arrays.stream(LabelAdapter.candidates).anyMatch(entry.getKey()::equals);
+                        if(result){
+                            Log.i("TESTING",""+entry.getValue());
+                            pollution =  pollution + entry.getValue();
+                            count ++;
+                        }
+                    }
+                    if(pollution!=0.1f && count !=0){
+                        weightedLatLng = new WeightedLatLng(latLng,pollution/count);
+                    }
+                    else{
+                        weightedLatLng = new WeightedLatLng(latLng,0.1);
+                    }
+                   list.add(weightedLatLng);
 
                 }
             }
 
             // Create a heat map tile provider, passing it the latlngs of the police stations
             mHeatMapTileProvider = new HeatmapTileProvider.Builder()
-                    .data(list)
+                    .weightedData(list)
                     .build();
 
             // Add a tile overlay to the map, using the heat map tile provider.

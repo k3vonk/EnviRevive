@@ -4,21 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_bg"
     tools:context=".Authentication.LoginActivity">
 
     <ImageView
-        android:id="@+id/gradient"
+        android:id="@+id/imageView3"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="1"
-        android:contentDescription="image of a bridge with green gradient"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@mipmap/taneli" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.7"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/gradient_bg" />
 
     <TextView
@@ -26,11 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:textStyle="bold"
         android:padding="10dp"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         android:textColor="#000000"
         android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,10 +51,10 @@
         android:layout_height="30dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/gradient_background2"
-        android:drawableLeft="@drawable/ic_action_username"
+        android:drawableStart="@drawable/ic_action_username"
         android:ems="10"
         android:fontFamily="sans-serif"
-        android:hint="Email Address"
+        android:hint="@string/email_address_hint"
         android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textColor="#000000"
@@ -54,7 +63,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Log_in_title" />
+        app:layout_constraintTop_toBottomOf="@+id/Log_in_title"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/password_input_loginScreen"
@@ -62,16 +72,17 @@
         android:layout_height="30dp"
         android:layout_marginTop="32dp"
         android:background="@drawable/gradient_background2"
-        android:drawableLeft="@drawable/ic_action_passwrd"
+        android:drawableStart="@drawable/ic_action_passwrd"
         android:ems="10"
         android:fontFamily="sans-serif"
-        android:hint="Password"
+        android:hint="@string/password_hint"
         android:inputType="textPassword"
         android:textAlignment="center"
-        android:textSize="18dp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen" />
+        app:layout_constraintTop_toBottomOf="@+id/email_inputLoginScreen"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/createAccount"
@@ -80,7 +91,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="sans-serif"
-        android:text="Create a free account."
+        android:text="@string/create_a_free_account"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,13 +104,14 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif"
-        android:text="Can't login?"
+        android:text="@string/can_t_login"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginBTN" />
 
     <include
+        android:id="@+id/include"
         layout="@layout/activity_base"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -129,12 +141,11 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/gradient_background2"
         android:fontFamily="sans-serif"
-        android:text="Login"
+        android:text="@string/login"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_input_loginScreen" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
