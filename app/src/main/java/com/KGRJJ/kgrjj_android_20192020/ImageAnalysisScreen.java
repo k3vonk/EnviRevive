@@ -140,7 +140,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
             e.printStackTrace();
         }
         return rotatedBitmap;
-
         }
 
     /*=================== CLOUD VISION ===================*/
@@ -294,10 +293,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
                      String message = "No Labels Found";
                      imageDetail.setText(message);
                  }
-
-
-                 //TODO: pass these results to Database
-
             }
         }
     }

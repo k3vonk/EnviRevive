@@ -2,7 +2,6 @@ package com.KGRJJ.kgrjj_android_20192020;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -60,7 +59,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+
 import java.util.Random;
 /**
  * The BaseActivity houses any code that is reusable in multiple activities
@@ -241,7 +240,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         mStorageReference = FirebaseStorage.getInstance().getReferenceFromUrl(
                 "gs://kgrjj-android-2019.appspot.com/images");
-
     }
 
 
@@ -253,44 +251,30 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param Reg true if in registration activity
      */
     protected void takePhoto(boolean PI, boolean Reg) {
-        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE )!= PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        isInProfile = PI;
+        isInReg = Reg;
 
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSION_STORAGE_KEY);
-            } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSION_STORAGE_KEY);
-
-
-
-
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+                galleryAddPic();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.i("takePhoto", "Error occured creating file" + ex.getMessage());
             }
-        }else{
-            isInProfile = PI;
-            isInReg = Reg;
-
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            File photoFIle = createImageFile();
-            if (photoFIle != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
-                mostRecentPhotoPath = photoURI.toString();
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.KGRJJ.kgrjj_android_20192020.provider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
         }
-
     }
 
     /**
@@ -362,29 +346,19 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Reference: https://developer.android.com/training/camera/photobasics.html
      * @return unique file name
      */
-    private File createImageFile() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.UK).format(new Date());
-        String imageName = "JPG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = null;
-
-        try {
-            image = File.createTempFile(
-                    imageName,        /* prefix */
-                    ".jpg",     /* suffix */
-                    storageDir       /* directory */
-            );
-            //mostRecentPhotoPath = image.getAbsolutePath()Path();
-            mostRecentPhotoPath = image.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
         // Save a file: path for use with ACTION_VIEW intents
-        galleryAddPic();
-
-
-
+        mostRecentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
@@ -394,6 +368,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        Log.i("GALLERYADDPIC", "Photopath " + mostRecentPhotoPath);
         File f = new File(mostRecentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
@@ -508,29 +483,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             Log.d(TAG, "getLocation: permissions granted");
         }
     }
-    /**
-     * Check for application permission to access storage
-     */
-    protected void checkStoragePermissions() {
 
-        //If there is no permission...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION_STORAGE_KEY);
-        } else { //else granted...
-            Log.d(TAG, "getLocation: permissions granted");
-        }
-    }
-    /**
-     * Carry out various location tasks based on permission
-     */
-    private void onStoragePermissionTask(){
-        //If permission is granted...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-        } else { //Request permission...
-            checkStoragePermissions();
-        }
-    }
 
     /**
      * Callback function to obtain new location and store the old one.
@@ -566,10 +519,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                 }
             }
-        }
-        else if(requestCode == REQUEST_PERMISSION_STORAGE_KEY){
+        }else if(requestCode == REQUEST_PERMISSION_STORAGE_KEY){
             if((grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)&&(permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))){
-
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission Accessed", Toast.LENGTH_LONG).show();
                 } else { //Permission denied...
@@ -586,14 +537,27 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.i("Baseactivity", "What is my most recent phot path" + mostRecentPhotoPath);
         if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
             Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
             HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
             UploadImage(bmp,mLastLocation,results);
+            if(results != null) {
+                Log.i("BaseActivity", " Image Uploaded");
+            }
+            else
+                Log.i("BaseActivity"," Image not null 1");
+
         }
         else if (resultCode == RESULT_OK) {
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                Log.i("BASEACTIVITY", "string path" + mostRecentPhotoPath);
                 Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+
+                if(bmp == null)
+                    Log.i("BASEACTIVITY", "IS NULL");
+                else
+                    Log.i("BASEACTIVITIY", "IS NOT NULL");
                 if (isInProfile) {
                     ImageView m = findViewById(R.id.profile_portrait_image);
                     Glide
