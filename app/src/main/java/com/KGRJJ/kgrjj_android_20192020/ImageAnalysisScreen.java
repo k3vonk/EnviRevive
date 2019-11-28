@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.ExifInterface;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.Glide;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -153,7 +155,7 @@ public class ImageAnalysisScreen extends AppCompatActivity {
 
         }
 
-        /*=================== CLOUD VISION ===================*/
+    /*=================== CLOUD VISION ===================*/
     /**
      * Call Cloud Vision API to compute labels
      * Reference: https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/android
@@ -172,9 +174,7 @@ public class ImageAnalysisScreen extends AppCompatActivity {
         } catch (IOException e) {
             Log.d(TAG, "failed to make API request because of other IOException " +
                     e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         HashMap<String, Float> invalid = new HashMap<>();
@@ -312,7 +312,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
 
             }
         }
-
     }
 
     /**

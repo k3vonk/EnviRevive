@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.ExifInterface;
@@ -72,59 +73,49 @@ import java.util.Random;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected static final String MAP_TAG = "ENVIVE_MAP_TAG";
-    protected static final int CAPTURE_IMAGE_ATIVITY_REQUEST_CODE = 0;
-    protected static final int RESULT_OK = -1;
+    //Error Message Tag
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
+    //Map & Location Variables
     protected static final int REQUEST_PERMISSION_LOCATION_KEY = 99;
+    protected FusedLocationProviderClient mFusedLocationProviderClient;
+    protected Location mLastLocation;
+    protected LocationRequest mLocationRequest;
+
+    //Image Variables
+    protected static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
     protected  static final int REQUEST_ANALYSIS = 70;
-    protected static String fullname;
-    protected static String Rank;
-    protected static String Country;
-    protected static String Points;
-    protected static Bitmap profileImage;
-    protected static StorageReference mStorageReference;
+    protected static final int RESULT_OK = -1;
+    public static Bitmap profileImage;
+    protected String mostRecentPhotoPath;
+
+    //FireBase/Internal Storage & Image Info Variables
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
+    protected static StorageReference mStorageReference;
+    protected FirebaseFirestore db;
+    protected ArrayList<LatLng> list;
+    public static String fullname;
+    public static String Rank;
+    public static String Country;
+    public static String Points;
+
+    //Cycle Hamburger menu
     private static boolean isInProfile;
     private static boolean isInReg;
     protected CycleMenuWidget cycleMenuWidget;
-    protected String mostRecentPhotoPath;
-    protected Location mLastLocation;
-    protected FusedLocationProviderClient mFusedLocationProviderClient;
-    protected LocationRequest mLocationRequest;
-    protected ArrayList<LatLng> list;
 
-    protected FirebaseFirestore db;
-
-    private static final String TAG = BaseActivity.class.getSimpleName();
-
-
+    /**
+     * Setup location tracker, wheel widget, FireBase and Internal storage
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceID());
 
-        //Instantiation
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-        //Requesting location
-        mLocationRequest = new LocationRequest();
+        setupLocationTracker(); //instantiate location tracking and carry out various tasks
 
-        //Frequency settings
-        mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
-        mLocationRequest.setFastestInterval(2 * 60 * 1000);
-
-        //Accuracy settings
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
-        //If permission is granted...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-
-        } else { //Request permission...
-            checkLocationPermissions();
-        }
-
-        //region cycleMenu
+        //TODO: clean up cycleMenuWidget to several functions
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
         if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration
@@ -238,9 +229,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 }
         );
-        //endregion
 
-        //Initialise Firebase related variables.
+        //Initialise FireBase related variables
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -249,34 +239,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    //region Photo Related Content
 
-    /*
-    createImage file from Android documentation.
-    This Method creates a location to house the image being taken in the devices external storage
+    //====================== IMAGE TAKEN ===========================//
+
+    /**
+     * Take a photo using phone's hardware
+     * @param PI true if in profile activity
+     * @param Reg true if in registration activity
      */
-    private File createImageFile() {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageName = "ENVIREVIVE_JPG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File image = null;
-        try {
-            image = File.createTempFile(
-                    imageName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Save a file: path for use with ACTION_VIEW intents
-        mostRecentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
     protected void takePhoto(boolean PI, boolean Reg) {
-
-
         isInProfile = PI;
         isInReg = Reg;
 
@@ -286,115 +257,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (photoFIle != null) {
             Uri photoURI = FileProvider.getUriForFile(this, "com.KGRJJ.kgrjj_android_20192020.provider", photoFIle);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(intent, CAPTURE_IMAGE_ATIVITY_REQUEST_CODE);
-        }
-
-    }
-
-/*
-    Function to handle any Results returned from launching activities.
- */
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
-            Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
-            HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
-            UploadImage(bmp,mLastLocation,results);
-        }
-        else if (resultCode == RESULT_OK) {
-            if (requestCode == CAPTURE_IMAGE_ATIVITY_REQUEST_CODE) {
-                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
-                try {
-                    ExifInterface ei = new ExifInterface(mostRecentPhotoPath);
-                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                            ExifInterface.ORIENTATION_UNDEFINED);
-
-                    Bitmap rotatedBitmap = null;
-                    switch (orientation) {
-
-                        case ExifInterface.ORIENTATION_ROTATE_90:
-                            rotatedBitmap = rotateImage(bmp, 90);
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_180:
-                            rotatedBitmap = rotateImage(bmp, 180);
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_270:
-                            rotatedBitmap = rotateImage(bmp, 270);
-                            break;
-
-                        case ExifInterface.ORIENTATION_NORMAL:
-                        default:
-                            rotatedBitmap = bmp;
-                    }
-
-
-                    if (isInProfile) {
-                        ImageView m = findViewById(R.id.profile_portrait_image);
-                        Glide
-                                .with(getApplicationContext())
-                                .load(mostRecentPhotoPath)
-                                //.apply(RequestOptions.overrideOf(400,400))
-                                .apply(RequestOptions.centerCropTransform())
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(m);
-                        try {
-
-                            UploadProfileImage(rotatedBitmap, user);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (isInReg) {
-                        ImageView m = findViewById(R.id.takePhoto);
-                        Glide
-                                .with(getApplicationContext())
-                                .load(mostRecentPhotoPath)
-                                //.apply(RequestOptions.overrideOf(400,400))
-                                .apply(RequestOptions.centerCropTransform())
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(m);
-                    } else {
-                        try {
-                            //analyse the image with new intent and return then values
-                            Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
-                            imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
-                            startActivityForResult(imageAnalysisScreen, REQUEST_ANALYSIS);
-                        } catch (Exception e) {
-                            Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
         }
     }
 
-    /*
-            Method called only when the current ApplicationContext is the user profile screen
-            or registration screen.
-
-            Bitmap is compressed into a byte array and then uploaded to FirebaseStorage
+    /**
+     * Upload personal profile image onto FireBase and into user's account
+     * @param bmp image of user
+     * @param user users personal FireBase
      */
     public void UploadProfileImage(Bitmap bmp, FirebaseUser user) throws IOException {
+
         StorageReference profileRef = mStorageReference.child(user.getUid() + "/profileImage.jpg");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
         UploadTask uploadTask = profileRef.putBytes(data);
-        uploadTask.addOnSuccessListener(taskSnapshot -> {
-            Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show();
-        });
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Uploaded image", Toast.LENGTH_SHORT)
+                .show())
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed upload", Toast.LENGTH_SHORT).show());
     }
 
-    /*
+    /**
             Method called only after image analysis has completed.
-            Current location, URL of image and analsis results are store in a
-            Firebase Firestore Image Collection.
+            Current location, URL of image and analysis results are store in a
+            FireBase FireStore Image Collection.
      */
     public void UploadImage(Bitmap bmp,Location location,HashMap<String,Float> results){
         String imagename = new Random().nextInt(10000) + 0 + "_" + location + ".jpg";
@@ -439,54 +327,54 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     /**
-     * Check for application permission to access location
+     * createImageFile create a collision-resistant file name
+     * Reference: https://developer.android.com/training/camera/photobasics.html
+     * @return unique file name
      */
-    protected void checkLocationPermissions() {
+    private File createImageFile() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "ENVIREVIVE_JPG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = null;
 
-        //If there is no permission...
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
-        } else { //else granted...
-            Log.d(MAP_TAG, "getLocation: permissions granted");
+        try {
+            image = File.createTempFile(
+                    imageName,        /* prefix */
+                    ".jpg",     /* suffix */
+                    storageDir       /* directory */
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }
 
-    /**
-     * Handle requests based on requestCode
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case REQUEST_PERMISSION_LOCATION_KEY:
-
-                //If the request is granted...
-                if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
-                    //If permission location is granted...
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        // mMap.setMyLocationEnabled(true);
-                    } else { //Permission denied...
-                        Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
-                    }
-                }
-        }
+        // Save a file: path for use with ACTION_VIEW intents
+        mostRecentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
 
-    //endregion
+    /**
+     * Bitmap transformation by rotation
+     */
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
     /**
-     * Callback function to obtain new location and store the old one.
-     * Update any additional features in regards to this new location
+     * Bitmap transformation by flipping
      */
+    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
 
-
-//endregion
-
+    //============================================ FIREBASE ==================================================================//
     protected abstract int getLayoutResourceID();
 
-    /*
+    /**
             Method to retrieve user data from Firebase Firestore
      */
     public void getUserData(FirebaseUser user) {
@@ -531,8 +419,52 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //======================== LOCATION FINDER =============================//
     /**
+     * Instantiate location tracker
+     */
+    private void setupLocationTracker(){
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+        //Requesting location
+        mLocationRequest = new LocationRequest();
+
+        //Frequency settings
+        mLocationRequest.setInterval(2 * 60 * 1000); //Every 2 minutes
+        mLocationRequest.setFastestInterval(2 * 60 * 1000);
+
+        //Accuracy settings
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        onLocationPermissionTask();
+    }
+
+    /**
+     * Carry out various location tasks based on permission
+     */
+    private void onLocationPermissionTask(){
+        //If permission is granted...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+        } else { //Request permission...
+            checkLocationPermissions();
+        }
+    }
+
+    /**
+     * Check for application permission to access location
+     */
+    protected void checkLocationPermissions() {
+
+        //If there is no permission...
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSION_LOCATION_KEY);
+        } else { //else granted...
+            Log.d(TAG, "getLocation: permissions granted");
+        }
+    }
+
+    /**
      * Callback function to obtain new location and store the old one.
      * Update any additional features in regards to this new location
+     * Reference: https://developers.google.com/maps/documentation/android-sdk/start
      */
     final LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -547,4 +479,76 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
     };
+
+    /**
+     * Handle requests based on requestCode
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_PERMISSION_LOCATION_KEY) {//If the request is granted...
+            if ((grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) && (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION))) {
+                //If permission location is granted...
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    mFusedLocationProviderClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                } else { //Permission denied...
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    //================================  ACTIVITY RESULTS =====================================//
+    /**
+     * Based on parameters, carry out different tasks after an activity
+     */
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == 69 && requestCode == REQUEST_ANALYSIS){
+            Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+            HashMap<String,Float> results = (HashMap<String,Float>) data.getSerializableExtra("Results");
+            UploadImage(bmp,mLastLocation,results);
+        }
+        else if (resultCode == RESULT_OK) {
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+                Bitmap bmp = BitmapFactory.decodeFile(mostRecentPhotoPath);
+                if (isInProfile) {
+                    ImageView m = findViewById(R.id.profile_portrait_image);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                    try {
+
+                        UploadProfileImage(bmp ,user);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (isInReg) {
+                    ImageView m = findViewById(R.id.takePhoto);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mostRecentPhotoPath)
+                            //.apply(RequestOptions.overrideOf(400,400))
+                            .apply(RequestOptions.centerCropTransform())
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(m);
+                } else {
+                    try {
+                        //analyse the image with new intent and return then values
+                        Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
+                        imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
+                        startActivityForResult(imageAnalysisScreen,REQUEST_ANALYSIS);
+                    }catch (Exception e){
+                        Log.e(TAG, "Bitmap of image does not exist " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
 }
+
