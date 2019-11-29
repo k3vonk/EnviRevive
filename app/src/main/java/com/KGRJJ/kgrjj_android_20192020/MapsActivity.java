@@ -138,7 +138,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
 
         //Small widgets for the map
         mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         //Requesting location

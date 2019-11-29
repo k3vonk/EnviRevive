@@ -116,8 +116,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         //TODO: clean up cycleMenuWidget to several functions
         cycleMenuWidget = findViewById(R.id.itemCycleMenuWidget);
         cycleMenuWidget.setMenuRes(R.menu.wheel_menu);
-        if(getLayoutResourceID() == R.layout.activity_login || getLayoutResourceID() == R.layout.activity_registration
-        ||getLayoutResourceID()==R.layout.activity_image_analysis_screen){
+        if(getLayoutResourceID() == R.layout.activity_login ||
+                getLayoutResourceID() == R.layout.activity_registration ||
+                    getLayoutResourceID()==R.layout.activity_image_analysis_screen ||
+                        getLayoutResourceID()==R.layout.activity_image_analysis_screen){
             cycleMenuWidget.setEnabled(false);
             cycleMenuWidget.setVisibility(View.INVISIBLE);
         }
@@ -220,6 +222,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             case 6:
                                 Toast.makeText(getApplicationContext(), "Sign Out", Toast.LENGTH_SHORT).show();
                                 break;
+
 
                         }
 

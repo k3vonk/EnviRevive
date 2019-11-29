@@ -7,7 +7,11 @@
         tools:ignore="MenuTitle"/>
     <item
         android:id="@+id/profile"
-        android:icon="@mipmap/userprofile"
+        android:icon="@mipmap/profilefem"
+        tools:ignore="MenuTitle"/>
+    <item
+        android:id="@+id/take_photo"
+        android:icon="@mipmap/cameratake"
         tools:ignore="MenuTitle"/>
 
     <item
@@ -18,10 +22,7 @@
         android:id="@+id/find_image"
         android:icon="@mipmap/searchimages"
         tools:ignore="MenuTitle"/>
-    <item
-        android:id="@+id/take_photo"
-        android:icon="@mipmap/takephotolandscape"
-        tools:ignore="MenuTitle"/>
+
 
     <item
         android:id="@+id/create_event"
@@ -29,7 +30,7 @@
         tools:ignore="MenuTitle"/>
     <item
         android:id="@+id/signout"
-        android:icon="@mipmap/logout"
+        android:icon="@mipmap/exit"
         tools:ignore="MenuTitle"
         />
 
