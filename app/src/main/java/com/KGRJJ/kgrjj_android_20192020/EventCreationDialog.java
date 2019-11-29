@@ -45,7 +45,6 @@ public class EventCreationDialog extends BaseActivity implements View.OnClickLis
     public static Marker currentMaker;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

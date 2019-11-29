@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,6 +64,7 @@ public class ImageAdapter extends RecyclerView.Adapter<com.KGRJJ.kgrjj_android_2
                 .addOnSuccessListener(uri-> {
                     Glide.with(mCtxImage)
                             .load(uri)
+                            .apply(RequestOptions.centerCropTransform())
                             .into(holder.urlImage);
                 });
 

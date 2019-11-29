@@ -1,8 +1,10 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,6 +31,7 @@ import java.io.IOException;
 public class SplashScreenActivity extends AppCompatActivity {
 
     private LottieAnimationView mSplashLogo;
+    private static final String MY_PREFS_NAME ="first_time";
     private static int msplashTimeOut=5000;
     private TextView appName;
     private Animation fadein;
@@ -44,9 +47,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         appName.startAnimation(fadein);
 
         new Handler().postDelayed(() -> {
-            Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
-            startActivity(i);
-            finish();
+            SharedPreferences preference =
+                    getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
+
+            if(preference.getBoolean("returning_user",true)){
+                SharedPreferences.Editor e = preference.edit();
+                e.putBoolean("returning_user", false);
+                e.apply();
+                Intent i = new Intent(SplashScreenActivity.this,FirstTimeUserScreen.class);
+                startActivity(i);
+                finish();
+            }else {
+                Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+
         },msplashTimeOut);
 
 
