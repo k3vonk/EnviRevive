@@ -185,7 +185,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             else
             {
                 signIn(email.getText().toString(), password.getText().toString());
-
             }
 
         }
