@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,29 +50,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder( ViewHolder holder, int position) {
         NewsObjects eventDataObject = mNewsObjList.get(position);
-        /*
-        holder.title.setText(mNewsObjList.get(position).getTitle());
-        holder.description.setText(mNewsObjList.get(position).getDescription());
-        holder.author.setText(mNewsObjList.get(position).getAuthor());
-        holder.date.setText(mNewsObjList.get(position).getDate());
 
-        Picasso.get().load(mNewsObjList.get(position).getURL()).fit().centerInside().into(holder.preview);
-
-         */
         holder.title.setText(eventDataObject.getTitle());
         holder.description.setText(eventDataObject.getDescription());
         holder.author.setText(eventDataObject.getAuthor());
         holder.date.setText(eventDataObject.getDate());
         Picasso.get().load(mNewsObjList.get(position).getPreviewImg()).fit().centerInside().into(holder.preview);
-       // holder.date.setText(mNewsObjList.get(position).getDate());
 
-        /*
-        holder.title.setText(mNewsObjList.get(position).getTitle());
-        holder.description.setText(mNewsObjList.get(position).getDescription());
-        holder.author.setText(mNewsObjList.get(position).getAuthor());
-        holder.date.setText(mNewsObjList.get(position).getDate());
-
-        */
     }
 
     @Override
@@ -87,7 +69,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         TextView title, description, author, date;
         ImageView preview;
-        LinearLayout view_container;
 
         //attributes from list_news.xml
         public ViewHolder(View itemView) {
@@ -98,8 +79,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             author = itemView.findViewById(R.id.news_AuthorTextView);
             preview = itemView.findViewById(R.id.news_imgPreview);
             date = itemView.findViewById(R.id.news_DateTextView);
-          //  URL = itemView.findViewById(R.id.news)
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,7 +86,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                     if(mListener != null){
                         int pos = getAdapterPosition();
                         if (pos != RecyclerView.NO_POSITION){
-                            mListener.onItemClick((pos));
+                            mListener.onItemClick(pos);
                         }
                     }
                 }
