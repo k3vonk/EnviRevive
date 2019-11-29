@@ -519,7 +519,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
                 }
             }
-        }else if(requestCode == REQUEST_PERMISSION_STORAGE_KEY){
+        }if(requestCode == REQUEST_PERMISSION_STORAGE_KEY){
             if((grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)&&(permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE))){
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Permission Accessed", Toast.LENGTH_LONG).show();
