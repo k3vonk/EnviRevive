@@ -77,7 +77,6 @@ public class ViewPagerAdapter extends PagerAdapter {
         mImage.setImageResource(images[pos]);
         mTitile.setText(Headings[pos]);
         mDesc.setText(descriptions[pos]);
-
         cont.addView(view);
         return view;
     }
