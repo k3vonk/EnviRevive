@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Image_related_content.SpecificImageDisplayActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -45,9 +48,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 
 /**
  * The MapsActivity allows the tracking of users and display Google Maps
@@ -310,6 +310,7 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
                 mHeatMapTileProvider = new HeatmapTileProvider.Builder()
                         .weightedData(cleanList)
                         .gradient(gradient)
+                        .radius(10)
                         .opacity(0.7)
                         .build();
 
