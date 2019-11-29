@@ -2,10 +2,14 @@ package com.KGRJJ.kgrjj_android_20192020.Event_related_content;
 
 import android.location.Location;
 import android.util.Log;
+
+import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Date;
 import com.KGRJJ.kgrjj_android_20192020.utilities.Time;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
@@ -22,6 +26,7 @@ public class EventCreation {
 
     private FirebaseFirestore db;
     private FirebaseUser user;
+    private static final long POINT_FOR_CREATION = 100;
 
     public EventCreation(FirebaseFirestore db, FirebaseUser user){
         this.db = db;
@@ -50,6 +55,7 @@ public class EventCreation {
         db.collection("Events").document(Title).set(map).addOnSuccessListener(aVoid->
                 Log.i("Test","Correctly added event")
         );
+        BaseActivity.addPoints(user,POINT_FOR_CREATION);
         value.add(db.collection("Events").document(Title));
         db.collection("User").document(user.getUid()).set(map2, SetOptions.merge());
     }

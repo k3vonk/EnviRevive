@@ -52,8 +52,12 @@
     <string name="can_t_login">Can\'t login?</string>
     <string name="login">Login</string>
 
+    <string name="AppDescription">EnviRevive is an app which connects people through participating
+        in clean up events to conserve the surrounding natural environment \n
+        The apps ethos is striving to promote healthy people and environmental awareness by actively
+        engaging its users in interactive outdoor pursuits.</string>
     <string name="TakePhoto">Our Image anaylsis tool rates the enviornmental impact of the chosen area.\n
-        Simply Click this button from the wheel menuIand our tool wil analyse the photo taken!
+        Simply Click this button from the wheel menu and our tool wil analyse the photo taken!
     </string>
     <string name="BrowsePhoto">If you wish to browse photos taken by other users simple click this button.
     </string>

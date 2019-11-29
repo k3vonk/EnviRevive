@@ -9,6 +9,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +26,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The EventAdapter activity produces allows the contents
@@ -37,6 +40,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
 
     private Context mCtxEvent;
     private List<EventDataObject> eventobjList;
+    private static final int POINTS_FOR_REGISTER = 30;
+    private static final int POINT_FOR_UNREGISTER = -30;
 
     public EventAdapter(Context mCtx, List<EventDataObject> eventobjList) {
         this.mCtxEvent = mCtx;
@@ -52,8 +57,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
     public EventAdapter.ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mCtxEvent);
         View view = inflater.inflate(R.layout.event_list_layout, null);
-        ProductViewHolder holder = new ProductViewHolder(view);
-        return holder;
+        return new ProductViewHolder(view);
     }
 
     /**
@@ -69,7 +73,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         holder.textViewDate.setText(eventDataObject.getDate().toString());
         holder.textViewTime.setText(eventDataObject.getTime().toString());
         holder.location = eventDataObject.getLocation();
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         holder.un_sub.setEnabled(false);
         holder.un_sub.setVisibility(View.INVISIBLE);
         if(eventDataObject.getRegisteredUsers().contains(user)){
@@ -81,6 +85,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         holder.un_sub.setOnClickListener(v -> {
             String event = eventDataObject.getID();
             UnRegisterToEvent(event);
+            BaseActivity.addPoints(FirebaseAuth.getInstance().getCurrentUser(),POINT_FOR_UNREGISTER);
             holder.un_sub.setEnabled(false);
             holder.un_sub.setText("No longer Registered");
             Toast.makeText(mCtxEvent,"Registered to event",Toast.LENGTH_SHORT).show();
@@ -90,6 +95,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
             String event = eventDataObject.getID();
            RegisterToEvent(event);
            holder.button.setEnabled(false);
+            BaseActivity.addPoints(FirebaseAuth.getInstance().getCurrentUser(),POINTS_FOR_REGISTER);
            holder.button.setText("Already Registered");
 
             Toast.makeText(mCtxEvent,"Registered to event",Toast.LENGTH_SHORT).show();
@@ -111,8 +117,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
      * functionality to register to the events held within each card.
      * register status is held within Firebase
      */
-    public void RegisterToEvent(String event){
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void RegisterToEvent(String event){
+        String user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         DocumentReference eventRef =
                 FirebaseFirestore.getInstance().collection("Events").document(event);
 
@@ -120,8 +126,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
         FirebaseFirestore.getInstance().collection("user").document(user)
                 .update("subscribedEvents",FieldValue.arrayUnion(eventRef));
     }
-    public void UnRegisterToEvent(String event){
-        String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void UnRegisterToEvent(String event){
+        String user = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         DocumentReference eventRef =
                 FirebaseFirestore.getInstance().collection("Events").document(event);
 
@@ -138,11 +144,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ProductViewH
 
         TextView textViewTitle, textViewDescription, textViewDate, textViewTime;
         GeoPoint location;
-        Button button,un_sub;
+        Button button;
+        Button un_sub;
         GoogleMap mapViewLocation;
         MapView map;
 
-        public ProductViewHolder(@NonNull View itemView) {
+        ProductViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.textViewTitle);

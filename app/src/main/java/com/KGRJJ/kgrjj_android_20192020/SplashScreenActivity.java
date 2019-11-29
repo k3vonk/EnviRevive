@@ -31,6 +31,7 @@ import java.io.IOException;
 public class SplashScreenActivity extends AppCompatActivity {
 
     private LottieAnimationView mSplashLogo;
+    private static final String MY_PREFS_NAME ="first_time";
     private static int msplashTimeOut=5000;
     private TextView appName;
     private Animation fadein;
@@ -46,21 +47,21 @@ public class SplashScreenActivity extends AppCompatActivity {
         appName.startAnimation(fadein);
 
         new Handler().postDelayed(() -> {
-            //SharedPreferences preference =
-                    //PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences preference =
+                    getSharedPreferences(MY_PREFS_NAME,MODE_PRIVATE);
 
-            //if(!preference.getBoolean("firstTime",false)){
-                //Intent i = new Intent(SplashScreenActivity.this,FirstTimeUserScreen.class);
-              //  startActivity(i);
-           //     finish();
-            //}else{
-                //SharedPreferences.Editor e = preference.edit();
-               // e.putBoolean("firstTime",false);
-               // e.commit();
+            if(preference.getBoolean("returning_user",true)){
+                SharedPreferences.Editor e = preference.edit();
+                e.putBoolean("returning_user", false);
+                e.apply();
+                Intent i = new Intent(SplashScreenActivity.this,FirstTimeUserScreen.class);
+                startActivity(i);
+                finish();
+            }else {
                 Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
                 startActivity(i);
                 finish();
-
+            }
 
         },msplashTimeOut);
 
