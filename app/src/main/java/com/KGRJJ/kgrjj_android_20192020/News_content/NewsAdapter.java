@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private Context mCtxNews;
     private ArrayList<NewsObjects> mNewsObjList;
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+
+    public void setOnItemClicklistener(OnItemClickListener listener){
+        mListener = listener;
+    }
 
     //constructor
     public NewsAdapter(Context mCtxNews, ArrayList<NewsObjects> mNewsObjList) {
@@ -88,6 +99,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             preview = itemView.findViewById(R.id.news_imgPreview);
             date = itemView.findViewById(R.id.news_DateTextView);
           //  URL = itemView.findViewById(R.id.news)
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null){
+                        int pos = getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION){
+                            mListener.onItemClick((pos));
+                        }
+                    }
+                }
+            });
         }
     }
 

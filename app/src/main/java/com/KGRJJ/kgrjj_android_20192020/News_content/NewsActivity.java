@@ -1,6 +1,8 @@
 package com.KGRJJ.kgrjj_android_20192020.News_content;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +25,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NewsActivity extends BaseActivity {
+public class NewsActivity extends BaseActivity implements NewsAdapter.OnItemClickListener {
+        public static final String WEB_URL = "web_url";
+
     private TextView mTextViewResult;
     private RequestQueue mQueue;
 
@@ -36,6 +40,7 @@ public class NewsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
         mNewsObj = new ArrayList<>();
 
         mTextViewResult = findViewById(R.id.news_TextView);
@@ -68,7 +73,7 @@ public class NewsActivity extends BaseActivity {
     }
 
     public void jsonParse(){
-        String URL = "https://newsapi.org/v2/top-headlines?country=ie&category=business&apiKey=f05bc125586849b5b53391ce06b75ae9";
+        String URL = "https://newsapi.org/v2/everything?q=ireland+waste&apiKey=f05bc125586849b5b53391ce06b75ae9";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, URL, null,
                 new Response.Listener<JSONObject>() {
@@ -107,6 +112,7 @@ public class NewsActivity extends BaseActivity {
                             //ERROR 20:56	Emulator: Trying to erase a non-existent color buffer with handle 0
                              mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
                              mRecycleView.setAdapter(mNewsAdapter);
+                             mNewsAdapter.setOnItemClicklistener(NewsActivity.this);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -123,4 +129,12 @@ public class NewsActivity extends BaseActivity {
         mQueue.add(request);
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Intent webpageIntent = new Intent(this, NewsWebView.class);
+        NewsObjects clicked = mNewsObj.get(position);
+
+        webpageIntent.putExtra(WEB_URL, clicked.getURL());
+        startActivity(webpageIntent);
+    }
 }
