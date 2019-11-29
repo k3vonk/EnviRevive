@@ -38,6 +38,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -86,6 +88,11 @@ public class ImageAnalysisScreen extends AppCompatActivity {
        HashMap<String,Float>  results = callCloudVision(bmp);
         imgButton.setOnClickListener(v -> {
             Intent output = new Intent();
+
+            for (Map.Entry result: results.entrySet()) {
+                Log.i("IMAGE ANALYSIS", "Show results" + result.toString());
+            }
+
             output.putExtra("Results",results);
             setResult(RESULT_0K,output);
             finish();

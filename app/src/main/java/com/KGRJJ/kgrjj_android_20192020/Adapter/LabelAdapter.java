@@ -35,7 +35,7 @@ public class LabelAdapter extends BaseAdapter {
     private final HashMap<String, Float> labels;
     private List<String> keyList;
 
-    public static final String[] candidates = {"Nose", "Waste", "Litter"};
+    public static final String[] candidates = {"Pollution", "Waste", "Litter"};
 
     /**
      * Constructor instantiate multiple private variables and

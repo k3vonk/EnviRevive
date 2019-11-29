@@ -1,6 +1,7 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -8,12 +9,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
 import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
+import com.KGRJJ.kgrjj_android_20192020.Image_related_content.SpecificImageDisplayActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -24,7 +25,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -33,15 +35,19 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.maps.android.heatmaps.Gradient;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.google.maps.android.heatmaps.WeightedLatLng;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 /**
  * The MapsActivity allows the tracking of users and display Google Maps
@@ -231,46 +237,192 @@ public class MapsActivity extends BaseActivity implements OnMapReadyCallback {
      * Acquires various images from FireBase and adds it to the HeatMap
      */
     private void readItems() {
-        ArrayList<WeightedLatLng> list = new ArrayList<>();
+        ArrayList<WeightedLatLng> cleanList = new ArrayList<>();
+        ArrayList<LatLng> cleanLatlng = new ArrayList<>();
+        ArrayList<Circle> cleanCircle = new ArrayList<>();
+        ArrayList<WeightedLatLng> dirtyList = new ArrayList<>();
+        ArrayList<LatLng> dirtyLatlng = new ArrayList<>();
+        ArrayList<Circle> dirtyCircle = new ArrayList<>();
 
         db.collection("Images").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (queryDocumentSnapshots != null) {
 
                 for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                    Log.i("TESTING", doc.get("Location").toString());
                     GeoPoint location = (GeoPoint) doc.get("Location");
                     WeightedLatLng weightedLatLng;
                     LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                     HashMap<String,Double> results = (HashMap<String, Double>) doc.get("AnalysisResults");
+
                     double pollution = 0.10000000f;
-                    float count = 0;
                     for(Map.Entry<String,Double> entry : results.entrySet()){
 
                         boolean result = Arrays.stream(LabelAdapter.candidates).anyMatch(entry.getKey()::equals);
                         if(result){
-                            Log.i("TESTING",""+entry.getValue());
-                            pollution =  pollution + entry.getValue();
-                            count ++;
+                            if(entry.getValue()>pollution){
+                                pollution = entry.getValue();
+                            }
                         }
                     }
-                    if(pollution!=0.1f && count !=0){
-                        weightedLatLng = new WeightedLatLng(latLng,pollution/count);
+                    // store the dirty points information into list
+                    if(pollution!=0.1f){
+                        double weight = 0.5 + pollution/2;
+                        weightedLatLng = new WeightedLatLng(latLng,weight);
+                        dirtyList.add(weightedLatLng);
+                        dirtyLatlng.add(latLng);
+
                     }
+                    // store the clean points information into list
                     else{
                         weightedLatLng = new WeightedLatLng(latLng,0.1);
+                        cleanList.add(weightedLatLng);
+                        cleanLatlng.add(latLng);
                     }
-                    list.add(weightedLatLng);
 
                 }
             }
+            // show clean points hearmap by default
+            if (cleanList.size()!=0) {
+                for(LatLng latLng : cleanLatlng){
+                    CircleOptions circleOptions = new CircleOptions()
+                            .center(latLng)
+                            .strokeColor(Color.TRANSPARENT)
+                            .clickable(true)
+                            .radius(100); // In meters
 
-            // Create a heat map tile provider, passing it the latlngs of the police stations
-            mHeatMapTileProvider = new HeatmapTileProvider.Builder()
-                    .weightedData(list)
-                    .build();
+                    // Get back the mutable Circle
+                    Circle circle = mMap.addCircle(circleOptions);
+                    cleanCircle.add(circle);
+                }
+                // Set gradient
+                int[] colors = {
+                        Color.rgb(0,255,0), // green
+                        Color.rgb(0,255,0)  // red
+                };
 
-            // Add a tile overlay to the map, using the heat map tile provider.
-            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+                // Set star point
+                float[] startPoints = {
+                        0.2f, 0.3f
+                };
+
+                Gradient gradient = new Gradient(colors, startPoints);
+
+                // Create a heat map tile provider, passing it the latlngs of the police stations
+                mHeatMapTileProvider = new HeatmapTileProvider.Builder()
+                        .weightedData(cleanList)
+                        .gradient(gradient)
+                        .opacity(0.7)
+                        .build();
+
+                // Add a tile overlay to the map, using the heat map tile provider.
+                mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+            }
+            // change heatmaps
+            Button button = findViewById(R.id.shift_heatmaps);
+            button.setText("CLEAN");
+            button.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    if(button.getText().equals("CLEAN")){
+                        mTileOverlay.remove();
+                        button.setText("DIRTY");
+                        Log.i("dirty" ,dirtyList.size()+"");
+                        // delete circles for clean points
+                        if(cleanCircle.size()!=0){
+                            for(Circle circle : cleanCircle){
+                                circle.remove();
+                            }
+                        }
+                        if (dirtyList.size()!=0) {
+                            // draw circles for dirty points
+                            for(LatLng latLng : dirtyLatlng){
+                                CircleOptions circleOptions = new CircleOptions()
+                                        .center(latLng)
+                                        .strokeColor(Color.TRANSPARENT)
+                                        .clickable(true)
+                                        .radius(100); // In meters
+
+                                // Get back the mutable Circle
+                                Circle circle = mMap.addCircle(circleOptions);
+                            }
+                            // reset settings for dirty points heatmap
+                            // Set gradient
+                            int[] colors = {
+                                    Color.rgb(255,128,0), // green
+                                    Color.rgb(255,0,0)  // red
+                            };
+
+                            // Set star point
+                            float[] startPoints = {
+                                    0.1f, 0.2f
+                            };
+
+                            Gradient gradient = new Gradient(colors, startPoints);
+                            mHeatMapTileProvider.setGradient(gradient);
+                            mHeatMapTileProvider.setWeightedData(dirtyList);
+                            mHeatMapTileProvider.setOpacity(1);
+                            mHeatMapTileProvider.setRadius(20);
+                            mTileOverlay.clearTileCache();
+                            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+                        }
+                    }
+                    else{
+                        button.setText("CLEAN");
+                        // remove dirty points heatmap
+                        mTileOverlay.remove();
+                        // remove circles for dirty points
+                        if(dirtyCircle.size()!=0){
+                            for(Circle circle : dirtyCircle){
+                                circle.remove();
+                            }
+                        }
+                        if (cleanList.size()!=0) {
+                            // draw circles for clean points
+                            for(LatLng latLng : cleanLatlng){
+                                CircleOptions circleOptions = new CircleOptions()
+                                        .center(latLng)
+                                        .strokeColor(Color.TRANSPARENT)
+                                        .clickable(true)
+                                        .radius(100); // In meters
+
+                                // Get back the mutable Circle
+                                Circle circle = mMap.addCircle(circleOptions);
+                            }
+                            // reset settings for clean points heatmap
+                            // Set gradient
+                            int[] colors = {
+                                    Color.rgb(0,255,0), // green
+                                    Color.rgb(0,255,0)  // red
+                            };
+
+                            // Set star point
+                            float[] startPoints = {
+                                    0.2f, 0.3f
+                            };
+
+                            Gradient gradient = new Gradient(colors, startPoints);
+                            mHeatMapTileProvider.setGradient(gradient);
+                            mHeatMapTileProvider.setWeightedData(cleanList);
+                            mHeatMapTileProvider.setRadius(10);
+                            mHeatMapTileProvider.setOpacity(0.7);
+                            mTileOverlay.clearTileCache();
+                            mTileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mHeatMapTileProvider));
+                        }
+                    }
+
+                }
+            });
+            // show images corresponding to the geographic location of the image
+            mMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+
+                @Override
+                public void onCircleClick(Circle circle) {
+                    Intent myIntent = new Intent(MapsActivity.this, SpecificImageDisplayActivity.class);
+                    myIntent.putExtra("latitude",circle.getCenter().latitude);
+                    myIntent.putExtra("longitude",circle.getCenter().longitude);
+                    startActivity(myIntent);
+
+                }
+            });
         });
 
     }
