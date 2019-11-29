@@ -171,17 +171,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                                     break;
                                 }
 
-                            case 2:
+                            case 3:
                                 Intent myIntentEventsList = new Intent(getApplicationContext(), EventDisplayActivity.class);
                                 startActivity(myIntentEventsList);
                                 finish();
                                 break;
-                            case 3:
+                            case 4:
                                 Intent myIntentImagesList = new Intent(getApplicationContext(), ImageDisplayActivity.class);
                                 startActivity(myIntentImagesList);
                                 finish();
                                 break;
-                            case 4:
+                            case 2:
                                 takePhoto(false, false);
                                 break;
                             case 5:
@@ -208,13 +208,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                             case 1:
                                 Toast.makeText(getApplicationContext(), "View your Profile", Toast.LENGTH_SHORT).show();
                                 break;
-                            case 2:
+                            case 3:
                                 Toast.makeText(getApplicationContext(), "See a List of Events", Toast.LENGTH_SHORT).show();
                                 break;
-                            case 3:
+                            case 4:
                                 Toast.makeText(getApplicationContext(), "See a List of Images", Toast.LENGTH_SHORT).show();
                                 break;
-                            case 4:
+                            case 2:
                                 Toast.makeText(getApplicationContext(), "Take a Photo", Toast.LENGTH_SHORT).show();
 
                                 break;
