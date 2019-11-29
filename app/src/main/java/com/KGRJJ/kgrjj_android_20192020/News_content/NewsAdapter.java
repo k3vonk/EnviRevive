@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.description.setText(eventDataObject.getDescription());
         holder.author.setText(eventDataObject.getAuthor());
         holder.date.setText(eventDataObject.getDate());
-
+        Picasso.get().load(mNewsObjList.get(position).getPreviewImg()).fit().centerInside().into(holder.preview);
        // holder.date.setText(mNewsObjList.get(position).getDate());
 
         /*
@@ -61,7 +62,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.description.setText(mNewsObjList.get(position).getDescription());
         holder.author.setText(mNewsObjList.get(position).getAuthor());
         holder.date.setText(mNewsObjList.get(position).getDate());
-        Picasso.get().load(mNewsObjList.get(position).getPreviewImg()).fit().centerInside().into(holder.preview);
+
         */
     }
 

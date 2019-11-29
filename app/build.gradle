@@ -74,6 +74,8 @@ dependencies {
     //volley
     implementation 'com.android.volley:volley:1.1.1'
 
+    //Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //CloudVision API
     implementation 'com.android.support:design:28.0.2'

@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,8 +45,9 @@ public class NewsActivity extends BaseActivity {
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        testInputs();
-    //    jsonParse();
+      //testInputs();
+        mQueue = Volley.newRequestQueue(this    );
+        jsonParse();
 
     }
 
@@ -58,7 +60,7 @@ public class NewsActivity extends BaseActivity {
         mTextViewResult.setText("WELCOME");
         String img_test = "https://www.weareopen.ie/wp-content/uploads/UCD-Logo.jpg";
         mNewsObj.add(new NewsObjects("title_test", "desc_test", "auth_test", "date_test", img_test, "haha"));
-
+        mNewsObj.add(new NewsObjects("title_test2", "desc_test2", "auth_test2", "date_test2", img_test, "haha2"));
         //MOVED THESE THINGS TO HERE
         // THEY WERE IN JSONPARSE
         mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
@@ -96,12 +98,15 @@ public class NewsActivity extends BaseActivity {
                                 String image = article.getString("urlToImage");
                                 String date = article.getString("publishedAt");
 
-                                mNewsObj.add(new NewsObjects(title, description, author, date, image, url));
-                            //    mTextViewResult.setText(title);
+                             mNewsObj.add(new NewsObjects(title, description, author, date, image, url));
+                       //         mTextViewResult.setText(title);
 
-                     //           mNewsObj.add(new NewsObjects("haha", "haha", "haha", "haha", "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200", "haha"));
+                       //         mNewsObj.add(new NewsObjects("haha", "haha", "haha", "haha", "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200", "haha"));
                             }
-
+                            //TODO
+                            //ERROR 20:56	Emulator: Trying to erase a non-existent color buffer with handle 0
+                             mNewsAdapter = new NewsAdapter(NewsActivity.this, mNewsObj);
+                             mRecycleView.setAdapter(mNewsAdapter);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -114,6 +119,7 @@ public class NewsActivity extends BaseActivity {
                             error.printStackTrace();
                         }
                 });
+
         mQueue.add(request);
     }
 
