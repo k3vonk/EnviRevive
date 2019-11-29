@@ -42,8 +42,10 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
@@ -88,10 +90,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     //FireBase/Internal Storage & Image Info Variables
     protected static final int REQUEST_PERMISSION_STORAGE_KEY = 10;
+    private static final long POINTS_FOR_IMAGE = 60;
     protected static FirebaseUser user;
     protected static FirebaseAuth mAuth;
     protected static StorageReference mStorageReference;
-    protected FirebaseFirestore db;
+    protected static FirebaseFirestore db;
     protected ArrayList<LatLng> list;
     public static String fullname;
     public static String Rank;
@@ -261,7 +264,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
-                galleryAddPic();
+
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 Log.i("takePhoto", "Error occured creating file" + ex.getMessage());
@@ -439,6 +442,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.i("FirebaseResults", "cloud function called and retrieved user info");
     }
 
+    /*
+            Method to update user points
+     */
+    public static void addPoints(FirebaseUser user,long p){
+        db.collection("user").document(user.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        long points = (long) documentSnapshot.get("Points");
+                        db.collection("user").document(user.getUid())
+                                .update("Points",points+p);
+                    }
+                });
+    }
 
     //======================== LOCATION FINDER =============================//
     /**
@@ -585,6 +602,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 } else {
                     try {
                         //analyse the image with new intent and return then values
+                        galleryAddPic();
+                        addPoints(user,POINTS_FOR_IMAGE);
                         Intent imageAnalysisScreen = new Intent(getApplicationContext(), ImageAnalysisScreen.class);
                         imageAnalysisScreen.putExtra("image", mostRecentPhotoPath);
                         startActivityForResult(imageAnalysisScreen,REQUEST_ANALYSIS);

@@ -16,17 +16,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.KGRJJ.kgrjj_android_20192020.BaseActivity;
 import com.KGRJJ.kgrjj_android_20192020.Data.FirestoreDocumentModel;
 import com.KGRJJ.kgrjj_android_20192020.MapsActivity;
 import com.KGRJJ.kgrjj_android_20192020.R;
 import com.airbnb.lottie.LottieAnimationView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mukesh.countrypicker.CountryPicker;
+
 import java.io.IOException;
 import java.util.Map;
 

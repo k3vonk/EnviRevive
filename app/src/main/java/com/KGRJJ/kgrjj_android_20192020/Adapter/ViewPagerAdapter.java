@@ -26,6 +26,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     public int[] images = {
+            R.mipmap.envi_logo,
             R.mipmap.takephotolandscape,
             R.mipmap.searchimages,
             R.mipmap.eventadd,
@@ -36,6 +37,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     };
 
     public String[] Headings = {
+            "ENVI-REVIVE",
             "TAKE PHOTO",
             "BROWSE PHOTOS",
             "CREATE EVENTS",
@@ -45,6 +47,7 @@ public class ViewPagerAdapter extends PagerAdapter {
             "LOGOUT",
     };
     public int[] descriptions = {
+            R.string.AppDescription,
            R.string.TakePhoto,
            R.string.BrowsePhoto,
            R.string.CreateEvent,

@@ -1,17 +1,14 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.KGRJJ.kgrjj_android_20192020.Adapter.ViewPagerAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;

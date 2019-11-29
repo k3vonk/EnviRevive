@@ -27,7 +27,7 @@ public class FirestoreDocumentModel {
         String ImageRef = "";
 
         String Rank = "Fresh";
-        int Points = 0;
+        int Points = 150;
         List<DocumentReference> EventsAttended = new ArrayList<>();
         List<DocumentReference> subscribedEvents = new ArrayList<>();
         List<DocumentReference> Accolades = new ArrayList<>();
