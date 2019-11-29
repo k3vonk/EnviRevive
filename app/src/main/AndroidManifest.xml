@@ -57,6 +57,9 @@
             android:name=".Image_related_content.ImageDisplayActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Image_related_content.SpecificImageDisplayActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".BaseActivity"
             android:screenOrientation="portrait" />
         <activity
