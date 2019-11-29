@@ -1,10 +1,9 @@
 package com.KGRJJ.kgrjj_android_20192020;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +12,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.KGRJJ.kgrjj_android_20192020.Adapter.LabelAdapter;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.PackageManagerUtils;
+import com.bumptech.glide.Glide;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
@@ -29,7 +31,6 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -101,11 +102,45 @@ public class ImageAnalysisScreen extends AppCompatActivity {
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
 
+        Bitmap rotatedBitmap = null;
         Bitmap bitmap = BitmapFactory.decodeFile(currPhotoPath, bmOptions);
-        imgView.setImageBitmap(bitmap);
 
-        return bitmap;
-    }
+        //get the correct rotation
+        try {
+            ExifInterface ei = new ExifInterface(currPhotoPath);
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+
+            switch (orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = BaseActivity.rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
+
+            Glide
+                    .with(getApplicationContext())
+                    .load(rotatedBitmap)
+                    .fitCenter()
+                    .into(imgView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rotatedBitmap;
+        }
 
     /*=================== CLOUD VISION ===================*/
     /**
@@ -258,7 +293,6 @@ public class ImageAnalysisScreen extends AppCompatActivity {
                      String message = "No Labels Found";
                      imageDetail.setText(message);
                  }
-
             }
         }
     }

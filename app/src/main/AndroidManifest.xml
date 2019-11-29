@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.KGRJJ.kgrjj_android_20192020">
-
     <!-- PERMISSIONS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION" />
@@ -11,6 +10,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -21,7 +21,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <!-- META-DATA -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <activity android:name=".FirstTimeUserScreen" /> <!-- META-DATA -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -30,61 +34,61 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
-
-        <!-- ACTIVITY -->
+            android:resource="@array/preloaded_fonts" /> <!-- ACTIVITY -->
         <activity
             android:name=".LoadingScreen"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".EventCreationDialog"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Event_related_content.EventAdapter"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Event_related_content.EventDataObject"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Event_related_content.EventCreation"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Event_related_content.EventDisplayActivity"
-            android:screenOrientation = "portrait" />
-        <activity android:name=".Image_related_content.ImageDisplayActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Image_related_content.ImageDisplayActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".BaseActivity"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UserSpecificActivities.UserProfileActivity"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ImageAnalysisScreen"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Authentication.LoginActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation = "portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".Authentication.RegistrationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation = "portrait" />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name="Adapter.WheelSelectionAdapter"
-            android:windowSoftInputMode="stateVisible|adjustPan"
-            android:screenOrientation = "portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation = "portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter> <!-- Intent received -->
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -99,4 +103,5 @@
                 android:resource="@xml/provider_paths" />
         </provider>
     </application>
+
 </manifest>
