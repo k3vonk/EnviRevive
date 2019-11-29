@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="350dp"
+    android:layout_height="340dp"
     android:layout_margin="10dp"
-    android:background="@drawable/rounded_corner_layout"
+    android:background="@drawable/gradient_background"
     android:orientation="vertical">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="204dp"
-        android:orientation="vertical">
+    <ImageView
+        android:id="@+id/news_imgPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="190dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/gradient_background3"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-        <ImageView
-            android:id="@+id/news_imgPreview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+    <TextView
+        android:id="@+id/news_TitleTextView"
+        android:layout_width="293dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/news_imgPreview"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="7dp"
+        android:text="News Title"
+        android:textAlignment="center"
+        android:textSize="25sp" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/news_DateTextView"
+        android:layout_width="169dp"
+        android:layout_height="32dp"
+        android:layout_below="@+id/news_AuthorTextView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        android:text="Date"
+        android:textAlignment="center" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/news_AuthorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_below="@+id/news_TitleTextView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        android:text="Author"
+        android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/news_TitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="News Title"
-            android:textAlignment="center"
-            android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/news_DescriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="69dp"
-            android:layout_margin="5dp"
-            android:text="Description of the news"
-            android:textAllCaps="false"
-            android:textSize="14dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/news_AuthorTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Author"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/news_DateTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Date"
-                android:textAlignment="center" />
-        </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

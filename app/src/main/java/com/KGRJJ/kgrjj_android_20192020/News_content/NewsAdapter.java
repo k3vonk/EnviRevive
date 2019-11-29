@@ -10,7 +10,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.KGRJJ.kgrjj_android_20192020.R;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+
 
 import java.util.ArrayList;
 
@@ -52,10 +53,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         NewsObjects eventDataObject = mNewsObjList.get(position);
 
         holder.title.setText(eventDataObject.getTitle());
-        holder.description.setText(eventDataObject.getDescription());
+        //holder.description.setText(eventDataObject.getDescription());
         holder.author.setText(eventDataObject.getAuthor());
         holder.date.setText(eventDataObject.getDate());
-        Picasso.get().load(mNewsObjList.get(position).getPreviewImg()).fit().centerInside().into(holder.preview);
+        Glide
+                .with(holder.itemView)
+                .load(mNewsObjList.get(position).getPreviewImg())
+                .centerCrop()
+                .into(holder.preview);
 
     }
 
@@ -75,7 +80,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             super(itemView);
 
             title = itemView.findViewById(R.id.news_TitleTextView);
-            description = itemView.findViewById(R.id.news_DescriptionTextView);
+            //description = itemView.findViewById(R.id.news_DescriptionTextView);
             author = itemView.findViewById(R.id.news_AuthorTextView);
             preview = itemView.findViewById(R.id.news_imgPreview);
             date = itemView.findViewById(R.id.news_DateTextView);

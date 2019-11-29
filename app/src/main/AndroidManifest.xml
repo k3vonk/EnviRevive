@@ -84,7 +84,8 @@
             android:name="Adapter.WheelSelectionAdapter"
             android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation = "portrait"/>
-
+        <activity android:name=".News_content.NewsWebView"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".News_content.NewsActivity"
             android:screenOrientation = "portrait"/>
