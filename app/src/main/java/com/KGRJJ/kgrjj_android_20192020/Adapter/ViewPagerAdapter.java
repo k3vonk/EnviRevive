@@ -26,14 +26,14 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
     public int[] images = {
-            R.mipmap.envi_logo,
-            R.mipmap.takephotolandscape,
+            R.mipmap.ic_launcher_envi,
+            R.mipmap.cameratake,
             R.mipmap.searchimages,
             R.mipmap.eventadd,
             R.mipmap.eventsearch,
             R.mipmap.userprofile,
             R.mipmap.mapmarker,
-            R.mipmap.logout
+            R.mipmap.exit
     };
 
     public String[] Headings = {

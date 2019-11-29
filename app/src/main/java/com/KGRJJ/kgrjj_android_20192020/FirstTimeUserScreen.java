@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.KGRJJ.kgrjj_android_20192020.Adapter.ViewPagerAdapter;
+import com.KGRJJ.kgrjj_android_20192020.Authentication.LoginActivity;
 import com.KGRJJ.kgrjj_android_20192020.Authentication.RegistrationActivity;
 
 public class FirstTimeUserScreen extends AppCompatActivity {
@@ -34,7 +35,7 @@ public class FirstTimeUserScreen extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(FirstTimeUserScreen.this, RegistrationActivity.class);
+                Intent i = new Intent(FirstTimeUserScreen.this, LoginActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -47,7 +48,7 @@ public class FirstTimeUserScreen extends AppCompatActivity {
     }
 
     public void addDotsIndicator(int pos){
-        mdots = new TextView[7];
+        mdots = new TextView[8];
         mTutLinear.removeAllViews();
         for(int i = 0;i<mdots.length;i++){
             mdots[i] = new TextView(this);
@@ -76,6 +77,7 @@ public class FirstTimeUserScreen extends AppCompatActivity {
             else{
                 mButton.setEnabled(false);
             }
+            //if(currentPage)
         }
 
         @Override

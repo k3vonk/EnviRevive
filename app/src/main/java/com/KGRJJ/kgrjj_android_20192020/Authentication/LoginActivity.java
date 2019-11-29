@@ -1,6 +1,9 @@
 package com.KGRJJ.kgrjj_android_20192020.Authentication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -132,6 +135,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                                 Toast.LENGTH_LONG).show();
                         //gives the user the capability to try to log in again
                         mLoginBTN.setVisibility(View.VISIBLE);
+                        mLoginBTN.setEnabled(true);
                         //loading animation is stopped if authentication fails
                         animationView.setVisibility(View.INVISIBLE);
                     }
@@ -164,7 +168,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         if(i == R.id.loginBTN){
 
             mLoginBTN.setVisibility(View.INVISIBLE);
-            signIn(email.getText().toString(), password.getText().toString());
+            //ensure that the device is connectedto internet
+            NetworkInfo info = (NetworkInfo) ((ConnectivityManager)
+                    getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+            if (info == null)
+            {
+                Log.d(TAG,"no internet connection: Please connect to internet");
+                Toast.makeText(getApplicationContext(),"Please connect to the internet",Toast.LENGTH_SHORT).show();
+                //gives the user the capability to try to log in again
+                mLoginBTN.setVisibility(View.VISIBLE);
+                mLoginBTN.setEnabled(true);
+                //loading animation is stopped if authentication fails
+                animationView.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                signIn(email.getText().toString(), password.getText().toString());
+
+            }
+
         }
     }
 
