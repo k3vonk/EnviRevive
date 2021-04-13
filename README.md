@@ -1,4 +1,4 @@
-# KGRJJ-Android-2019
+# EnviRevive
 
 After Cloning the project
 
