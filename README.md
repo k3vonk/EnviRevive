@@ -2,6 +2,9 @@
 
 A 4th Year Android project that utilizes Google Maps API and image analysis to track areas with high litter concentrations.
 
+<img src="https://github.com/k3vonk/EnviRevive/blob/master/images/clean_image.png" height="500">
+Filter out only clean images on EnviRevive application.
+
 # Installation Guide
 
 1) Click Tools in Android Studio
